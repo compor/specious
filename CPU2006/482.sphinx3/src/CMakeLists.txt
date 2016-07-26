@@ -1,0 +1,74 @@
+# cmake file
+
+set(PROJECT_NAME "sphinx3")
+
+set(SOURCES
+  spec_main_live_pretend.c 
+  parse_args_file.c 
+  live.c 
+  agc.c 
+  approx_cont_mgau.c 
+  ascr.c 
+  beam.c 
+  bio.c 
+  case.c 
+  ckd_alloc.c 
+  cmd_ln.c 
+  cmn.c 
+  cmn_prior.c 
+  cont_mgau.c 
+  dict.c 
+  dict2pid.c 
+  err.c 
+  feat.c 
+  fillpen.c 
+  glist.c 
+  gs.c 
+  hash.c 
+  heap.c 
+  hmm.c 
+  io.c 
+  kb.c 
+  kbcore.c 
+  lextree.c 
+  lm.c 
+  lmclass.c 
+  logs3.c 
+  mdef.c 
+  new_fe.c 
+  new_fe_sp.c 
+  profile.c 
+  specrand.c
+  str2words.c 
+  subvq.c 
+  tmat.c 
+  unlimit.c 
+  utt.c 
+  vector.c 
+  vithist.c 
+  wid.c)
+
+add_executable(${PROJECT_NAME} ${SOURCES})
+
+add_definitions(-DHAVE_CONFIG_H)
+
+# this property is required by our parasitic targets
+set_target_properties(${PROJECT_NAME} PROPERTIES LINKER_LANGUAGE C)
+
+target_include_directories(${PROJECT_NAME} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/")
+target_include_directories(${PROJECT_NAME} PUBLIC
+  "${CMAKE_CURRENT_SOURCE_DIR}/libutil")
+
+target_link_libraries(${PROJECT_NAME} m)
+
+# attachments on first target
+
+if(${USE_LLVM})
+  attach_llvmir_target(${PROJECT_NAME}_bc ${PROJECT_NAME})
+
+  include(CMakeLists-additional.txt)
+
+  attach_llvmir_executable(${PROJECT_NAME}_bc_exe ${PROJECT_NAME}_link)
+  target_link_libraries(${PROJECT_NAME}_bc_exe m)
+endif()
+

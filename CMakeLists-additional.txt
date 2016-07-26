@@ -1,0 +1,5 @@
+# cmake file fragment
+
+attach_llvmir_link_target(${PROJECT_NAME}_link
+  ${PROJECT_NAME}_bc)
+
