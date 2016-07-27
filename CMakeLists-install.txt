@@ -1,0 +1,8 @@
+# cmake file fragment
+
+# attachments on first target
+
+install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION ${BMK_NAME}/exe/)
+
+install(DIRECTORY "../data" DESTINATION ${BMK_NAME})
+
