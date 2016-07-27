@@ -1,5 +1,6 @@
 # cmake file
 
+set(BMK_NAME "482.sphinx3")
 set(PROJECT_NAME "sphinx3")
 
 set(SOURCES
@@ -71,4 +72,12 @@ if(${USE_LLVM})
   attach_llvmir_executable(${PROJECT_NAME}_bc_exe ${PROJECT_NAME}_link)
   target_link_libraries(${PROJECT_NAME}_bc_exe m)
 endif()
+
+
+foreach(FRAGMENT in ${PROJECT_END_FRAGMENT_FILES})
+  set(frag "${CMAKE_CURRENT_SOURCE_DIR}/${FRAGMENT}")
+  if(EXISTS ${frag})
+    include(${frag})
+  endif()
+endforeach()
 

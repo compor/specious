@@ -23,6 +23,8 @@ if(${LLVM_FOUND})
   message(STATUS "LLVM IR Utils version: ${LLVM_IR_UTIL_VERSION_STRING}")
 endif()
 
+list(APPEND PROJECT_END_FRAGMENT_FILES "CMakeLists-install.txt")
+
 message(STATUS "C compiler: ${CMAKE_C_COMPILER}")
 message(STATUS "CXX compiler: ${CMAKE_CXX_COMPILER}")
 

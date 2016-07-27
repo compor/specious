@@ -1,5 +1,6 @@
 # cmake file
 
+set(BMK_NAME "403.gcc")
 set(PROJECT_NAME "gcc")
 
 set(SOURCES
