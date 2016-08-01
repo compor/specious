@@ -53,3 +53,8 @@ message(STATUS "CXX compiler: ${CMAKE_CXX_COMPILER}")
 #add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/CPU2006/473.astar/src/)
 #add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/CPU2006/483.xalancbmk/src/)
 
+
+# installation
+
+install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/utils/invocations" DESTINATION .)
+
