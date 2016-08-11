@@ -30,7 +30,7 @@ BENCHMARKS=(
 # set configuration vars
 
 if [ -z "$1" ]; then 
-  echo "error: benchmark directory was not provided" 
+  echo "error: benchmark install directory was not provided" 
 
   exit 1
 fi
