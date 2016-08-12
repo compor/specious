@@ -83,9 +83,8 @@ endif()
 
 
 foreach(FRAGMENT in ${PROJECT_END_FRAGMENT_FILES})
-  set(frag "${CMAKE_CURRENT_SOURCE_DIR}/${FRAGMENT}")
-  if(EXISTS ${frag})
-    include(${frag})
+  if(EXISTS ${FRAGMENT})
+    include(${FRAGMENT})
   endif()
 endforeach()
 

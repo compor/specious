@@ -179,3 +179,9 @@ if(${USE_LLVM})
   endforeach()
 endif()
 
+foreach(FRAGMENT in ${PROJECT_END_FRAGMENT_FILES})
+  if(EXISTS ${FRAGMENT})
+    include(${FRAGMENT})
+  endif()
+endforeach()
+

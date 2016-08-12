@@ -27,7 +27,8 @@ endif()
 list(APPEND PROJECT_LLVMIR_FRAGMENT_FILES
   "${CMAKE_CURRENT_SOURCE_DIR}/CMakeLists-loopcanon.txt")
 
-list(APPEND PROJECT_END_FRAGMENT_FILES "CMakeLists-install.txt")
+list(APPEND PROJECT_END_FRAGMENT_FILES 
+  "${CMAKE_CURRENT_SOURCE_DIR}/CMakeLists-install.txt")
 
 message(STATUS "C compiler: ${CMAKE_C_COMPILER}")
 message(STATUS "CXX compiler: ${CMAKE_CXX_COMPILER}")
