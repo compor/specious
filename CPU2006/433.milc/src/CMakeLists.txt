@@ -89,12 +89,11 @@ target_link_libraries(${PROJECT_NAME} m)
 
 # attachments on first target
 if(${USE_LLVM})
-  attach_llvmir_target(${PROJECT_NAME}_bc ${PROJECT_NAME})
-
-  include(CMakeLists-additional.txt)
-
-  attach_llvmir_executable(${PROJECT_NAME}_bc_exe ${PROJECT_NAME}_link)
-  target_link_libraries(${PROJECT_NAME}_bc_exe m)
+  foreach(FRAGMENT in ${PROJECT_LLVMIR_FRAGMENT_FILES})
+    if(EXISTS ${FRAGMENT})
+      include(${FRAGMENT})
+    endif()
+  endforeach()
 endif()
 
 
