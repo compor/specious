@@ -78,18 +78,5 @@ do
 done
 
 
-RC=$(( RC + 1 ))
-
-clang -o ${OPT_OUT_FNAME} \
-  -lc++ -lc++abi -L$PROFLIB -lcommprofilerrt \
-  -Wl,-rpath=$(llvm-config --libdir):$PROFLIB \
-  ${OPT_OUT_FULL_FNAME}
-
-if [ "$?" -ne 0 ]; then
-  echo "clang usage failed."
-
-  exit ${RC}
-fi
-
-exit $?
+exit 0
 
