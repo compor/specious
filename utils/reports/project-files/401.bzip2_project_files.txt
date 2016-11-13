@@ -1,0 +1,12 @@
+./spec.c
+./blocksort.c
+./bzlib.c
+./compress.c
+./decompress.c
+./spec.h
+./crctable.c
+./bzlib_private.h
+./randtable.c
+./huffman.c
+./bzlib.h
+./bzip2.c

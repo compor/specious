@@ -1,0 +1,6 @@
+./lbm.h
+./config.h
+./lbm_1d_array.h
+./main.c
+./lbm.c
+./main.h
