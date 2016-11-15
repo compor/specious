@@ -3,12 +3,7 @@
 This is a SPEC CPU2006 CMake build harness.
 
 Features
-- Support for all `C` and `C++` benchmarks.
-
-
-# TODO
-
-- Add support for `LLVM IR` generation
+- Support for building all `C` and `C++` benchmarks.
 
 
 # Not implemented
