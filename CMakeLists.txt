@@ -8,11 +8,11 @@ add_definitions(-DSPEC_CPU)
 add_definitions(-DSPEC_CPU_LINUX)
 add_definitions(-DSPEC_CPU_LINUX_X64)
 
-if(${USE_LLVM})
+if(USE_LLVM)
   find_package(LLVM REQUIRED CONFIG)
 endif()
 
-if(${LLVM_FOUND})
+if(LLVM_FOUND)
   set(LLVM_LIB_DIR ${LLVM_TOOLS_BINARY_DIR}/../lib/)
 
   list(APPEND CMAKE_MODULE_PATH 
