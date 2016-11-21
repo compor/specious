@@ -20,6 +20,9 @@ function(add_prefix outvar prefix files)
 endfunction()
 
 
+set(BENCHMARK_SOURCE_DIR "src")
+
+
 if(USE_LLVM)
   find_package(LLVM REQUIRED CONFIG)
 endif()
