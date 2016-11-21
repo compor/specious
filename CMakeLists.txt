@@ -8,6 +8,18 @@ add_definitions(-DSPEC_CPU)
 add_definitions(-DSPEC_CPU_LINUX)
 add_definitions(-DSPEC_CPU_LINUX_X64)
 
+
+function(add_prefix outvar prefix files)
+   set(tmplist "")
+
+   foreach(f ${files})
+      list(APPEND tmplist "${prefix}${f}")
+   endforeach()
+
+   set(${outvar} "${tmplist}" PARENT_SCOPE)
+endfunction()
+
+
 if(USE_LLVM)
   find_package(LLVM REQUIRED CONFIG)
 endif()
