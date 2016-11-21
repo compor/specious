@@ -18,14 +18,18 @@ if(LLVM_FOUND)
   list(APPEND CMAKE_MODULE_PATH 
     "${CMAKE_CURRENT_SOURCE_DIR}/cmake/llvm-ir-cmake-utils/cmake/")
 
-  include(LLVM-IR-Util)
+  include(LLVM-IR-Util RESULT_VARIABLE LLVM_IR_UTIL_FOUND)
 
-  message(STATUS "LLVM IR Utils version: ${LLVM_IR_UTIL_VERSION_STRING}")
+  if(LLVM_IR_UTIL_FOUND)
+    message(STATUS "LLVM IR Utils version: ${LLVM_IR_UTIL_VERSION_STRING}")
+  endif()
 endif()
 
 
-list(APPEND PROJECT_LLVMIR_FRAGMENT_FILES
-  "${CMAKE_CURRENT_SOURCE_DIR}/CMakeLists-loopcanon.txt")
+if(LLVM_IR_UTIL_FOUND)
+  list(APPEND PROJECT_LLVMIR_FRAGMENT_FILES
+    "${CMAKE_CURRENT_SOURCE_DIR}/CMakeLists-loopcanon.txt")
+endif()
 
 list(APPEND PROJECT_END_FRAGMENT_FILES 
   "${CMAKE_CURRENT_SOURCE_DIR}/CMakeLists-install.txt")
