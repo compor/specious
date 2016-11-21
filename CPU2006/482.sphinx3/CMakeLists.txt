@@ -67,9 +67,9 @@ target_link_libraries(${PROJECT_NAME} m)
 
 # attachments on first target
 
-if(${USE_LLVM})
+if(USE_LLVM)
   foreach(FRAGMENT in ${PROJECT_LLVMIR_FRAGMENT_FILES})
-    if(EXISTS ${FRAGMENT})
+    if(EXISTS FRAGMENT)
       include(${FRAGMENT})
     endif()
   endforeach()
@@ -77,7 +77,7 @@ endif()
 
 
 foreach(FRAGMENT in ${PROJECT_END_FRAGMENT_FILES})
-  if(EXISTS ${FRAGMENT})
+  if(EXISTS FRAGMENT)
     include(${FRAGMENT})
   endif()
 endforeach()
