@@ -16,12 +16,15 @@ set(SOURCES
   RegWay_.cpp
   Way_.cpp) 
 
+add_prefix(SOURCES "${BENCHMARK_SOURCE_DIR}/" "${SOURCES}")
+
 add_executable(${PROJECT_NAME} ${SOURCES})
 
 # this property is required by our parasitic targets
 set_target_properties(${PROJECT_NAME} PROPERTIES LINKER_LANGUAGE CXX)
 
-target_include_directories(${PROJECT_NAME} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/")
+target_include_directories(${PROJECT_NAME} PUBLIC
+  "${CMAKE_CURRENT_SOURCE_DIR}/${BENCHMARK_SOURCE_DIR}")
 
 target_link_libraries(${PROJECT_NAME} m)
 

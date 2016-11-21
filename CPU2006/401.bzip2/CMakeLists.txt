@@ -14,6 +14,8 @@ set(SOURCES
   huffman.c
   randtable.c)
 
+add_prefix(SOURCES "${BENCHMARK_SOURCE_DIR}/" "${SOURCES}")
+
 add_executable(${PROJECT_NAME} ${SOURCES})
 
 add_definitions(-DSPEC_BZIP)
@@ -21,7 +23,8 @@ add_definitions(-DSPEC_BZIP)
 # this property is required by our parasitic targets
 set_target_properties(${PROJECT_NAME} PROPERTIES LINKER_LANGUAGE C)
 
-target_include_directories(${PROJECT_NAME} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/")
+target_include_directories(${PROJECT_NAME} PUBLIC
+  "${CMAKE_CURRENT_SOURCE_DIR}/${BENCHMARK_SOURCE_DIR}")
 
 target_link_libraries(${PROJECT_NAME} m)
 

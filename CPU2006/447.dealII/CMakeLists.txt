@@ -121,6 +121,8 @@ set(SOURCES
   polynomials_bdm.cc
   polynomials_p.cc)
 
+add_prefix(SOURCES "${BENCHMARK_SOURCE_DIR}/" "${SOURCES}")
+
 add_executable(${PROJECT_NAME} ${SOURCES})
 
 # this property is required by our parasitic targets
@@ -129,9 +131,10 @@ set_target_properties(${PROJECT_NAME} PROPERTIES LINKER_LANGUAGE CXX)
 add_definitions(-DBOOST_DISABLE_THREADS)
 add_definitions(-Ddeal_II_dimension=3)
 
-target_include_directories(${PROJECT_NAME} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/")
 target_include_directories(${PROJECT_NAME} PUBLIC
-  "${CMAKE_CURRENT_SOURCE_DIR}/include/")
+  "${CMAKE_CURRENT_SOURCE_DIR}/${BENCHMARK_SOURCE_DIR}")
+target_include_directories(${PROJECT_NAME} PUBLIC
+  "${CMAKE_CURRENT_SOURCE_DIR}/${BENCHMARK_SOURCE_DIR}/include/")
 
 target_link_libraries(${PROJECT_NAME} m)
 
