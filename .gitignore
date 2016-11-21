@@ -1,0 +1,21 @@
+
+# ignore src directories
+CPU2006/400.perlbench/src
+CPU2006/401.bzip2/src
+CPU2006/403.gcc/src
+CPU2006/429.mcf/src
+CPU2006/433.milc/src
+CPU2006/444.namd/src
+CPU2006/445.gobmk/src
+CPU2006/447.dealII/src
+CPU2006/450.soplex/src
+CPU2006/456.hmmer/src
+CPU2006/458.sjeng/src
+CPU2006/462.libquantum/src
+CPU2006/464.h264ref/src
+CPU2006/470.lbm/src
+CPU2006/471.omnetpp/src
+CPU2006/473.astar/src
+CPU2006/482.sphinx3/src
+CPU2006/483.xalancbmk/src
+
