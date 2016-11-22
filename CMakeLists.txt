@@ -9,17 +9,10 @@ add_definitions(-DSPEC_CPU_LINUX)
 add_definitions(-DSPEC_CPU_LINUX_X64)
 
 
-function(add_prefix outvar prefix files)
-   set(tmplist "")
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/")
+include(Specious-Utils)
 
-   foreach(f ${files})
-      list(APPEND tmplist "${prefix}${f}")
-   endforeach()
-
-   set(${outvar} "${tmplist}" PARENT_SCOPE)
-endfunction()
-
-
+set(PROJECT_CMAKE_FRAGMENT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/cmake/fragments/")
 set(BENCHMARK_SOURCE_DIR "src")
 
 
@@ -41,17 +34,43 @@ if(LLVM_FOUND)
 endif()
 
 
+
+# EDIT FRAGMENT FILES SECTION START
+
+set(PROJECT_LLVMIR_CMAKE_FRAGMENT_FILES "")
+
 if(LLVM_IR_UTIL_FOUND)
-  list(APPEND PROJECT_LLVMIR_FRAGMENT_FILES
-    "${CMAKE_CURRENT_SOURCE_DIR}/CMakeLists-loopcanon.txt")
+  list(APPEND PROJECT_LLVMIR_CMAKE_FRAGMENT_FILES
+    "${PROJECT_CMAKE_FRAGMENT_DIR}/CMakeLists-loopcanon.txt")
 endif()
 
-list(APPEND PROJECT_END_FRAGMENT_FILES 
-  "${CMAKE_CURRENT_SOURCE_DIR}/CMakeLists-install.txt")
+
+set(PROJECT_END_CMAKE_FRAGMENT_FILES "")
+
+list(APPEND PROJECT_END_CMAKE_FRAGMENT_FILES 
+  "${PROJECT_CMAKE_FRAGMENT_DIR}/CMakeLists-install.txt")
+
+
+
+# aggregate lists
+
+set(PROJECT_CMAKE_FRAGMENT_FILES "")
+
+list(APPEND PROJECT_CMAKE_FRAGMENT_FILES
+  "${PROJECT_LLVMIR_CMAKE_FRAGMENT_FILES}"
+  "${PROJECT_END_CMAKE_FRAGMENT_FILES}")
+
+
+# EDIT FRAGMENT FILES SECTION END
+
+
 
 message(STATUS "C compiler: ${CMAKE_C_COMPILER}")
 message(STATUS "CXX compiler: ${CMAKE_CXX_COMPILER}")
 
+
+
+# UN/COMMENT DESIRED BENCHMARKS
 
 # c projects
 #add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/CPU2006/400.perlbench/)
