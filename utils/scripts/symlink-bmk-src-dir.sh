@@ -50,7 +50,7 @@ TARGET_BMK_DIR=$2
 
 # print configuration vars
 
-echo "info: printing configuation vars"
+echo "info: printing configuration vars"
 echo "info: source benchmark dir: ${SOURCE_BMK_DIR}"
 echo "info: target benchmark dir: ${TARGET_BMK_DIR}"
 echo ""
