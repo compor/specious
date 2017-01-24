@@ -49,7 +49,7 @@ OUTPUT_FILENAME=$2
 
 # print configuration vars
 
-echo "info: printing configuation vars"
+echo "info: printing configuration vars"
 echo "info: benchmark source dir: ${BMK_SOURCE_DIR}"
 echo "info: output file name: ${OUTPUT_FILENAME}"
 echo ""

@@ -49,7 +49,7 @@ INPUT_TYPE=$2
 
 # print configuration vars
 
-echo "info: printing configuation vars"
+echo "info: printing configuration vars"
 echo "info: benchmark install dir: ${BMK_INSTALL_DIR}"
 echo "info: input type: ${INPUT_TYPE}"
 echo ""

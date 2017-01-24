@@ -27,7 +27,7 @@ CMAKE_FRAGMENT_FILE=$2
 
 # print configuration vars
 
-echo "info: printing configuation vars"
+echo "info: printing configuration vars"
 echo "info: benchmark dir: ${BMK_DIR}"
 echo "info: cmake fragment file: ${CMAKE_FRAGMENT_FILE}"
 echo ""

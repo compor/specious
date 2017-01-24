@@ -32,7 +32,7 @@ BC_INPUT_FILE=$1
 
 # print configuration vars
 
-echo "info: printing configuation vars"
+echo "info: printing configuration vars"
 echo "info: LLVM bitcode input file: ${BC_INPUT_FILE}"
 echo ""
 
