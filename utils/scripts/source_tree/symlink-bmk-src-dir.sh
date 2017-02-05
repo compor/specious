@@ -3,17 +3,18 @@
 # initialize configuration vars
 
 SHOW_HELP=0
+BMK_CONFIG_FILE=""
 BMK_SOURCE_DIR=""
 BMK_TARGET_DIR=""
 
 
 # parse and check cmd line options
 
-CMDOPTS=":f:s:t:h"
+CMDOPTS=":c:s:t:h"
 
 HELP_STRING="Usage: ${0} OPTIONS
 
--f file    benchmark config file
+-c file    benchmark config file
 -s dir     benchmark source directory
 -t dir     benchmark target directory
 -h         help
@@ -21,7 +22,7 @@ HELP_STRING="Usage: ${0} OPTIONS
 
 while getopts $CMDOPTS cmdopt; do
   case $cmdopt in
-    f)
+    c)
       BMK_CONFIG_FILE=$OPTARG
       ;;
     s)

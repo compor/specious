@@ -3,17 +3,18 @@
 # initialize configuration vars
 
 SHOW_HELP=0
+BMK_CONFIG_FILE=""
 BMK_SOURCE_DIR=""
 OUTPUT_FILENAME="project_files.txt"
 
 
 # parse and check cmd line options
 
-CMDOPTS=":f:s:o:h"
+CMDOPTS=":c:s:o:h"
 
 HELP_STRING="Usage: ${0} OPTIONS
 
--f file    benchmark config file
+-c file    benchmark config file
 -s dir     benchmark source directory
 -o file    output file name
 -h         help
@@ -21,7 +22,7 @@ HELP_STRING="Usage: ${0} OPTIONS
 
 while getopts $CMDOPTS cmdopt; do
   case $cmdopt in
-    f)
+    c)
       BMK_CONFIG_FILE=$OPTARG
       ;;
     s)
