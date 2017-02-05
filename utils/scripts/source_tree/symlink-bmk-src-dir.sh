@@ -2,69 +2,94 @@
 
 # initialize configuration vars
 
-BENCHMARKS=(
-  #"400.perlbench"
-  #"401.bzip2"
-  #"403.gcc"
-  #"429.mcf"
-  #"433.milc"
-  #"444.namd"
-  #"445.gobmk"
-  #"447.dealII"
-  #"450.soplex"
-  #"453.povray"
-  #"456.hmmer"
-  #"458.sjeng"
-  #"462.libquantum"
-  #"464.h264ref"
-  "470.lbm"
-  #"471.omnetpp"
-  #"473.astar"
-  #"482.sphinx3"
-  #"483.xalancbmk"
-)
+SHOW_HELP=0
+BMK_SOURCE_DIR=""
+BMK_TARGET_DIR=""
 
 
-SOURCE_BMK_DIR=""
+# parse and check cmd line options
+
+CMDOPTS=":f:s:t:h"
+
+HELP_STRING="Usage: ${0} OPTIONS
+
+-f file    benchmark config file
+-s dir     benchmark source directory
+-t dir     benchmark target directory
+-h         help
+"
+
+while getopts $CMDOPTS cmdopt; do
+  case $cmdopt in
+    f)
+      BMK_CONFIG_FILE=$OPTARG
+      ;;
+    s)
+      BMK_SOURCE_DIR=$OPTARG
+      ;;
+    t)
+      BMK_TARGET_DIR=$OPTARG
+      ;;
+    h)
+      SHOW_HELP=1
+      ;;
+    \?)
+      echo "error: invalid option: -$OPTARG" >&2
+      exit 1
+      ;;
+    :)
+      echo "error: option -$OPTARG requires an argument" >&2
+      exit 1
+      ;;
+  esac
+done
 
 
-# set configuration vars
+if [ "$SHOW_HELP" -ne 0 ]; then
+  echo "$HELP_STRING" >&2
 
-if [ -z "$1" ]; then 
-  echo "error: source benchmark directory was not provided" 
+  exit 0
+fi
+
+if [ -z "$BMK_CONFIG_FILE" -a ! -e "$BMK_CONFIG_FILE" ]; then
+  echo "error: benchmark config file was not provided or does not exist" >&2
 
   exit 1
 fi
 
-SOURCE_BMK_DIR=$1
+if [ -z "$BMK_SOURCE_DIR" -a ! -e "$BMK_SOURCE_DIR" ]; then
+  echo "error: benchmark source dir was not provided or does not exist" >&2
 
-
-if [ -z "$2" ]; then 
-  echo "error: target benchmark directory was not provided" 
-
-  exit 2
+  exit 1
 fi
 
-TARGET_BMK_DIR=$2
+if [ -z "$BMK_TARGET_DIR" -a ! -e "$BMK_TARGET_DIR" ]; then
+  echo "error: benchmark target dir was not provided or does not exist" >&2
+
+  exit 1
+fi
 
 
 # print configuration vars
 
 echo "info: printing configuration vars"
-echo "info: source benchmark dir: ${SOURCE_BMK_DIR}"
-echo "info: target benchmark dir: ${TARGET_BMK_DIR}"
+echo "info: benchmark config file: ${BMK_CONFIG_FILE}"
+echo "info: benchmark source dir: ${BMK_SOURCE_DIR}"
+echo "info: benchmark target dir: ${BMK_TARGET_DIR}"
 echo ""
 
 
+# operations
 
+readarray BENCHMARKS < ${BMK_CONFIG_FILE}
 
-for bmk in ${BENCHMARKS}; do
-  source_bmk="${SOURCE_BMK_DIR}/${bmk}/src"
-  [ ! -d ${source_bmk} ] && continue
+for BMK in ${BENCHMARKS}; do
+  BMK_SOURCE="${SOURCE_BMK_DIR}/${BMK}/src"
+  [ ! -d ${BMK_SOURCE} ] && continue
 
-  pushd "${TARGET_BMK_DIR}/${bmk}"
+  pushd "${BMK_TARGET_DIR}/${BMK}"
 
-  ln -sf ${source_bmk}
+  ln -sf ${BMK_SOURCE}
 
   popd
 done
