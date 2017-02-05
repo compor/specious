@@ -12,7 +12,7 @@
 458.sjeng
 462.libquantum
 464.h264ref
-70.lbm
+470.lbm
 471.omnetpp
 473.astar
 482.sphinx3
