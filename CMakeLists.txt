@@ -17,9 +17,9 @@ set(BENCHMARK_SOURCE_DIR "src")
 
 
 if(NOT BMK_CONFIG_FILE)
-  message(ERROR "Benchmark config file BMK_CONFIG_FILE is not set.")
+  message(FATAL_ERROR "Benchmark config file BMK_CONFIG_FILE is not set.")
 elseif(NOT EXISTS BMK_CONFIG_FILE)
-  message(ERROR "Benchmark config file does not exist: ${BMK_CONFIG_FILE}.")
+  message(FATAL_ERROR "Benchmark config file does not exist: ${BMK_CONFIG_FILE}.")
 endif()
 
 
