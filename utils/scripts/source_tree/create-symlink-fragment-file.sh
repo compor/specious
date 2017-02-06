@@ -82,15 +82,26 @@ echo ""
 
 # operations
 
+if [ "${CMAKE_FRAGMENT_FILE[0]}" != "/" ]; then 
+  CMAKE_FRAGMENT_FILE="$(pwd)/${CMAKE_FRAGMENT_FILE}"
+fi
+
 readarray BENCHMARKS < ${BMK_CONFIG_FILE}
 
 pushd ${BMK_DIR}
 
 for BMK in ${BENCHMARKS}; do
-  [ ! -d ${BMK} ] && continue
+  # trim whitespace
+  BMK=$(echo $BMK | xargs)
 
-  pushd ${BMK}/src/
-    ln -sf ../../../${CMAKE_FRAGMENT_FILE} ${CMAKE_FRAGMENT_FILE}
+  [ -z ${BMK} ] && continue
+
+  BMK_SUBDIR=${BMK_DIR}/${BMK}
+
+  [ ! -d ${BMK_SUBDIR} ] && continue
+
+  pushd ${BMK_SUBDIR}
+    ln -sf ${CMAKE_FRAGMENT_FILE}
   popd
 done
 
