@@ -112,7 +112,10 @@ for BMK in "${BENCHMARKS[@]}"; do
 
     pushd "${BMK_TARGET_DIR}/${BMK}"
 
-    ln -sf ${CURRENT_BMK_SUBDIR}
+    SUBDIR_PREFIX=""
+    [ "${BMK_TARGET_DIR[0]}" != "/" ] && SUBDIR_PREFIX="../../"
+
+    ln -sf ${SUBDIR_PREFIX}${CURRENT_BMK_SUBDIR}
 
     popd
   done
