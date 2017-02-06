@@ -98,9 +98,16 @@ echo ""
 
 readarray BENCHMARKS < ${BMK_CONFIG_FILE}
 
-for BMK in "${BENCHMARKS}"; do
+for BMK in "${BENCHMARKS[@]}"; do
+  # trim whitespace
+  BMK=$(echo $BMK | xargs)
+
   for BMK_SUBDIR in "${BMK_SUBDIRS[@]}"; do
+    # trim whitespace
+    BMK_SUBDIR=$(echo $BMK_SUBDIR | xargs)
+
     CURRENT_BMK_SUBDIR="${BMK_SOURCE_DIR}/${BMK}/${BMK_SUBDIR}"
+
     [ ! -d ${CURRENT_BMK_SUBDIR} ] && continue
 
     pushd "${BMK_TARGET_DIR}/${BMK}"
