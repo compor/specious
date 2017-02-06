@@ -110,7 +110,10 @@ for BMK in "${BENCHMARKS[@]}"; do
     # trim whitespace
     BMK_SUBDIR=$(echo $BMK_SUBDIR | xargs)
 
+    [ -z ${BMK_SUBDIR} ] && continue
+
     BMK_SUBDIR="${BMK_SOURCE_DIR}/${BMK}/${BMK_SUBDIR}"
+    echo \"$BMK_SUBDIR\"
 
     [ ! -d ${BMK_SUBDIR} ] && continue
 
