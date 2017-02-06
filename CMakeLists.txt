@@ -17,9 +17,9 @@ set(BENCHMARK_SOURCE_DIR "src")
 
 
 if(NOT BMK_CONFIG_FILE)
-  message(FATAL_ERROR "Benchmark config file BMK_CONFIG_FILE is not set.")
-elseif(NOT EXISTS BMK_CONFIG_FILE)
-  message(FATAL_ERROR "Benchmark config file does not exist: ${BMK_CONFIG_FILE}.")
+  message(FATAL_ERROR "Benchmark config file BMK_CONFIG_FILE is not set")
+elseif(NOT EXISTS ${BMK_CONFIG_FILE})
+  message(FATAL_ERROR "Benchmark config file does not exist: ${BMK_CONFIG_FILE}")
 endif()
 
 
@@ -78,7 +78,7 @@ message(STATUS "CXX compiler: ${CMAKE_CXX_COMPILER}")
 
 file(STRINGS ${BMK_CONFIG_FILE} BENCHMARKS)
 
-foreach(BMK IN BENCHMARKS)
+foreach(BMK ${BENCHMARKS})
   add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/CPU2006/${BMK}/)
 endforeach()
 
