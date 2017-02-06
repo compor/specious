@@ -76,7 +76,7 @@ message(STATUS "C compiler: ${CMAKE_C_COMPILER}")
 message(STATUS "CXX compiler: ${CMAKE_CXX_COMPILER}")
 
 
-file(STRINGS ${BMK_CONFIG_FILE})
+file(STRINGS ${BMK_CONFIG_FILE} BENCHMARKS)
 
 foreach(BMK IN BENCHMARKS)
   add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/CPU2006/${BMK}/)
