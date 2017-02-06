@@ -98,15 +98,17 @@ echo ""
 
 readarray BENCHMARKS < ${BMK_CONFIG_FILE}
 
-for BMK in ${BENCHMARKS}; do
-  BMK_SOURCE="${SOURCE_BMK_DIR}/${BMK}/src"
-  [ ! -d ${BMK_SOURCE} ] && continue
+for BMK in "${BENCHMARKS}"; do
+  for BMK_SUBDIR in "${BMK_SUBDIRS[@]}"; do
+    CURRENT_BMK_SUBDIR="${BMK_SOURCE_DIR}/${BMK}/${BMK_SUBDIR}"
+    [ ! -d ${CURRENT_BMK_SUBDIR} ] && continue
 
-  pushd "${BMK_TARGET_DIR}/${BMK}"
+    pushd "${BMK_TARGET_DIR}/${BMK}"
 
-  ln -sf ${BMK_SOURCE}
+    ln -sf ${CURRENT_BMK_SUBDIR}
 
-  popd
+    popd
+  done
 done
 
 
