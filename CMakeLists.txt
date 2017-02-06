@@ -16,6 +16,13 @@ set(PROJECT_CMAKE_FRAGMENT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/cmake/fragments/")
 set(BENCHMARK_SOURCE_DIR "src")
 
 
+if(NOT BMK_CONFIG_FILE)
+  message(ERROR "Benchmark config file BMK_CONFIG_FILE is not set.")
+elseif(NOT EXISTS BMK_CONFIG_FILE)
+  message(ERROR "Benchmark config file does not exist: ${BMK_CONFIG_FILE}.")
+endif()
+
+
 if(USE_LLVM)
   find_package(LLVM REQUIRED CONFIG)
 endif()
@@ -69,32 +76,11 @@ message(STATUS "C compiler: ${CMAKE_C_COMPILER}")
 message(STATUS "CXX compiler: ${CMAKE_CXX_COMPILER}")
 
 
+file(STRINGS ${BMK_CONFIG_FILE})
 
-# UN/COMMENT DESIRED BENCHMARKS
-
-# c projects
-#add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/CPU2006/400.perlbench/)
-#add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/CPU2006/401.bzip2/)
-#add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/CPU2006/403.gcc/)
-#add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/CPU2006/429.mcf/)
-#add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/CPU2006/433.milc/)
-#add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/CPU2006/445.gobmk/)
-#add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/CPU2006/456.hmmer/)
-#add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/CPU2006/462.libquantum/)
-#add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/CPU2006/464.h264ref/)
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/CPU2006/470.lbm/)
-#add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/CPU2006/482.sphinx3/)
-#add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/CPU2006/998.specrand/)
-#add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/CPU2006/999.specrand/)
-
-# cxx projects
-#add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/CPU2006/444.namd/)
-#add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/CPU2006/447.dealII/)
-#add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/CPU2006/450.soplex/)
-#add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/CPU2006/453.povray/)
-#add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/CPU2006/471.omnetpp/)
-#add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/CPU2006/473.astar/)
-#add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/CPU2006/483.xalancbmk/)
+foreach(BMK IN BENCHMARKS)
+  add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/CPU2006/${BMK}/)
+endforeach()
 
 
 # installation
