@@ -96,6 +96,10 @@ echo ""
 
 # operations
 
+if [ "${BMK_SOURCE_DIR[0]}" != "/" ]; then 
+  BMK_SOURCE_DIR="$(pwd)/${BMK_SOURCE_DIR}"
+fi
+
 readarray BENCHMARKS < ${BMK_CONFIG_FILE}
 
 for BMK in "${BENCHMARKS[@]}"; do
@@ -106,16 +110,13 @@ for BMK in "${BENCHMARKS[@]}"; do
     # trim whitespace
     BMK_SUBDIR=$(echo $BMK_SUBDIR | xargs)
 
-    CURRENT_BMK_SUBDIR="${BMK_SOURCE_DIR}/${BMK}/${BMK_SUBDIR}"
+    BMK_SUBDIR="${BMK_SOURCE_DIR}/${BMK}/${BMK_SUBDIR}"
 
-    [ ! -d ${CURRENT_BMK_SUBDIR} ] && continue
+    [ ! -d ${BMK_SUBDIR} ] && continue
 
     pushd "${BMK_TARGET_DIR}/${BMK}"
 
-    SUBDIR_PREFIX=""
-    [ "${BMK_TARGET_DIR[0]}" != "/" ] && SUBDIR_PREFIX="../../"
-
-    ln -sf ${SUBDIR_PREFIX}${CURRENT_BMK_SUBDIR}
+    ln -sf ${BMK_SUBDIR}
 
     popd
   done
