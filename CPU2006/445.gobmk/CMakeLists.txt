@@ -84,7 +84,7 @@ set_target_properties(${PROJECT_NAME} PROPERTIES LINKER_LANGUAGE C)
 target_include_directories(${PROJECT_NAME} PUBLIC
   "${CMAKE_CURRENT_SOURCE_DIR}/${BENCHMARK_SOURCE_DIR}")
 target_include_directories(${PROJECT_NAME} PUBLIC
-  "${CMAKE_CURRENT_SOURCE_DIR}/include/")
+  "${CMAKE_CURRENT_SOURCE_DIR}/${BENCHMARK_SOURCE_DIR}/include/")
 
 target_link_libraries(${PROJECT_NAME} m)
 
