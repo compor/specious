@@ -6,7 +6,7 @@ attach_llvmir_target(${PROJECT_NAME}_bc ${PROJECT_NAME})
 
 attach_llvmir_opt_pass_target(${PROJECT_NAME}_loopcanon
   ${PROJECT_NAME}_bc
-  -mem2reg -simplifycfg -loop-simplify)
+  -mem2reg -mergereturn -simplifycfg -loop-simplify)
 
 attach_llvmir_link_target(${PROJECT_NAME}_loopcanon_link
   ${PROJECT_NAME}_loopcanon)
