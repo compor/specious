@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
 
+# internal vars
+
+OUTS='/dev/stdout'
+ERRS='/dev/stderr'
+
+
 # initialize configuration vars
 
 SHOW_HELP=0
@@ -11,7 +17,7 @@ BMK_SUBDIRS=""
 
 # parse and check cmd line options
 
-CMDOPTS=":c:s:t:l:h"
+CMDOPTS=":c:s:t:l:qh"
 
 CMD_ARGS_DEFAULT=("-l src")
 
@@ -24,6 +30,7 @@ HELP_STRING="Usage: ${0} OPTIONS
 -t dir     benchmark target directory
 -l subdir  benchmark subdir (use multiple times for more than one subdirs)
            default value: src
+-q         silent mode (no output)
 -h         help
 "
 
@@ -41,15 +48,19 @@ while getopts ${CMDOPTS} cmdopt "${SCRIPT_ARGS[@]}"; do
     l)
       BMK_SUBDIRS=("${BMK_SUBDIRS[@]}" "${OPTARG}")
       ;;
+    q)
+      OUTS="/dev/null"
+      ERRS="/dev/null"
+      ;;
     h)
       SHOW_HELP=1
       ;;
     \?)
-      echo "error: invalid option: -$OPTARG" >&2
+      echo "error: invalid option: -$OPTARG" > $ERRS
       exit 1
       ;;
     :)
-      echo "error: option -$OPTARG requires an argument" >&2
+      echo "error: option -$OPTARG requires an argument" > $ERRS
       exit 1
       ;;
   esac
@@ -57,25 +68,25 @@ done
 
 
 if [ "$SHOW_HELP" -ne 0 ]; then
-  echo "$HELP_STRING" >&2
+  echo "$HELP_STRING" > $ERRS
 
   exit 0
 fi
 
-if [ -z "$BMK_CONFIG_FILE" -a ! -e "$BMK_CONFIG_FILE" ]; then
-  echo "error: benchmark config file was not provided or does not exist" >&2
+if [ -z "$BMK_CONFIG_FILE" -o ! -e "$BMK_CONFIG_FILE" ]; then
+  echo "error: benchmark config file was not provided or does not exist" > $ERRS
 
   exit 1
 fi
 
-if [ -z "$BMK_SOURCE_DIR" -a ! -e "$BMK_SOURCE_DIR" ]; then
-  echo "error: benchmark source dir was not provided or does not exist" >&2
+if [ -z "$BMK_SOURCE_DIR" -o ! -e "$BMK_SOURCE_DIR" ]; then
+  echo "error: benchmark source dir was not provided or does not exist" > $ERRS
 
   exit 1
 fi
 
-if [ -z "$BMK_TARGET_DIR" -a ! -e "$BMK_TARGET_DIR" ]; then
-  echo "error: benchmark target dir was not provided or does not exist" >&2
+if [ -z "$BMK_TARGET_DIR" -o ! -e "$BMK_TARGET_DIR" ]; then
+  echo "error: benchmark target dir was not provided or does not exist" > $ERRS
 
   exit 1
 fi
@@ -83,20 +94,24 @@ fi
 
 # print configuration vars
 
-echo "info: printing configuration vars"
-echo "info: benchmark config file: ${BMK_CONFIG_FILE}"
-echo "info: benchmark source dir: ${BMK_SOURCE_DIR}"
-echo "info: benchmark target dir: ${BMK_TARGET_DIR}"
-echo -n "info: benchmark subdirs: "
+INFO_STR="\
+info: printing configuration vars
+info: benchmark config file: ${BMK_CONFIG_FILE}
+info: benchmark source dir: ${BMK_SOURCE_DIR}
+info: benchmark target dir: ${BMK_TARGET_DIR}
+info: benchmark subdirs: 
+"
+
+echo "$INFO_STR" > $OUTS
 for BMK_SUBDIR in ${BMK_SUBDIRS[@]}; do 
-  echo -n "${BMK_SUBDIR} "
+  echo -n "${BMK_SUBDIR} " > $OUTS
 done
-echo ""
 
 
 # operations
 
-if [ "${BMK_SOURCE_DIR[0]}" != "/" ]; then 
+# check if out dir location is given in relative form
+if [ "${BMK_SOURCE_DIR}" == "${BMK_SOURCE_DIR#/}" ]; then 
   BMK_SOURCE_DIR="$(pwd)/${BMK_SOURCE_DIR}"
 fi
 
@@ -113,15 +128,15 @@ for BMK in "${BENCHMARKS[@]}"; do
     [ -z ${BMK_SUBDIR} ] && continue
 
     BMK_SUBDIR="${BMK_SOURCE_DIR}/${BMK}/${BMK_SUBDIR}"
-    echo \"$BMK_SUBDIR\"
+    echo "${BMK_SUBDIR}" > $OUTS
 
     [ ! -d ${BMK_SUBDIR} ] && continue
 
-    pushd "${BMK_TARGET_DIR}/${BMK}"
+    pushd "${BMK_TARGET_DIR}/${BMK}" > $OUTS
 
     ln -sf ${BMK_SUBDIR}
 
-    popd
+    popd > $OUTS
   done
 done
 
