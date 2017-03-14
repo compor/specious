@@ -1,16 +1,58 @@
 # cmake file fragment
 
-# attachments on first target
+# configuration
 
-attach_llvmir_target(${PROJECT_NAME}_bc ${PROJECT_NAME})
+set(PIPELINE_NAME "loopcanon")
+set(PIPELINE_PREFIX "${PROJECT_NAME}_${PIPELINE_NAME}")
 
-attach_llvmir_opt_pass_target(${PROJECT_NAME}_loopcanon
-  ${PROJECT_NAME}_bc
-  -mem2reg -mergereturn -simplifycfg -loop-simplify)
+set(PIPELINE_INSTALL_TARGET "${PIPELINE_NAME}-install")
+set(PIPELINE_LOCAL_INSTALL_TARGET "${PIPELINE_NAME}-${PROJECT_NAME}-install")
 
-attach_llvmir_link_target(${PROJECT_NAME}_loopcanon_link
-  ${PROJECT_NAME}_loopcanon)
+set(PIPELINE_LOCAL_DEST_DIR ${CMAKE_INSTALL_PREFIX}/CPU2006/${BMK_NAME}/llvm-ir)
 
-attach_llvmir_executable(${PROJECT_NAME}_loopcanon_bc_exe ${PROJECT_NAME}_loopcanon_link)
-target_link_libraries(${PROJECT_NAME}_loopcanon_bc_exe m)
+
+# pipeline of attachments on first target
+
+#
+# expected target name under PROJECT_NAME variable
+#
+
+attach_llvmir_target(${PIPELINE_PREFIX}_bc ${PROJECT_NAME})
+
+attach_llvmir_opt_pass_target(${PIPELINE_PREFIX}_opt
+  ${PIPELINE_PREFIX}_bc
+  -mem2reg 
+  -mergereturn 
+  -simplifycfg 
+  -loop-simplify)
+
+attach_llvmir_link_target(${PROJECT_NAME}_${PIPELINE_NAME}_link
+  ${PIPELINE_PREFIX}_opt)
+
+attach_llvmir_executable(${PIPELINE_PREFIX}_bc_exe 
+  ${PIPELINE_PREFIX}_link)
+
+target_link_libraries(${PIPELINE_PREFIX}_bc_exe m)
+
+
+# installation
+
+#
+# the dummy global target that aggregates the local targets must be added only
+# once, although this fragment file is added by each benchmark cmake file
+#
+
+if(NOT TARGET ${PIPELINE_INSTALL_TARGET})
+  add_custom_target(${PIPELINE_INSTALL_TARGET})
+endif()
+
+
+get_property(CUR_LLVMIR_DIR TARGET ${PIPELINE_PREFIX}_link 
+  PROPERTY LLVMIR_DIR)
+
+add_custom_target(${PIPELINE_LOCAL_INSTALL_TARGET}
+  COMMAND ${CMAKE_COMMAND} -E
+  copy_directory ${CUR_LLVMIR_DIR} ${PIPELINE_LOCAL_DEST_DIR})
+
+add_dependencies(${PIPELINE_INSTALL_TARGET} ${PIPELINE_LOCAL_INSTALL_TARGET})
 
