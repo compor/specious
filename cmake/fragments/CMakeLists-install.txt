@@ -2,7 +2,9 @@
 
 # attachments on first target
 
-install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION ${BMK_NAME}/exe/)
+set(DEST_DIR "CPU2006/${BMK_NAME}")
 
-install(DIRECTORY "./data" DESTINATION ${BMK_NAME})
+install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION ${DEST_DIR}/exe/)
+
+install(DIRECTORY "./data" DESTINATION ${DEST_DIR})
 
