@@ -85,4 +85,6 @@ endforeach()
 # installation
 
 install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/utils/invocations" DESTINATION .)
+install(DIRECTORY 
+  "${CMAKE_CURRENT_SOURCE_DIR}/utils/scripts/install_tree/" DESTINATION scripts)
 
