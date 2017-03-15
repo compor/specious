@@ -19,17 +19,13 @@ BMK_SUBDIRS=""
 
 CMDOPTS=":c:s:t:l:qh"
 
-CMD_ARGS_DEFAULT=("-l src")
-
-SCRIPT_ARGS=("${@}" "${CMD_ARGS_DEFAULT[@]}")
-
-HELP_STRING="Usage: ${0} OPTIONS
+HELP_STRING="\
+Usage: ${0} OPTIONS
 
 -c file    benchmark config file
 -s dir     benchmark source directory
 -t dir     benchmark target directory
 -l subdir  benchmark subdir (use multiple times for more than one subdirs)
-           default value: src
 -q         silent mode (no output)
 -h         help
 "
