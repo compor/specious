@@ -56,7 +56,7 @@ set(SOURCES
   Hostname.c
   Opcode.c)
 
-add_prefix(SOURCES "${BENCHMARK_SOURCE_DIR}/" "${SOURCES}")
+add_prefix(SOURCES "${PROJECT_BMK_SOURCE_SUBDIR}/" "${SOURCES}")
 
 add_executable(${PROJECT_NAME} ${SOURCES})
 
@@ -66,7 +66,7 @@ add_definitions(-DPERL_CORE)
 set_target_properties(${PROJECT_NAME} PROPERTIES LINKER_LANGUAGE C)
 
 target_include_directories(${PROJECT_NAME} PUBLIC
-  "${CMAKE_CURRENT_SOURCE_DIR}/${BENCHMARK_SOURCE_DIR}")
+  "${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_BMK_SOURCE_SUBDIR}")
 
 target_link_libraries(${PROJECT_NAME} m)
 

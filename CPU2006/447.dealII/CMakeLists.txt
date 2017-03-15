@@ -121,7 +121,7 @@ set(SOURCES
   polynomials_bdm.cc
   polynomials_p.cc)
 
-add_prefix(SOURCES "${BENCHMARK_SOURCE_DIR}/" "${SOURCES}")
+add_prefix(SOURCES "${PROJECT_BMK_SOURCE_SUBDIR}/" "${SOURCES}")
 
 add_executable(${PROJECT_NAME} ${SOURCES})
 
@@ -132,9 +132,9 @@ add_definitions(-DBOOST_DISABLE_THREADS)
 add_definitions(-Ddeal_II_dimension=3)
 
 target_include_directories(${PROJECT_NAME} PUBLIC
-  "${CMAKE_CURRENT_SOURCE_DIR}/${BENCHMARK_SOURCE_DIR}")
+  "${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_BMK_SOURCE_SUBDIR}")
 target_include_directories(${PROJECT_NAME} PUBLIC
-  "${CMAKE_CURRENT_SOURCE_DIR}/${BENCHMARK_SOURCE_DIR}/include/")
+  "${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_BMK_SOURCE_SUBDIR}/include/")
 
 target_link_libraries(${PROJECT_NAME} m)
 

@@ -17,7 +17,7 @@ include(Specious-Utils)
 
 option(PROJECT_USE_LLVM "use LLVM bitcode processing tools" OFF)
 
-set(BENCHMARK_SOURCE_DIR "src")
+set(PROJECT_BMK_SOURCE_SUBDIR "src")
 
 # aggregate list variables for appending commands 
 # per each benchmark without editing each cmake file separately
