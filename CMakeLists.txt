@@ -88,3 +88,18 @@ install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/utils/invocations" DESTINATION .)
 install(DIRECTORY 
   "${CMAKE_CURRENT_SOURCE_DIR}/utils/scripts/install_tree/" DESTINATION scripts)
 
+
+set(PROJECT_BUILD_TREE_SCRIPTS_SRC_DIR
+  "${CMAKE_CURRENT_SOURCE_DIR}/utils/scripts/build_tree/")
+
+set(PROJECT_BUILD_TREE_SCRIPTS_DEST_DIR
+  "${CMAKE_CURRENT_BINARY_DIR}/scripts/")
+
+add_custom_target(install-build-scripts 
+  ALL
+  COMMAND ${CMAKE_COMMAND} -E copy_directory 
+  ${PROJECT_BUILD_TREE_SCRIPTS_SRC_DIR}
+  ${PROJECT_BUILD_TREE_SCRIPTS_DEST_DIR}
+  COMMENT "copying build-tree related scripts")
+
+
