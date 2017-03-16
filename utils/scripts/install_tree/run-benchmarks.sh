@@ -30,7 +30,7 @@ Usage: ${0} OPTIONS
 -h         help
 "
 
-while getopts ${CMDOPTS} cmdopt "${SCRIPT_ARGS[@]}"; do
+while getopts ${CMDOPTS} cmdopt; do
   case $cmdopt in
     c)
       BMK_CONFIG_FILE=$OPTARG
