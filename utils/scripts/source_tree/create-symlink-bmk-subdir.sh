@@ -2,6 +2,8 @@
 
 # internal vars
 
+OP_MODE_STR="create symlinks"
+
 OUTS='/dev/stdout'
 ERRS='/dev/stderr'
 
@@ -9,6 +11,7 @@ ERRS='/dev/stderr'
 # initialize configuration vars
 
 SHOW_HELP=0
+BMK_RM_LINKS=0
 BMK_CONFIG_FILE=""
 BMK_SOURCE_DIR=""
 BMK_TARGET_DIR=""
@@ -17,7 +20,7 @@ BMK_SUBDIRS=""
 
 # parse and check cmd line options
 
-CMDOPTS=":c:s:t:l:qh"
+CMDOPTS=":c:s:t:l:Rqh"
 
 HELP_STRING="\
 Usage: ${0} OPTIONS
@@ -26,11 +29,12 @@ Usage: ${0} OPTIONS
 -s dir     benchmark source directory
 -t dir     benchmark target directory
 -l subdir  benchmark subdir (use multiple times for more than one subdirs)
+-R         remove symlinks to subdirs (default is adding symlinks)
 -q         silent mode (no output)
 -h         help
 "
 
-while getopts ${CMDOPTS} cmdopt "${SCRIPT_ARGS[@]}"; do
+while getopts ${CMDOPTS} cmdopt; do
   case $cmdopt in
     c)
       BMK_CONFIG_FILE=$OPTARG
@@ -43,6 +47,10 @@ while getopts ${CMDOPTS} cmdopt "${SCRIPT_ARGS[@]}"; do
       ;;
     l)
       BMK_SUBDIRS=("${BMK_SUBDIRS[@]}" "${OPTARG}")
+      ;;
+    R)
+      BMK_RM_LINKS=1
+      OP_MODE_STR="remove symlinks"
       ;;
     q)
       OUTS="/dev/null"
@@ -87,21 +95,27 @@ if [ -z "$BMK_TARGET_DIR" -o ! -e "$BMK_TARGET_DIR" ]; then
   exit 1
 fi
 
+if [ -z "${BMK_SUBDIRS[@]}" ]; then
+  echo "error: benchmark subdirs were not provided" > $ERRS
+
+  exit 1
+fi
 
 # print configuration vars
 
 INFO_STR="\
 info: printing configuration vars
+info: operation mode: ${OP_MODE_STR}
 info: benchmark config file: ${BMK_CONFIG_FILE}
 info: benchmark source dir: ${BMK_SOURCE_DIR}
 info: benchmark target dir: ${BMK_TARGET_DIR}
-info: benchmark subdirs: 
-"
+info: benchmark subdirs: "
 
-echo "$INFO_STR" > $OUTS
+echo -n "$INFO_STR" > $OUTS
 for BMK_SUBDIR in ${BMK_SUBDIRS[@]}; do 
   echo -n "${BMK_SUBDIR} " > $OUTS
 done
+echo ""
 
 
 # operations
@@ -123,14 +137,14 @@ for BMK in "${BENCHMARKS[@]}"; do
 
     [ -z ${BMK_SUBDIR} ] && continue
 
-    BMK_SUBDIR="${BMK_SOURCE_DIR}/${BMK}/${BMK_SUBDIR}"
-    echo "${BMK_SUBDIR}" > $OUTS
+    ABSOLUTE_BMK_SUBDIR="${BMK_SOURCE_DIR}/${BMK}/${BMK_SUBDIR}"
+    echo "${ABSOLUTE_BMK_SUBDIR}" > $OUTS
 
-    [ ! -d ${BMK_SUBDIR} ] && continue
+    [ ! -d ${ABSOLUTE_BMK_SUBDIR} ] && continue
 
     pushd "${BMK_TARGET_DIR}/${BMK}" > $OUTS
 
-    ln -sf ${BMK_SUBDIR}
+    ln -sf ${ABSOLUTE_BMK_SUBDIR}
 
     popd > $OUTS
   done
