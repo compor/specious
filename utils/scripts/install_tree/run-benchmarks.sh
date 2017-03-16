@@ -126,20 +126,21 @@ for BMK in ${BENCHMARKS[@]}; do
 
   BMK_EXE=${BMK##*.} # cut off the numbers ###.bmk
 
-  #pushd ${BMK_INSTALL_DIR}/CPU2006/${BMK} > $OUTS
-
   # read command args file
   BMK_ARGS_FILE=${BMK_DATA_DIR}/invocations/${BMK_DATA_TYPE}/${BMK}.${BMK_DATA_TYPE}.cmd
   IFS=$'\n' read -d '' -r -a BMK_ARGS < ${BMK_ARGS_FILE}
 
   echo "running ${BMK}" > $OUTS
 
-  pushd ${BMK_DATA_DIR}/CPU2006/${BMK}/data/${BMK_DATA_TYPE}/input/
+  # this cur working directory change is essentially bound to the way each
+  # benchmark is invoked by the corresponding arguments file 
+  # the downside is that any output file is created in the input date location
+  pushd ${BMK_DATA_DIR}/CPU2006/${BMK}/data/${BMK_DATA_TYPE}/input/ > $OUTS
 
   echo "${BMK_EXE} ${BMK_DATA_TYPE}" > $OUTS
   eval ${BMK_INSTALL_DIR}/CPU2006/${BMK}/exe/${BMK_EXE} ${BMK_ARGS}
 
-  popd
+  popd > $OUTS
 done
 
 
