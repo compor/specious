@@ -36,6 +36,8 @@ set(PROJECT_BUILD_TREE_SCRIPTS_DEST_DIR
 set(PROJECT_INSTALL_TREE_SCRIPTS_DIR
   "${CMAKE_CURRENT_SOURCE_DIR}/utils/scripts/install_tree/")
 
+set(PROJECT_CONFIGS_DIR "${CMAKE_CURRENT_SOURCE_DIR}/configs")
+
 set(PROJECT_INVOCATIONS_DIR 
   "${CMAKE_CURRENT_SOURCE_DIR}/utils/invocations")
 
@@ -112,6 +114,7 @@ endforeach()
 # installation
 
 install(DIRECTORY ${PROJECT_INVOCATIONS_DIR} DESTINATION .)
+install(DIRECTORY ${PROJECT_CONFIGS_DIR} DESTINATION .)
 install(DIRECTORY ${PROJECT_INSTALL_TREE_SCRIPTS_DIR} DESTINATION scripts)
 
 add_custom_target(install-build-scripts 
