@@ -112,7 +112,7 @@ info: benchmark target dir: ${BMK_TARGET_DIR}
 info: benchmark subdirs: "
 
 echo -n "$INFO_STR" > $OUTS
-for BMK_SUBDIR in ${BMK_SUBDIRS[@]}; do 
+for BMK_SUBDIR in ${BMK_SUBDIRS[@]}; do
   echo -n "${BMK_SUBDIR} " > $OUTS
 done
 echo ""
@@ -121,7 +121,7 @@ echo ""
 # operations
 
 # check if out dir location is given in relative form
-if [ "${BMK_SOURCE_DIR}" == "${BMK_SOURCE_DIR#/}" ]; then 
+if [ "${BMK_SOURCE_DIR}" == "${BMK_SOURCE_DIR#/}" ]; then
   BMK_SOURCE_DIR="$(pwd)/${BMK_SOURCE_DIR}"
 fi
 
@@ -131,23 +131,41 @@ for BMK in "${BENCHMARKS[@]}"; do
   # trim whitespace
   BMK=$(echo $BMK | xargs)
 
-  for BMK_SUBDIR in "${BMK_SUBDIRS[@]}"; do
-    # trim whitespace
-    BMK_SUBDIR=$(echo $BMK_SUBDIR | xargs)
+  # 2 modes of operation
+  if [ "$BMK_RM_LINKS" -eq 0 ]; then
+    # mode: create symlinks, if targets exist
 
-    [ -z ${BMK_SUBDIR} ] && continue
+    for BMK_SUBDIR in "${BMK_SUBDIRS[@]}"; do
+      # trim whitespace
+      BMK_SUBDIR=$(echo $BMK_SUBDIR | xargs)
 
-    ABSOLUTE_BMK_SUBDIR="${BMK_SOURCE_DIR}/${BMK}/${BMK_SUBDIR}"
-    echo "${ABSOLUTE_BMK_SUBDIR}" > $OUTS
+      [ -z ${BMK_SUBDIR} ] && continue
 
-    [ ! -d ${ABSOLUTE_BMK_SUBDIR} ] && continue
+      ABSOLUTE_BMK_SUBDIR="${BMK_SOURCE_DIR}/${BMK}/${BMK_SUBDIR}"
+      echo "${ABSOLUTE_BMK_SUBDIR}" > $OUTS
 
-    pushd "${BMK_TARGET_DIR}/${BMK}" > $OUTS
+      [ ! -d ${ABSOLUTE_BMK_SUBDIR} ] && continue
 
-    ln -sf ${ABSOLUTE_BMK_SUBDIR}
+      pushd "${BMK_TARGET_DIR}/${BMK}" > $OUTS
 
-    popd > $OUTS
-  done
+      ln -sf ${ABSOLUTE_BMK_SUBDIR}
+
+      popd > $OUTS
+    done
+  else
+    # mode: remove symlinks
+
+    for BMK_SUBDIR in "${BMK_SUBDIRS[@]}"; do
+      # trim whitespace
+      BMK_SUBDIR=$(echo $BMK_SUBDIR | xargs)
+
+      pushd "${BMK_TARGET_DIR}/${BMK}" > $OUTS
+
+      [ -L "${BMK_SUBDIR}" ] && rm -f "${BMK_SUBDIR}"
+
+      popd > $OUTS
+    done
+  fi
 done
 
 
