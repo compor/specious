@@ -4,11 +4,15 @@ cmake_minimum_required(VERSION 3.0)
 
 project(spec-cpu2006 C CXX)
 
-message(STATUS "C compiler: ${CMAKE_C_COMPILER}")
-message(STATUS "CXX compiler: ${CMAKE_CXX_COMPILER}")
-
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/")
 include(Specious-Utils)
+include(Specious-Version)
+
+get_version(SPECIOUS_VERSION)
+message(STATUS "Specious harness version: ${SPECIOUS_VERSION}")
+
+message(STATUS "C compiler: ${CMAKE_C_COMPILER}")
+message(STATUS "CXX compiler: ${CMAKE_CXX_COMPILER}")
 
 
 #
