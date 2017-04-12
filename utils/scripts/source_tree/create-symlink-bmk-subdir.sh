@@ -15,7 +15,7 @@ BMK_RM_LINKS=0
 BMK_CONFIG_FILE=""
 BMK_SOURCE_DIR=""
 BMK_TARGET_DIR=""
-BMK_SUBDIRS=""
+declare -a BMK_SUBDIRS
 
 
 # parse and check cmd line options
@@ -95,7 +95,7 @@ if [ -z "$BMK_TARGET_DIR" -o ! -e "$BMK_TARGET_DIR" ]; then
   exit 1
 fi
 
-if [ -z "${BMK_SUBDIRS}" ]; then
+if [ "${BMK_SUBDIRS[@]}" -eq 0 ]; then
   echo "error: benchmark subdirs were not provided" > $ERRS
 
   exit 1
