@@ -6,7 +6,7 @@ set(PROJECT_NAME "gcc")
 check_bmk_processing(hasSrcDir)
 
 if(NOT ${hasSrcDir})
-  message(status "skipping project: ${PROJECT_NAME}") 
+  message(STATUS "skipping project: ${PROJECT_NAME}") 
   return()
 endif()
 
