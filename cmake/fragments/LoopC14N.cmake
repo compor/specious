@@ -2,61 +2,58 @@
 
 # configuration
 
-set(PIPELINE_NAME "loopcanon")
-set(PIPELINE_PREFIX "${PROJECT_NAME}_${PIPELINE_NAME}")
+set(PIPELINE_NAME "loopc14n")
+add_custom_target(${PIPELINE_NAME})
 
 set(PIPELINE_INSTALL_TARGET "${PIPELINE_NAME}-install")
-set(PIPELINE_LOCAL_INSTALL_TARGET "${PIPELINE_NAME}-${PROJECT_NAME}-install")
-
-set(PIPELINE_LOCAL_DEST_DIR ${CMAKE_INSTALL_PREFIX}/CPU2006/${BMK_NAME}/llvm-ir)
+add_custom_target(${PIPELINE_INSTALL_TARGET})
 
 
-# pipeline of attachments on first target
+function(AttachLoopC14NPipeline trgt)
+  set(PIPELINE_SUBTARGET "${PIPELINE_NAME}_${trgt}")
+  set(PIPELINE_PREFIX ${PIPELINE_SUBTARGET})
 
-#
-# expected target name under PROJECT_NAME variable
-#
+  ## pipeline targets and chaining
+  attach_llvmir_bc_target(${PIPELINE_PREFIX}_bc ${trgt})
+  add_dependencies(${PIPELINE_PREFIX}_bc ${trgt})
 
-attach_llvmir_bc_target(${PIPELINE_PREFIX}_bc ${PROJECT_NAME})
-add_dependencies(${PIPELINE_PREFIX}_bc ${PROJECT_NAME})
+  attach_llvmir_opt_pass_target(${PIPELINE_PREFIX}_opt
+    ${PIPELINE_PREFIX}_bc
+    -mem2reg
+    -mergereturn
+    -simplifycfg
+    -loop-simplify)
+  add_dependencies(${PIPELINE_PREFIX}_opt ${PIPELINE_PREFIX}_bc)
 
-attach_llvmir_opt_pass_target(${PIPELINE_PREFIX}_opt
-  ${PIPELINE_PREFIX}_bc
-  -mem2reg
-  -mergereturn
-  -simplifycfg
-  -loop-simplify)
-add_dependencies(${PIPELINE_PREFIX}_opt ${PIPELINE_PREFIX}_bc)
+  attach_llvmir_link_target(${PIPELINE_PREFIX}_link ${PIPELINE_PREFIX}_opt)
+  add_dependencies(${PIPELINE_PREFIX}_link ${PIPELINE_PREFIX}_opt)
 
-attach_llvmir_link_target(${PROJECT_NAME}_${PIPELINE_NAME}_link
-  ${PIPELINE_PREFIX}_opt)
-add_dependencies(${PROJECT_NAME}_${PIPELINE_NAME}_link ${PIPELINE_PREFIX}_opt)
+  attach_llvmir_executable(${PIPELINE_PREFIX}_bc_exe ${PIPELINE_PREFIX}_link)
+  add_dependencies(${PIPELINE_PREFIX}_bc_exe ${PIPELINE_PREFIX}_link)
 
-attach_llvmir_executable(${PIPELINE_PREFIX}_bc_exe
-  ${PIPELINE_PREFIX}_link)
-add_dependencies(${PIPELINE_PREFIX}_bc_exe ${PIPELINE_PREFIX}_link)
+  target_link_libraries(${PIPELINE_PREFIX}_bc_exe m)
 
-target_link_libraries(${PIPELINE_PREFIX}_bc_exe m)
+  ## pipeline aggregate targets
+  add_custom_target(${PIPELINE_SUBTARGET} DEPENDS
+    ${PIPELINE_PREFIX}_bc
+    ${PIPELINE_PREFIX}_opt
+    ${PIPELINE_PREFIX}_link
+    ${PIPELINE_PREFIX}_bc_exe)
 
-
-# installation
-
-#
-# the dummy global target that aggregates the local targets must be added only
-# once, although this fragment file is added by each benchmark cmake file
-#
-
-if(NOT TARGET ${PIPELINE_INSTALL_TARGET})
-  add_custom_target(${PIPELINE_INSTALL_TARGET})
-endif()
+  add_dependencies(${PIPELINE_NAME} ${PIPELINE_SUBTARGET})
 
 
-get_property(CUR_LLVMIR_DIR TARGET ${PIPELINE_PREFIX}_link
-  PROPERTY LLVMIR_DIR)
+  # installation
+  get_property(bmk_name TARGET ${trgt} PROPERTY BMK_NAME)
+  get_property(llvmir_dir TARGET ${PIPELINE_PREFIX}_link PROPERTY LLVMIR_DIR)
 
-add_custom_target(${PIPELINE_LOCAL_INSTALL_TARGET}
-  COMMAND ${CMAKE_COMMAND} -E
-  copy_directory ${CUR_LLVMIR_DIR} ${PIPELINE_LOCAL_DEST_DIR})
+  set(PIPELINE_INSTALL_SUBTARGET "${PIPELINE_NAME}_${trgt}-install")
+  set(PIPELINE_DEST_SUBDIR ${CMAKE_INSTALL_PREFIX}/CPU2006/${bmk_name}/llvm-ir)
 
-add_dependencies(${PIPELINE_INSTALL_TARGET} ${PIPELINE_LOCAL_INSTALL_TARGET})
+  add_custom_target(${PIPELINE_INSTALL_SUBTARGET}
+    COMMAND ${CMAKE_COMMAND} -E
+    copy_directory ${llvmir_dir} ${PIPELINE_DEST_SUBDIR})
+
+  add_dependencies(${PIPELINE_INSTALL_TARGET} ${PIPELINE_INSTALL_SUBTARGET})
+endfunction()
 

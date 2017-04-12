@@ -66,24 +66,18 @@ if(PROJECT_USE_LLVM)
 endif()
 
 
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/fragments")
+include(BmkBasicInstall)
+
+if(LLVM_IR_UTIL_FOUND)
+  #include(BasicBitcodeGen)
+  include(LoopC14N)
+endif()
+
+
 #
 # project user options
 #
-
-#set(PROJECT_BMK_CONFIG_FILE "")
-
-# EDIT FRAGMENT FILES SECTION START
-
-if(LLVM_IR_UTIL_FOUND)
-  list(APPEND PROJECT_LLVMIR_CMAKE_FRAGMENT_FILES
-    "${PROJECT_CMAKE_FRAGMENT_DIR}/LoopC14N.cmake")
-endif()
-
-list(APPEND PROJECT_END_CMAKE_FRAGMENT_FILES 
-  "${PROJECT_CMAKE_FRAGMENT_DIR}/BmkBasicInstall.cmake")
-
-# EDIT FRAGMENT FILES SECTION END
-
 
 # project user options checks and processing
 
@@ -107,6 +101,7 @@ list(APPEND PROJECT_CMAKE_FRAGMENT_FILES
 file(STRINGS ${PROJECT_BMK_CONFIG_FILE} BENCHMARKS)
 
 foreach(BMK ${BENCHMARKS})
+  message(STATUS "adding subdir: ${BMK}")
   add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/CPU2006/${BMK}/)
 endforeach()
 

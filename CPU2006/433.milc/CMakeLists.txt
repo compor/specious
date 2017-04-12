@@ -90,14 +90,24 @@ add_definitions(-DDSLASH_TMP_LINKS)
 add_definitions(-DFAST)
 add_definitions(-DFN)
 
-# this property is required by our parasitic targets
-set_target_properties(${PROJECT_NAME} PROPERTIES LINKER_LANGUAGE C)
-
 target_include_directories(${PROJECT_NAME} PUBLIC
   "${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_BMK_SOURCE_SUBDIR}")
 
 target_link_libraries(${PROJECT_NAME} m)
 
 
-include_fragments("${PROJECT_CMAKE_FRAGMENT_FILES}")
+# this property is required by our parasitic targets
+set_target_properties(${PROJECT_NAME} PROPERTIES LINKER_LANGUAGE C)
+
+# this property is used internally by our harness 
+# because benchmark names and their main targets have different names
+set_target_properties(${PROJECT_NAME} PROPERTIES BMK_NAME ${BMK_NAME})
+
+if(COMMAND SetupBmkBasicInstall)
+  SetupBmkBasicInstall(${PROJECT_NAME})
+endif()
+
+if(COMMAND AttachLoopC14NPipeline)
+  AttachLoopC14NPipeline(${PROJECT_NAME})
+endif()
 
