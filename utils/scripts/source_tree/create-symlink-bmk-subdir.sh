@@ -95,7 +95,7 @@ if [ -z "$BMK_TARGET_DIR" -o ! -e "$BMK_TARGET_DIR" ]; then
   exit 1
 fi
 
-if [ "${BMK_SUBDIRS[@]}" -eq 0 ]; then
+if [ "${#BMK_SUBDIRS[@]}" -eq 0 ]; then
   echo "error: benchmark subdirs were not provided" > $ERRS
 
   exit 1
