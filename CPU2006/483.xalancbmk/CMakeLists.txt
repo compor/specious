@@ -3,6 +3,13 @@
 set(BMK_NAME "483.xalancbmk")
 set(PROJECT_NAME "xalancbmk")
 
+check_bmk_processing(hasSrcDir)
+
+if(NOT ${hasSrcDir})
+  message(STATUS "skipping project: ${PROJECT_NAME}") 
+  return()
+endif()
+
 set(SOURCES
   AIXPlatformUtils.cpp
   CSetDefs.cpp

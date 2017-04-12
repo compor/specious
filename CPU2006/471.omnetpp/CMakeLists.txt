@@ -3,6 +3,13 @@
 set(BMK_NAME "471.omnetpp")
 set(PROJECT_NAME "omnetpp")
 
+check_bmk_processing(hasSrcDir)
+
+if(NOT ${hasSrcDir})
+  message(STATUS "skipping project: ${PROJECT_NAME}") 
+  return()
+endif()
+
 set(SOURCES
   EtherAppCli.cc
   EtherAppCli_n.cc

@@ -62,10 +62,6 @@ if(PROJECT_USE_LLVM)
       "${CMAKE_CURRENT_SOURCE_DIR}/cmake/llvm-ir-cmake-utils/cmake/")
 
     include(LLVM-IR-Util RESULT_VARIABLE LLVM_IR_UTIL_FOUND)
-
-    if(LLVM_IR_UTIL_FOUND)
-      message(STATUS "LLVM IR Utils version: ${LLVM_IR_UTIL_VERSION_STRING}")
-    endif()
   endif()
 endif()
 

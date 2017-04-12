@@ -3,6 +3,13 @@
 set(BMK_NAME "401.bzip2")
 set(PROJECT_NAME "bzip2")
 
+check_bmk_processing(hasSrcDir)
+
+if(NOT ${hasSrcDir})
+  message(STATUS "skipping project: ${PROJECT_NAME}") 
+  return()
+endif()
+
 set(SOURCES
   spec.c
   blocksort.c

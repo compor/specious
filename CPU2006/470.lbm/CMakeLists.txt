@@ -3,10 +3,16 @@
 set(BMK_NAME "470.lbm")
 set(PROJECT_NAME lbm)
 
+check_bmk_processing(hasSrcDir)
+
+if(NOT ${hasSrcDir})
+  message(STATUS "skipping project: ${PROJECT_NAME}") 
+  return()
+endif()
+
 set(SOURCES
   lbm.c
   main.c)
-
 
 add_prefix(SOURCES "${PROJECT_BMK_SOURCE_SUBDIR}/" "${SOURCES}")
 

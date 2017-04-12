@@ -3,6 +3,13 @@
 set(BMK_NAME "400.perlbench")
 set(PROJECT_NAME "perlbench")
 
+check_bmk_processing(hasSrcDir)
+
+if(NOT ${hasSrcDir})
+  message(STATUS "skipping project: ${PROJECT_NAME}") 
+  return()
+endif()
+
 set(SOURCES
   av.c
   deb.c

@@ -3,6 +3,13 @@
 set(BMK_NAME "445.gobmk")
 set(PROJECT_NAME "gobmk")
 
+check_bmk_processing(hasSrcDir)
+
+if(NOT ${hasSrcDir})
+  message(STATUS "skipping project: ${PROJECT_NAME}") 
+  return()
+endif()
+
 set(SOURCES
   sgf/sgf_utils.c
   sgf/sgftree.c

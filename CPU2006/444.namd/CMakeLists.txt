@@ -3,6 +3,13 @@
 set(BMK_NAME "444.namd")
 set(PROJECT_NAME "namd")
 
+check_bmk_processing(hasSrcDir)
+
+if(NOT ${hasSrcDir})
+  message(STATUS "skipping project: ${PROJECT_NAME}") 
+  return()
+endif()
+
 set(SOURCES
   Compute.C
   ComputeList.C

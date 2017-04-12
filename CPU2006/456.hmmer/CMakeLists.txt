@@ -3,6 +3,13 @@
 set(BMK_NAME "456.hmmer")
 set(PROJECT_NAME "hmmer")
 
+check_bmk_processing(hasSrcDir)
+
+if(NOT ${hasSrcDir})
+  message(STATUS "skipping project: ${PROJECT_NAME}") 
+  return()
+endif()
+
 set(SOURCES
   alphabet.c
   core_algorithms.c

@@ -3,6 +3,13 @@
 set(BMK_NAME "403.gcc")
 set(PROJECT_NAME "gcc")
 
+check_bmk_processing(hasSrcDir)
+
+if(NOT ${hasSrcDir})
+  message(status "skipping project: ${PROJECT_NAME}") 
+  return()
+endif()
+
 set(SOURCES
   alloca.c
   asprintf.c

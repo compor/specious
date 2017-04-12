@@ -3,6 +3,13 @@
 set(BMK_NAME "453.povray")
 set(PROJECT_NAME povray)
 
+check_bmk_processing(hasSrcDir)
+
+if(NOT ${hasSrcDir})
+  message(STATUS "skipping project: ${PROJECT_NAME}") 
+  return()
+endif()
+
 set(SOURCES
   atmosph.cpp
   bbox.cpp

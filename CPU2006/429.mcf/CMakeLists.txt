@@ -3,6 +3,13 @@
 set(BMK_NAME "429.mcf")
 set(PROJECT_NAME "mcf")
 
+check_bmk_processing(hasSrcDir)
+
+if(NOT ${hasSrcDir})
+  message(STATUS "skipping project: ${PROJECT_NAME}") 
+  return()
+endif()
+
 set(SOURCES
   mcf.c
   mcfutil.c

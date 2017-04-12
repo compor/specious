@@ -3,6 +3,13 @@
 set(BMK_NAME "447.dealII")
 set(PROJECT_NAME "dealII")
 
+check_bmk_processing(hasSrcDir)
+
+if(NOT ${hasSrcDir})
+  message(STATUS "skipping project: ${PROJECT_NAME}") 
+  return()
+endif()
+
 set(SOURCES
   auto_derivative_function.cc
   block_sparse_matrix.cc

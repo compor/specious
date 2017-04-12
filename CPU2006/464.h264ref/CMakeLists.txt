@@ -3,6 +3,13 @@
 set(BMK_NAME "464.h264ref")
 set(PROJECT_NAME "h264ref")
 
+check_bmk_processing(hasSrcDir)
+
+if(NOT ${hasSrcDir})
+  message(STATUS "skipping project: ${PROJECT_NAME}") 
+  return()
+endif()
+
 set(SOURCES
   annexb.c
   biariencode.c
