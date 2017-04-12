@@ -45,15 +45,28 @@ function(AttachLoopC14NPipeline trgt)
 
   # installation
   get_property(bmk_name TARGET ${trgt} PROPERTY BMK_NAME)
-  get_property(llvmir_dir TARGET ${PIPELINE_PREFIX}_link PROPERTY LLVMIR_DIR)
 
-  set(PIPELINE_INSTALL_SUBTARGET "${PIPELINE_NAME}_${trgt}-install")
-  set(PIPELINE_DEST_SUBDIR ${CMAKE_INSTALL_PREFIX}/CPU2006/${bmk_name}/llvm-ir)
+  InstallLoopC14NPipelineLLVMIR(${PIPELINE_PREFIX}_link ${bmk_name})
+endfunction()
 
-  add_custom_target(${PIPELINE_INSTALL_SUBTARGET}
+
+function(InstallLoopC14NPipelineLLVMIR pipeline_part_trgt bmk_name)
+  get_property(llvmir_dir TARGET ${pipeline_part_trgt} PROPERTY LLVMIR_DIR)
+
+  # strip trailing slashes
+  string(REGEX REPLACE "(.*[^/]+)(//*)$" "\\1" llvmir_stripped_dir ${llvmir_dir})
+  get_filename_component(llvmir_part_dir ${llvmir_stripped_dir} NAME)
+
+  set(PIPELINE_DEST_SUBDIR
+    ${CMAKE_INSTALL_PREFIX}/CPU2006/${bmk_name}/llvm-ir/${llvmir_part_dir})
+
+  set(PIPELINE_PART_INSTALL_TARGET "${pipeline_part_trgt}-install")
+
+  add_custom_target(${PIPELINE_PART_INSTALL_TARGET}
     COMMAND ${CMAKE_COMMAND} -E
     copy_directory ${llvmir_dir} ${PIPELINE_DEST_SUBDIR})
 
-  add_dependencies(${PIPELINE_INSTALL_TARGET} ${PIPELINE_INSTALL_SUBTARGET})
+  add_dependencies(${PIPELINE_PART_INSTALL_TARGET} ${pipeline_part_trgt})
+  add_dependencies(${PIPELINE_INSTALL_TARGET} ${PIPELINE_PART_INSTALL_TARGET})
 endfunction()
 
