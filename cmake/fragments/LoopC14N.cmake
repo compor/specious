@@ -18,19 +18,23 @@ set(PIPELINE_LOCAL_DEST_DIR ${CMAKE_INSTALL_PREFIX}/CPU2006/${BMK_NAME}/llvm-ir)
 #
 
 attach_llvmir_bc_target(${PIPELINE_PREFIX}_bc ${PROJECT_NAME})
+add_dependencies(${PIPELINE_PREFIX}_bc ${PROJECT_NAME})
 
 attach_llvmir_opt_pass_target(${PIPELINE_PREFIX}_opt
   ${PIPELINE_PREFIX}_bc
-  -mem2reg 
-  -mergereturn 
-  -simplifycfg 
+  -mem2reg
+  -mergereturn
+  -simplifycfg
   -loop-simplify)
+add_dependencies(${PIPELINE_PREFIX}_opt ${PIPELINE_PREFIX}_bc)
 
 attach_llvmir_link_target(${PROJECT_NAME}_${PIPELINE_NAME}_link
   ${PIPELINE_PREFIX}_opt)
+add_dependencies(${PROJECT_NAME}_${PIPELINE_NAME}_link ${PIPELINE_PREFIX}_opt)
 
-attach_llvmir_executable(${PIPELINE_PREFIX}_bc_exe 
+attach_llvmir_executable(${PIPELINE_PREFIX}_bc_exe
   ${PIPELINE_PREFIX}_link)
+add_dependencies(${PIPELINE_PREFIX}_bc_exe ${PIPELINE_PREFIX}_link)
 
 target_link_libraries(${PIPELINE_PREFIX}_bc_exe m)
 
@@ -47,7 +51,7 @@ if(NOT TARGET ${PIPELINE_INSTALL_TARGET})
 endif()
 
 
-get_property(CUR_LLVMIR_DIR TARGET ${PIPELINE_PREFIX}_link 
+get_property(CUR_LLVMIR_DIR TARGET ${PIPELINE_PREFIX}_link
   PROPERTY LLVMIR_DIR)
 
 add_custom_target(${PIPELINE_LOCAL_INSTALL_TARGET}
