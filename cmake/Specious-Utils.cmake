@@ -11,13 +11,6 @@ function(add_prefix outvar prefix files)
 endfunction()
 
 
-function(include_fragments fragments)
-  foreach(FRAGMENT ${fragments})
-    include(${FRAGMENT})
-  endforeach()
-endfunction()
-
-
 function(check_bmk_processing outvar)
   set(hasSrcDir FALSE)
 
