@@ -14,10 +14,10 @@ function(AttachLoopC14NPipeline trgt)
   set(PIPELINE_PREFIX ${PIPELINE_SUBTARGET})
 
   ## pipeline targets and chaining
-  attach_llvmir_bc_target(${PIPELINE_PREFIX}_bc ${trgt})
+  llvmir_attach_bc_target(${PIPELINE_PREFIX}_bc ${trgt})
   add_dependencies(${PIPELINE_PREFIX}_bc ${trgt})
 
-  attach_llvmir_opt_pass_target(${PIPELINE_PREFIX}_opt
+  llvmir_attach_opt_pass_target(${PIPELINE_PREFIX}_opt
     ${PIPELINE_PREFIX}_bc
     -mem2reg
     -mergereturn
@@ -25,10 +25,10 @@ function(AttachLoopC14NPipeline trgt)
     -loop-simplify)
   add_dependencies(${PIPELINE_PREFIX}_opt ${PIPELINE_PREFIX}_bc)
 
-  attach_llvmir_link_target(${PIPELINE_PREFIX}_link ${PIPELINE_PREFIX}_opt)
+  llvmir_attach_link_target(${PIPELINE_PREFIX}_link ${PIPELINE_PREFIX}_opt)
   add_dependencies(${PIPELINE_PREFIX}_link ${PIPELINE_PREFIX}_opt)
 
-  attach_llvmir_executable(${PIPELINE_PREFIX}_bc_exe ${PIPELINE_PREFIX}_link)
+  llvmir_attach_executable(${PIPELINE_PREFIX}_bc_exe ${PIPELINE_PREFIX}_link)
   add_dependencies(${PIPELINE_PREFIX}_bc_exe ${PIPELINE_PREFIX}_link)
 
   target_link_libraries(${PIPELINE_PREFIX}_bc_exe m)

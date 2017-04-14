@@ -61,7 +61,7 @@ if(PROJECT_USE_LLVM)
     list(APPEND CMAKE_MODULE_PATH 
       "${CMAKE_CURRENT_SOURCE_DIR}/cmake/llvm-ir-cmake-utils/cmake/")
 
-    include(LLVM-IR-Util RESULT_VARIABLE LLVM_IR_UTIL_FOUND)
+    include(LLVMIRUtil RESULT_VARIABLE LLVM_IR_UTIL_FOUND)
   endif()
 endif()
 
