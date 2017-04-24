@@ -26,6 +26,10 @@ def icc_report_parse():
             parts = line.split()
             file_details = parts[3]
 
+        # skip files that do not belong to the benchmark suite
+        if not re.search(benchmark_name, file_details):
+            continue
+
         if re.search(loop_end, line):
             is_top_level_loop = True
         
