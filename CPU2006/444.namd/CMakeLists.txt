@@ -40,10 +40,8 @@ set_target_properties(${PROJECT_NAME} PROPERTIES LINKER_LANGUAGE CXX)
 # because benchmark names and their main targets have different names
 set_target_properties(${PROJECT_NAME} PROPERTIES BMK_NAME ${BMK_NAME})
 
-if(COMMAND SetupBmkBasicInstall)
-  SetupBmkBasicInstall(${PROJECT_NAME})
-endif()
 
-if(COMMAND AttachLoopC14NPipeline)
-  AttachLoopC14NPipeline(${PROJECT_NAME})
-endif()
+foreach(FRAGMENT ${PROJECT_CMAKE_FRAGMENT_FILES})
+  include(${FRAGMENT})
+endforeach()
+

@@ -23,6 +23,8 @@ option(PROJECT_USE_LLVM "use LLVM bitcode processing tools" OFF)
 
 set(PROJECT_BMK_SOURCE_SUBDIR "src")
 
+set(PROJECT_CMAKE_PIPELINE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/cmake/pipelines/")
+
 # aggregate list variables for appending commands 
 # per each benchmark without editing each cmake file separately
 set(PROJECT_CMAKE_FRAGMENT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/cmake/fragments/")
@@ -82,7 +84,9 @@ if(CMAKE_C_COMPILER_ID STREQUAL "Intel"
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${ICC_FLAGS}")
 endif()
 
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/fragments")
+list(APPEND CMAKE_MODULE_PATH "${PROJECT_CMAKE_PIPELINE_DIR}")
+list(APPEND CMAKE_MODULE_PATH "${PROJECT_CMAKE_FRAGMENT_DIR}")
+
 include(BmkBasicInstall)
 
 if(LLVM_IR_UTIL_FOUND)
@@ -109,10 +113,7 @@ endif()
 #
 
 # concatenate fragment lists
-
-list(APPEND PROJECT_CMAKE_FRAGMENT_FILES
-  "${PROJECT_LLVMIR_CMAKE_FRAGMENT_FILES}"
-  "${PROJECT_END_CMAKE_FRAGMENT_FILES}")
+set(PROJECT_CMAKE_FRAGMENT_FILES BasicFragment)
 
 file(STRINGS ${PROJECT_BMK_CONFIG_FILE} BENCHMARKS)
 
