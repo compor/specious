@@ -1,4 +1,4 @@
-# cmake file fragment
+# cmake file
 
 function(SetupBmkBasicInstall trgt)
   get_property(bmk_name TARGET ${trgt} PROPERTY BMK_NAME)

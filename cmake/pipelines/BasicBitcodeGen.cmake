@@ -1,4 +1,4 @@
-# cmake file fragment
+# cmake file
 
 llvmir_attach_bc_target(${PROJECT_NAME}_bc ${PROJECT_NAME})
 add_dependencies(${PROJECT_NAME}_bc ${PROJECT_NAME})

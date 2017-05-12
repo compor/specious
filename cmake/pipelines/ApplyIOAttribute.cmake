@@ -1,15 +1,29 @@
 # cmake file
 
+set(ApplyIOAttribute_DIR
+  "/home/vasich/Documents/workbench/installs/ApplyIOAttribute/share/cmake/"
+  CACHE STRING "ApplyIOAttribute path" FORCE)
+
+find_package(ApplyIOAttribute CONFIG)
+
+if(NOT ApplyIOAttribute_FOUND)
+  message(WARNING "package ApplyIOAttribute was not found; skipping.")
+
+  return()
+endif()
+
+get_target_property(AIOATTR_LIB_LOCATION LLVMApplyIOAttributePass LOCATION)
+
 # configuration
 
-set(PIPELINE_NAME "loopc14n")
+set(PIPELINE_NAME "ApplyIOAttribute")
 add_custom_target(${PIPELINE_NAME})
 
 set(PIPELINE_INSTALL_TARGET "${PIPELINE_NAME}-install")
 add_custom_target(${PIPELINE_INSTALL_TARGET})
 
 
-function(AttachLoopC14NPipeline trgt)
+function(ApplyIOAttributePipeline trgt)
   set(PIPELINE_SUBTARGET "${PIPELINE_NAME}_${trgt}")
   set(PIPELINE_PREFIX ${PIPELINE_SUBTARGET})
 
@@ -46,11 +60,11 @@ function(AttachLoopC14NPipeline trgt)
   # installation
   get_property(bmk_name TARGET ${trgt} PROPERTY BMK_NAME)
 
-  InstallLoopC14NPipelineLLVMIR(${PIPELINE_PREFIX}_link ${bmk_name})
+  InstallApplyIOAttributePipelineLLVMIR(${PIPELINE_PREFIX}_link ${bmk_name})
 endfunction()
 
 
-function(InstallLoopC14NPipelineLLVMIR pipeline_part_trgt bmk_name)
+function(InstallApplyIOAttributePipelineLLVMIR pipeline_part_trgt bmk_name)
   get_property(llvmir_dir TARGET ${pipeline_part_trgt} PROPERTY LLVMIR_DIR)
 
   # strip trailing slashes
@@ -69,4 +83,5 @@ function(InstallLoopC14NPipelineLLVMIR pipeline_part_trgt bmk_name)
   add_dependencies(${PIPELINE_PART_INSTALL_TARGET} ${pipeline_part_trgt})
   add_dependencies(${PIPELINE_INSTALL_TARGET} ${PIPELINE_PART_INSTALL_TARGET})
 endfunction()
+
 

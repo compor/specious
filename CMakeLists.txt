@@ -92,6 +92,7 @@ include(BmkBasicInstall)
 if(LLVM_IR_UTIL_FOUND)
   #include(BasicBitcodeGen)
   include(LoopC14N)
+  include(ApplyIOAttribute)
 endif()
 
 
