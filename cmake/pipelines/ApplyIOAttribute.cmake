@@ -36,27 +36,35 @@ function(ApplyIOAttributePipeline trgt)
   llvmir_attach_bc_target(${PIPELINE_PREFIX}_bc ${trgt})
   add_dependencies(${PIPELINE_PREFIX}_bc ${trgt})
 
-  llvmir_attach_opt_pass_target(${PIPELINE_PREFIX}_opt
+  llvmir_attach_opt_pass_target(${PIPELINE_PREFIX}_opt1
     ${PIPELINE_PREFIX}_bc
     -mem2reg
     -mergereturn
     -simplifycfg
     -loop-simplify)
-  add_dependencies(${PIPELINE_PREFIX}_opt ${PIPELINE_PREFIX}_bc)
+  add_dependencies(${PIPELINE_PREFIX}_opt1 ${PIPELINE_PREFIX}_bc)
 
-  llvmir_attach_link_target(${PIPELINE_PREFIX}_link ${PIPELINE_PREFIX}_opt)
-  add_dependencies(${PIPELINE_PREFIX}_link ${PIPELINE_PREFIX}_opt)
+  llvmir_attach_link_target(${PIPELINE_PREFIX}_link ${PIPELINE_PREFIX}_opt1)
+  add_dependencies(${PIPELINE_PREFIX}_link ${PIPELINE_PREFIX}_opt1)
 
-  llvmir_attach_executable(${PIPELINE_PREFIX}_bc_exe ${PIPELINE_PREFIX}_link)
-  add_dependencies(${PIPELINE_PREFIX}_bc_exe ${PIPELINE_PREFIX}_link)
+  llvmir_attach_opt_pass_target(${PIPELINE_PREFIX}_opt2
+    ${PIPELINE_PREFIX}_link
+    -load ${AIOATTR_LIB_LOCATION}
+    -apply-io-attribute
+    -aioattr-stats=${PROJECT_REPORT_DIR}/${BMK_NAME}-${PIPELINE_NAME}.txt)
+  add_dependencies(${PIPELINE_PREFIX}_opt2 ${PIPELINE_PREFIX}_link)
+
+  llvmir_attach_executable(${PIPELINE_PREFIX}_bc_exe ${PIPELINE_PREFIX}_opt2)
+  add_dependencies(${PIPELINE_PREFIX}_bc_exe ${PIPELINE_PREFIX}_opt2)
 
   target_link_libraries(${PIPELINE_PREFIX}_bc_exe m)
 
   ## pipeline aggregate targets
   add_custom_target(${PIPELINE_SUBTARGET} DEPENDS
     ${PIPELINE_PREFIX}_bc
-    ${PIPELINE_PREFIX}_opt
+    ${PIPELINE_PREFIX}_opt1
     ${PIPELINE_PREFIX}_link
+    ${PIPELINE_PREFIX}_opt2
     ${PIPELINE_PREFIX}_bc_exe)
 
   add_dependencies(${PIPELINE_NAME} ${PIPELINE_SUBTARGET})
