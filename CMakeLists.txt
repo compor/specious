@@ -90,7 +90,7 @@ list(APPEND CMAKE_MODULE_PATH "${PROJECT_CMAKE_FRAGMENT_DIR}")
 include(BmkBasicInstall)
 
 if(LLVM_IR_UTIL_FOUND)
-  #include(BasicBitcodeGen)
+  include(BasicBitcodeGen)
   include(LoopC14N)
   include(ApplyIOAttribute)
 endif()
