@@ -12,4 +12,7 @@ if(COMMAND AttachLoopC14NPipeline)
   AttachLoopC14NPipeline(${PROJECT_NAME})
 endif()
 
+if(COMMAND ApplyIOAttributePipeline)
+  ApplyIOAttributePipeline(${PROJECT_NAME})
+endif()
 
