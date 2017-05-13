@@ -2,14 +2,19 @@
 
 # configuration
 
-set(PIPELINE_NAME "loopc14n")
-add_custom_target(${PIPELINE_NAME})
-
-set(PIPELINE_INSTALL_TARGET "${PIPELINE_NAME}-install")
-add_custom_target(${PIPELINE_INSTALL_TARGET})
+macro(AttachLoopC14NPipelineSetup)
+  set(PIPELINE_NAME "loopc14n")
+  set(PIPELINE_INSTALL_TARGET "${PIPELINE_NAME}-install")
+endmacro()
 
 
 function(AttachLoopC14NPipeline trgt)
+  AttachLoopC14NPipelineSetup()
+
+  if(NOT TARGET ${PIPELINE_NAME})
+    add_custom_target(${PIPELINE_NAME})
+  endif()
+
   set(PIPELINE_SUBTARGET "${PIPELINE_NAME}_${trgt}")
   set(PIPELINE_PREFIX ${PIPELINE_SUBTARGET})
 
@@ -51,6 +56,12 @@ endfunction()
 
 
 function(InstallLoopC14NPipelineLLVMIR pipeline_part_trgt bmk_name)
+  AttachLoopC14NPipelineSetup()
+
+  if(NOT TARGET ${PIPELINE_INSTALL_TARGET})
+    add_custom_target(${PIPELINE_INSTALL_TARGET})
+  endif()
+
   get_property(llvmir_dir TARGET ${pipeline_part_trgt} PROPERTY LLVMIR_DIR)
 
   # strip trailing slashes

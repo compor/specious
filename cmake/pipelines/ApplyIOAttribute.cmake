@@ -16,14 +16,19 @@ get_target_property(AIOATTR_LIB_LOCATION LLVMApplyIOAttributePass LOCATION)
 
 # configuration
 
-set(PIPELINE_NAME "ApplyIOAttribute")
-add_custom_target(${PIPELINE_NAME})
-
-set(PIPELINE_INSTALL_TARGET "${PIPELINE_NAME}-install")
-add_custom_target(${PIPELINE_INSTALL_TARGET})
+macro(ApplyIOAttributePipelineSetup)
+  set(PIPELINE_NAME "ApplyIOAttribute")
+  set(PIPELINE_INSTALL_TARGET "${PIPELINE_NAME}-install")
+endmacro()
 
 
 function(ApplyIOAttributePipeline trgt)
+  ApplyIOAttributePipelineSetup()
+
+  if(NOT TARGET ${PIPELINE_NAME})
+    add_custom_target(${PIPELINE_NAME})
+  endif()
+
   set(PIPELINE_SUBTARGET "${PIPELINE_NAME}_${trgt}")
   set(PIPELINE_PREFIX ${PIPELINE_SUBTARGET})
 
@@ -65,6 +70,12 @@ endfunction()
 
 
 function(InstallApplyIOAttributePipelineLLVMIR pipeline_part_trgt bmk_name)
+  ApplyIOAttributePipelineSetup()
+
+  if(NOT TARGET ${PIPELINE_INSTALL_TARGET})
+    add_custom_target(${PIPELINE_INSTALL_TARGET})
+  endif()
+
   get_property(llvmir_dir TARGET ${pipeline_part_trgt} PROPERTY LLVMIR_DIR)
 
   # strip trailing slashes
