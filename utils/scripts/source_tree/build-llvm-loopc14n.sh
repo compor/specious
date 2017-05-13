@@ -28,7 +28,7 @@ BMK_CONFIG_FILE="${SRC_DIR}/configs/all_except_fortran.txt"
 
 # print configuration vars
 
-echo "info: printing configuation vars"
+echo "info: printing configuration vars"
 echo "info: source dir: ${SRC_DIR}"
 echo "info: install dir: ${INSTALL_PREFIX}"
 echo ""
@@ -48,8 +48,8 @@ CC=clang CXX=clang++ \
   -DCMAKE_SHARED_LINKER_FLAGS="${LINKER_FLAGS}" \
   -DCMAKE_MODULE_LINKER_FLAGS="${LINKER_FLAGS}" \
   -DCMAKE_INSTALL_PREFIX="${INSTALL_PREFIX}" \
-  -DPROJECT_USE_LLVM=On \
-  -DPROJECT_BMK_CONFIG_FILE=${BMK_CONFIG_FILE} \
+  -DHARNESS_USE_LLVM=On \
+  -DHARNESS_BMK_CONFIG_FILE=${BMK_CONFIG_FILE} \
   "${SRC_DIR}"
 
 

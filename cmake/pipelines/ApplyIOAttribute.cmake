@@ -51,7 +51,7 @@ function(ApplyIOAttributePipeline trgt)
     ${PIPELINE_PREFIX}_link
     -load ${AIOATTR_LIB_LOCATION}
     -apply-io-attribute
-    -aioattr-stats=${PROJECT_REPORT_DIR}/${BMK_NAME}-${PIPELINE_NAME}.txt)
+    -aioattr-stats=${HARNESS_REPORT_DIR}/${BMK_NAME}-${PIPELINE_NAME}.txt)
   add_dependencies(${PIPELINE_PREFIX}_opt2 ${PIPELINE_PREFIX}_link)
 
   llvmir_attach_executable(${PIPELINE_PREFIX}_bc_exe ${PIPELINE_PREFIX}_opt2)

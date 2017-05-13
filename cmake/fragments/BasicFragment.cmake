@@ -1,18 +1,18 @@
 # cmake file
 
 if(COMMAND SetupBmkBasicInstall)
-  SetupBmkBasicInstall(${PROJECT_NAME})
+  SetupBmkBasicInstall(${BMK_PROJECT_NAME})
 endif()
 
 if(COMMAND AttachBasicBitcodeGenPipeline)
-  AttachBasicBitcodeGenPipeline(${PROJECT_NAME})
+  AttachBasicBitcodeGenPipeline(${BMK_PROJECT_NAME})
 endif()
 
 if(COMMAND AttachLoopC14NPipeline)
-  AttachLoopC14NPipeline(${PROJECT_NAME})
+  AttachLoopC14NPipeline(${BMK_PROJECT_NAME})
 endif()
 
 if(COMMAND ApplyIOAttributePipeline)
-  ApplyIOAttributePipeline(${PROJECT_NAME})
+  ApplyIOAttributePipeline(${BMK_PROJECT_NAME})
 endif()
 
