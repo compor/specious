@@ -1,9 +1,5 @@
 # cmake file
 
-set(ApplyIOAttribute_DIR
-  "/home/vasich/Documents/workbench/installs/ApplyIOAttribute/share/cmake/"
-  CACHE STRING "ApplyIOAttribute path" FORCE)
-
 find_package(ApplyIOAttribute CONFIG)
 
 if(NOT ApplyIOAttribute_FOUND)
@@ -47,9 +43,13 @@ function(ApplyIOAttributePipeline trgt)
   llvmir_attach_link_target(${PIPELINE_PREFIX}_link ${PIPELINE_PREFIX}_opt1)
   add_dependencies(${PIPELINE_PREFIX}_link ${PIPELINE_PREFIX}_opt1)
 
-  set(PIPELINE_INPUT_FILE "$ENV{HARNESS_INPUT_DIR}/${BMK_NAME}/lol.txt")
-  if(EXISTS PIPELINE_INPUT_FILE)
+  set(PIPELINE_INPUT_FILE
+    "$ENV{HARNESS_INPUT_DIR}${BMK_NAME}/cxx_user_functions.txt")
+
+  if(EXISTS ${PIPELINE_INPUT_FILE})
     set(PIPELINE_CMDLINE_ARG "-aioattr-fn-whitelist=${PIPELINE_INPUT_FILE}")
+  else()
+    message(STATUS "could not find file: ${PIPELINE_INPUT_FILE}")
   endif()
 
   llvmir_attach_opt_pass_target(${PIPELINE_PREFIX}_opt2
