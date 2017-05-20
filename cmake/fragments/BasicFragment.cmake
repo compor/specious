@@ -16,3 +16,7 @@ if(COMMAND ApplyIOAttributePipeline)
   ApplyIOAttributePipeline(${BMK_PROJECT_NAME})
 endif()
 
+if(COMMAND PropagateAttributesPipeline)
+  PropagateAttributesPipeline(${BMK_PROJECT_NAME})
+endif()
+
