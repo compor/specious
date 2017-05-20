@@ -25,7 +25,7 @@ fi
 
 BMK_CONFIG_FILE="${SRC_DIR}/configs/all_except_fortran.txt"
 
-AIOATTR_DIR="/home/vasich/Documents/workbench/installs/ApplyIOAttribute/share/cmake/"
+AIOATTR_DIR="${HOME}/Documents/workbench/installs/ApplyIOAttribute/share/cmake/"
 
 
 # print configuration vars
