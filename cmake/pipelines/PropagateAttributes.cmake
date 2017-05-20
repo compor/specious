@@ -46,7 +46,7 @@ function(PropagateAttributesPipeline trgt)
   llvmir_attach_opt_pass_target(${PIPELINE_PREFIX}_opt2
     ${PIPELINE_PREFIX}_link
     -load ${PROPATTR_LIB_LOCATION}
-    -propagate-attributes -pattr-ti-attr=noreturn)
+    -propagate-attributes -pattr-ti-attr=noreturn -pattr-stats=pattr)
   add_dependencies(${PIPELINE_PREFIX}_opt2 ${PIPELINE_PREFIX}_link)
 
   llvmir_attach_executable(${PIPELINE_PREFIX}_bc_exe ${PIPELINE_PREFIX}_opt2)
