@@ -103,6 +103,7 @@ if(LLVM_IR_UTIL_FOUND)
   include(LoopC14N)
   include(ApplyIOAttribute)
   include(PropagateAttributes)
+  include(MixedPropagateAttributes)
 endif()
 
 

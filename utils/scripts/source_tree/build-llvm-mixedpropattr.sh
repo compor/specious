@@ -26,6 +26,7 @@ fi
 BMK_CONFIG_FILE="${SRC_DIR}/configs/all_except_fortran.txt"
 
 PROPATTR_DIR="/bulk/workbench/installs/PropagateAttributes/share/cmake/"
+AIOATTR_DIR="/bulk/workbench/installs/ApplyIOAttribute/share/cmake/"
 
 
 # print configuration vars
@@ -52,6 +53,7 @@ CC=clang CXX=clang++ \
   -DCMAKE_INSTALL_PREFIX="${INSTALL_PREFIX}" \
   -DHARNESS_USE_LLVM=On \
   -DHARNESS_BMK_CONFIG_FILE=${BMK_CONFIG_FILE} \
+  -DApplyIOAttribute_DIR=${AIOATTR_DIR} \
   -DPropagateAttributes_DIR=${PROPATTR_DIR} \
   "${SRC_DIR}"
 

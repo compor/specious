@@ -20,3 +20,7 @@ if(COMMAND PropagateAttributesPipeline)
   PropagateAttributesPipeline(${BMK_PROJECT_NAME})
 endif()
 
+if(COMMAND MixedPropagateAttributesPipeline)
+  MixedPropagateAttributesPipeline(${BMK_PROJECT_NAME})
+endif()
+
