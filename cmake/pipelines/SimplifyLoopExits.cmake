@@ -44,9 +44,13 @@ function(SimplifyLoopExitsPipeline trgt)
   add_dependencies(${PIPELINE_PREFIX}_link ${PIPELINE_PREFIX}_opt1)
 
   set(PIPELINE_INPUT_FILE1
-    "$ENV{HARNESS_INPUT_DIR}${BMK_NAME}/icsa-io.txt")
+    "$ENV{HARNESS_INPUT_DIR}${BMK_NAME}/PropagateAttributes-filtered-icsa-io.txt")
   set(PIPELINE_INPUT_FILE2
-    "$ENV{HARNESS_INPUT_DIR}${BMK_NAME}/noreturn.txt")
+    "$ENV{HARNESS_INPUT_DIR}${BMK_NAME}/PropagateAttributes-propagated-icsa-io.txt")
+  set(PIPELINE_INPUT_FILE3
+    "$ENV{HARNESS_INPUT_DIR}${BMK_NAME}/PropagateAttributes-filtered-noreturn.txt")
+  set(PIPELINE_INPUT_FILE4
+    "$ENV{HARNESS_INPUT_DIR}${BMK_NAME}/PropagateAttributes-propagated-noreturn.txt")
 
   #if(EXISTS ${PIPELINE_INPUT_FILE})
     #set(PIPELINE_CMDLINE_ARG "-aioattr-fn-whitelist=${PIPELINE_INPUT_FILE}")
@@ -57,9 +61,11 @@ function(SimplifyLoopExitsPipeline trgt)
   llvmir_attach_opt_pass_target(${PIPELINE_PREFIX}_opt2
     ${PIPELINE_PREFIX}_link
     -load ${SLE_LIB_LOCATION}
-    -classifyloopexits
+    -classify-loops
     -classify-loops-iofuncs=${PIPELINE_INPUT_FILE1}
-    -classify-loops-nlefuncs=${PIPELINE_INPUT_FILE2}
+    -classify-loops-iofuncs=${PIPELINE_INPUT_FILE2}
+    -classify-loops-nlefuncs=${PIPELINE_INPUT_FILE3}
+    -classify-loops-nlefuncs=${PIPELINE_INPUT_FILE4}
     -classify-loops-stats=${HARNESS_REPORT_DIR}/${BMK_NAME}-${PIPELINE_NAME}.txt)
   add_dependencies(${PIPELINE_PREFIX}_opt2 ${PIPELINE_PREFIX}_link)
 
