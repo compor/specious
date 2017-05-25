@@ -10,6 +10,8 @@ endif()
 
 get_target_property(SLE_LIB_LOCATION LLVMSimplifyLoopExitsPass LOCATION)
 
+set(DEPENDENCY_LIB_LOCATION "/bulk/workbench/installs/icsa-dswp/lib/libdswp.so")
+
 # configuration
 
 macro(SimplifyLoopExitsPipelineSetup)
@@ -58,8 +60,14 @@ function(SimplifyLoopExitsPipeline trgt)
     #message(STATUS "could not find file: ${PIPELINE_INPUT_FILE}")
   #endif()
 
+  set(LOAD_DEPENDENCY_CMDLINE_ARG "")
+  if(DEPENDENCY_LIB_LOCATION)
+    set(LOAD_DEPENDENCY_CMDLINE_ARG -load;${DEPENDENCY_LIB_LOCATION})
+  endif()
+
   llvmir_attach_opt_pass_target(${PIPELINE_PREFIX}_opt2
     ${PIPELINE_PREFIX}_link
+    ${LOAD_DEPENDENCY_CMDLINE_ARG}
     -load ${SLE_LIB_LOCATION}
     -classify-loops
     -classify-loops-iofuncs=${PIPELINE_INPUT_FILE1}
