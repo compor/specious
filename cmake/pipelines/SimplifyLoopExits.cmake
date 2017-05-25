@@ -9,8 +9,7 @@ if(NOT SimplifyLoopExits_FOUND)
 endif()
 
 get_target_property(SLE_LIB_LOCATION LLVMSimplifyLoopExitsPass LOCATION)
-
-set(DEPENDENCY_LIB_LOCATION "/bulk/workbench/installs/icsa-dswp/lib/libdswp.so")
+get_target_property(DEPENDEE LLVMSimplifyLoopExitsPass DEPENDEE)
 
 # configuration
 
@@ -61,8 +60,10 @@ function(SimplifyLoopExitsPipeline trgt)
   #endif()
 
   set(LOAD_DEPENDENCY_CMDLINE_ARG "")
-  if(DEPENDENCY_LIB_LOCATION)
-    set(LOAD_DEPENDENCY_CMDLINE_ARG -load;${DEPENDENCY_LIB_LOCATION})
+  if(DEPENDEE)
+    foreach(dep ${DEPENDEE})
+      list(APPEND LOAD_DEPENDENCY_CMDLINE_ARG -load;${dep})
+    endforeach()
   endif()
 
   llvmir_attach_opt_pass_target(${PIPELINE_PREFIX}_opt2
