@@ -104,8 +104,9 @@ if(LLVM_IR_UTIL_FOUND)
   include(ApplyIOAttribute)
   include(PropagateAttributes)
   include(MixedPropagateAttributes)
-  include(SimplifyLoopExits)
   include(AnnotateLoops)
+  include(SimplifyLoopExits)
+  include(SimplifyLoopExitsWithId)
 endif()
 
 

@@ -24,11 +24,14 @@ if(COMMAND MixedPropagateAttributesPipeline)
   MixedPropagateAttributesPipeline(${BMK_PROJECT_NAME})
 endif()
 
-if(COMMAND SimplifyLoopExitsPipeline)
-  SimplifyLoopExitsPipeline(${BMK_PROJECT_NAME})
-endif()
-
 if(COMMAND AnnotateLoopsPipeline)
   AnnotateLoopsPipeline(${BMK_PROJECT_NAME})
 endif()
 
+if(COMMAND SimplifyLoopExitsPipeline)
+  SimplifyLoopExitsPipeline(${BMK_PROJECT_NAME})
+endif()
+
+if(COMMAND SimplifyLoopExitsWithIdPipeline)
+  SimplifyLoopExitsWithIdPipeline(${BMK_PROJECT_NAME})
+endif()
