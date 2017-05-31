@@ -25,7 +25,12 @@ fi
 
 BMK_CONFIG_FILE="${SRC_DIR}/configs/all_except_fortran.txt"
 
-SLE_DIR="/bulk/workbench/installs/SimplifyLoopExits/share/cmake/"
+if [ -z ${SIMPLIFYLOOPEXITS_DIR+x} ]; then 
+  echo "error: SIMPLIFYLOOPEXITS_DIR is not set"
+
+  exit 2
+fi
+
 
 
 # print configuration vars
@@ -52,7 +57,7 @@ CC=clang CXX=clang++ \
   -DCMAKE_INSTALL_PREFIX="${INSTALL_PREFIX}" \
   -DHARNESS_USE_LLVM=On \
   -DHARNESS_BMK_CONFIG_FILE=${BMK_CONFIG_FILE} \
-  -DSimplifyLoopExits_DIR=${SLE_DIR} \
+  -DSimplifyLoopExits_DIR=${SIMPLIFYLOOPEXITS_DIR} \
   "${SRC_DIR}"
 
 
