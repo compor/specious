@@ -44,26 +44,6 @@ function(SimplifyLoopExitsPipeline trgt)
   llvmir_attach_link_target(${PIPELINE_PREFIX}_link ${PIPELINE_PREFIX}_opt1)
   add_dependencies(${PIPELINE_PREFIX}_link ${PIPELINE_PREFIX}_opt1)
 
-  create_file_cmdline_arg(CMDLINE_OPTION "-classify-loops-iofuncs"
-    FILENAME "$ENV{HARNESS_INPUT_DIR}${BMK_NAME}/PropagateAttributes-filtered-icsa-io.txt"
-    CMDLINE_ARG PIPELINE_CMDLINE_ARG1)
-
-  create_file_cmdline_arg(CMDLINE_OPTION "-classify-loops-iofuncs"
-    FILENAME "$ENV{HARNESS_INPUT_DIR}${BMK_NAME}/PropagateAttributes-propagated-icsa-io.txt"
-    CMDLINE_ARG PIPELINE_CMDLINE_ARG2)
-
-  create_file_cmdline_arg(CMDLINE_OPTION "-classify-loops-nlefuncs"
-    FILENAME "$ENV{HARNESS_INPUT_DIR}${BMK_NAME}/PropagateAttributes-filtered-noreturn.txt"
-    CMDLINE_ARG PIPELINE_CMDLINE_ARG3)
-
-  create_file_cmdline_arg(CMDLINE_OPTION "-classify-loops-nlefuncs"
-    FILENAME "$ENV{HARNESS_INPUT_DIR}${BMK_NAME}/PropagateAttributes-propagated-noreturn.txt"
-    CMDLINE_ARG PIPELINE_CMDLINE_ARG4)
-
-  create_file_cmdline_arg(CMDLINE_OPTION "-classify-loops-fn-whitelist"
-    FILENAME "$ENV{HARNESS_INPUT_DIR}${BMK_NAME}/cxx_user_functions.txt"
-    CMDLINE_ARG PIPELINE_CMDLINE_ARG5)
-
   set(LOAD_DEPENDENCY_CMDLINE_ARG "")
   if(DEPENDEE)
     foreach(dep ${DEPENDEE})
@@ -75,13 +55,10 @@ function(SimplifyLoopExitsPipeline trgt)
     ${PIPELINE_PREFIX}_link
     ${LOAD_DEPENDENCY_CMDLINE_ARG}
     -load ${SLE_LIB_LOCATION}
-    -classify-loops
-    ${PIPELINE_CMDLINE_ARG1}
-    ${PIPELINE_CMDLINE_ARG2}
-    ${PIPELINE_CMDLINE_ARG3}
-    ${PIPELINE_CMDLINE_ARG4}
-    ${PIPELINE_CMDLINE_ARG5}
-    -classify-loops-stats=${HARNESS_REPORT_DIR}/${BMK_NAME}-${PIPELINE_NAME}.txt)
+    -simplify-loop-exits
+    -sle-loop-depth-ub=1
+    -sle-loop-exiting-block-depth-ub=1
+    -sle-stats=${HARNESS_REPORT_DIR}/${BMK_NAME}-${PIPELINE_NAME}.txt)
   add_dependencies(${PIPELINE_PREFIX}_opt2 ${PIPELINE_PREFIX}_link)
 
   llvmir_attach_executable(${PIPELINE_PREFIX}_bc_exe ${PIPELINE_PREFIX}_opt2)
