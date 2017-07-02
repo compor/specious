@@ -1,15 +1,15 @@
 # cmake file
 
-find_package(SimplifyLoopExits CONFIG)
+find_package(SimplifyLoopExitsFront CONFIG)
 
-if(NOT SimplifyLoopExits_FOUND)
-  message(WARNING "package ClassifyLoops was not found; skipping.")
+if(NOT SimplifyLoopExitsFront_FOUND)
+  message(WARNING "package SimplifyLoopExitsFront was not found; skipping.")
 
   return()
 endif()
 
-get_target_property(SLE_LIB_LOCATION LLVMSimplifyLoopExitsPass LOCATION)
-get_target_property(DEPENDEE LLVMSimplifyLoopExitsPass DEPENDEE)
+get_target_property(SLEF_LIB_LOCATION LLVMSimplifyLoopExitsFrontPass LOCATION)
+get_target_property(DEPENDEE LLVMSimplifyLoopExitsFrontPass DEPENDEE)
 
 # configuration
 
@@ -32,19 +32,6 @@ function(SimplifyLoopExitsFrontPipeline trgt)
   set(DEPENDEE_TRGT "AnnotateLoops_${trgt}_opt2")
 
   ## pipeline targets and chaining
-  llvmir_attach_bc_target(${PIPELINE_PREFIX}_bc ${trgt})
-  add_dependencies(${PIPELINE_PREFIX}_bc ${trgt})
-
-  llvmir_attach_opt_pass_target(${PIPELINE_PREFIX}_opt1
-    ${PIPELINE_PREFIX}_bc
-    -mem2reg
-    -mergereturn
-    -simplifycfg
-    -loop-simplify)
-  add_dependencies(${PIPELINE_PREFIX}_opt1 ${PIPELINE_PREFIX}_bc)
-
-  llvmir_attach_link_target(${PIPELINE_PREFIX}_link ${PIPELINE_PREFIX}_opt1)
-  add_dependencies(${PIPELINE_PREFIX}_link ${PIPELINE_PREFIX}_opt1)
 
   set(LOAD_DEPENDENCY_CMDLINE_ARG "")
   if(DEPENDEE)
@@ -56,12 +43,11 @@ function(SimplifyLoopExitsFrontPipeline trgt)
   llvmir_attach_opt_pass_target(${PIPELINE_PREFIX}_link
     ${DEPENDEE_TRGT}
     ${LOAD_DEPENDENCY_CMDLINE_ARG}
-    -load ${SLE_LIB_LOCATION}
-    -simplify-loop-exits
+    -load ${SLEF_LIB_LOCATION}
+    -simplify-loop-exits-front
     -slef-loop-depth-ub=1
     -slef-loop-exiting-block-depth-ub=1
     -slef-stats=${HARNESS_REPORT_DIR}/${BMK_NAME}-${PIPELINE_NAME}.txt)
-  add_dependencies(${PIPELINE_PREFIX}_opt2 ${PIPELINE_PREFIX}_link)
 
   llvmir_attach_executable(${PIPELINE_PREFIX}_bc_exe ${PIPELINE_PREFIX}_link)
   add_dependencies(${PIPELINE_PREFIX}_bc_exe ${PIPELINE_PREFIX}_link)

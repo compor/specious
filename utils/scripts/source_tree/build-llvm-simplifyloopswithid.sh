@@ -31,8 +31,8 @@ if [ -z ${ANNOTATELOOPS_DIR+x} ]; then
   exit 2
 fi
 
-if [ -z ${SIMPLIFYLOOPEXITS_DIR+x} ]; then 
-  echo "error: SIMPLIFYLOOPEXITS_DIR is not set"
+if [ -z ${SIMPLIFYLOOPEXITSFRONT_DIR+x} ]; then 
+  echo "error: SIMPLIFYLOOPEXITSFRONT_DIR is not set"
 
   exit 2
 fi
@@ -64,7 +64,7 @@ CC=clang CXX=clang++ \
   -DHARNESS_USE_LLVM=On \
   -DHARNESS_BMK_CONFIG_FILE=${BMK_CONFIG_FILE} \
   -DAnnotateLoops_DIR=${ANNOTATELOOPS_DIR} \
-  -DSimplifyLoopExits_DIR=${SIMPLIFYLOOPEXITS_DIR} \
+  -DSimplifyLoopExitsFront_DIR=${SIMPLIFYLOOPEXITSFRONT_DIR} \
   "${SRC_DIR}"
 
 

@@ -3,7 +3,7 @@
 find_package(SimplifyLoopExits CONFIG)
 
 if(NOT SimplifyLoopExits_FOUND)
-  message(WARNING "package ClassifyLoops was not found; skipping.")
+  message(WARNING "package SimplifyLoopExits was not found; skipping.")
 
   return()
 endif()
