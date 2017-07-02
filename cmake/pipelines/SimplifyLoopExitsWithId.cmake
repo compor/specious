@@ -13,14 +13,14 @@ get_target_property(DEPENDEE LLVMSimplifyLoopExitsPass DEPENDEE)
 
 # configuration
 
-macro(SimplifyLoopExitsWithIdPipelineSetup)
-  set(PIPELINE_NAME "SimplifyLoopExitsWithId")
+macro(SimplifyLoopExitsFrontPipelineSetup)
+  set(PIPELINE_NAME "SimplifyLoopExitsFront")
   set(PIPELINE_INSTALL_TARGET "${PIPELINE_NAME}-install")
 endmacro()
 
 
-function(SimplifyLoopExitsWithIdPipeline trgt)
-  SimplifyLoopExitsWithIdPipelineSetup()
+function(SimplifyLoopExitsFrontPipeline trgt)
+  SimplifyLoopExitsFrontPipelineSetup()
 
   if(NOT TARGET ${PIPELINE_NAME})
     add_custom_target(${PIPELINE_NAME})
@@ -80,12 +80,12 @@ function(SimplifyLoopExitsWithIdPipeline trgt)
   # installation
   get_property(bmk_name TARGET ${trgt} PROPERTY BMK_NAME)
 
-  InstallSimplifyLoopExitsWithIdPipelineLLVMIR(${PIPELINE_PREFIX}_link ${bmk_name})
+  InstallSimplifyLoopExitsFrontPipelineLLVMIR(${PIPELINE_PREFIX}_link ${bmk_name})
 endfunction()
 
 
-function(InstallSimplifyLoopExitsWithIdPipelineLLVMIR pipeline_part_trgt bmk_name)
-  SimplifyLoopExitsWithIdPipelineSetup()
+function(InstallSimplifyLoopExitsFrontPipelineLLVMIR pipeline_part_trgt bmk_name)
+  SimplifyLoopExitsFrontPipelineSetup()
 
   if(NOT TARGET ${PIPELINE_INSTALL_TARGET})
     add_custom_target(${PIPELINE_INSTALL_TARGET})

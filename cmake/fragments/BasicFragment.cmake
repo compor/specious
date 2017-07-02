@@ -32,6 +32,6 @@ if(COMMAND SimplifyLoopExitsPipeline)
   SimplifyLoopExitsPipeline(${BMK_PROJECT_NAME})
 endif()
 
-if(COMMAND SimplifyLoopExitsWithIdPipeline)
-  SimplifyLoopExitsWithIdPipeline(${BMK_PROJECT_NAME})
+if(COMMAND SimplifyLoopExitsFrontPipeline)
+  SimplifyLoopExitsFrontPipeline(${BMK_PROJECT_NAME})
 endif()
