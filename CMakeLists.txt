@@ -109,6 +109,7 @@ if(LLVM_IR_UTIL_FOUND)
   include(ClassifyLoopsWithId)
   include(SimplifyLoopExits)
   include(SimplifyLoopExitsFront)
+  include(SimplifyLoopExitsFrontIterative)
 endif()
 
 

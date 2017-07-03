@@ -43,3 +43,7 @@ endif()
 if(COMMAND SimplifyLoopExitsFrontPipeline)
   SimplifyLoopExitsFrontPipeline(${BMK_PROJECT_NAME})
 endif()
+
+if(COMMAND SimplifyLoopExitsFrontIterativePipeline)
+  SimplifyLoopExitsFrontIterativePipeline(${BMK_PROJECT_NAME})
+endif()
