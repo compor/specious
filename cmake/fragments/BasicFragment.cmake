@@ -28,6 +28,14 @@ if(COMMAND AnnotateLoopsPipeline)
   AnnotateLoopsPipeline(${BMK_PROJECT_NAME})
 endif()
 
+if(COMMAND ClassifyLoopsPipeline)
+  ClassifyLoopsPipeline(${BMK_PROJECT_NAME})
+endif()
+
+if(COMMAND ClassifyLoopsWithIdPipeline)
+  ClassifyLoopsWithIdPipeline(${BMK_PROJECT_NAME})
+endif()
+
 if(COMMAND SimplifyLoopExitsPipeline)
   SimplifyLoopExitsPipeline(${BMK_PROJECT_NAME})
 endif()
