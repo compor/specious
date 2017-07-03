@@ -40,6 +40,15 @@ function(SimplifyLoopExitsFrontPipeline trgt)
     endforeach()
   endif()
 
+  set(PIPELINE_INPUT_FILE
+    "$ENV{HARNESS_INPUT_DIR}${BMK_NAME}/ClassifyLoopsWithId-multiexit_with_no_inner_loop_exits.txt")
+
+  if(EXISTS ${PIPELINE_INPUT_FILE})
+    set(PIPELINE_CMDLINE_ARG "-slef-loop-id-whitelist=${PIPELINE_INPUT_FILE}")
+  else()
+    message(STATUS "could not find file: ${PIPELINE_INPUT_FILE}")
+  endif()
+
   llvmir_attach_opt_pass_target(${PIPELINE_PREFIX}_link
     ${DEPENDEE_TRGT}
     ${LOAD_DEPENDENCY_CMDLINE_ARG}
@@ -47,7 +56,9 @@ function(SimplifyLoopExitsFrontPipeline trgt)
     -simplify-loop-exits-front
     -slef-loop-depth-ub=1
     -slef-loop-exiting-block-depth-ub=1
-    -slef-stats=${HARNESS_REPORT_DIR}/${BMK_NAME}-${PIPELINE_NAME}.txt)
+    ${PIPELINE_CMDLINE_ARG})
+
+  #-slef-stats=${HARNESS_REPORT_DIR}/${BMK_NAME}-${PIPELINE_NAME}.txt
 
   llvmir_attach_executable(${PIPELINE_PREFIX}_bc_exe ${PIPELINE_PREFIX}_link)
   add_dependencies(${PIPELINE_PREFIX}_bc_exe ${PIPELINE_PREFIX}_link)
