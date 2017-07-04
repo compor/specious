@@ -41,7 +41,7 @@ function(SimplifyLoopExitsFrontPipeline trgt)
   endif()
 
   set(PIPELINE_INPUT_FILE
-    "$ENV{HARNESS_INPUT_DIR}${BMK_NAME}/ClassifyLoopsWithId-multiexit_with_no_inner_loop_exits.txt")
+    "$ENV{HARNESS_INPUT_DIR}${BMK_NAME}/$ENV{SLEF_LOOP_ID_WHITELIST_FILE}")
 
   if(EXISTS ${PIPELINE_INPUT_FILE})
     set(PIPELINE_CMDLINE_ARG "-slef-loop-id-whitelist=${PIPELINE_INPUT_FILE}")
