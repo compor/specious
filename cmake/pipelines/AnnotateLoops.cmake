@@ -43,13 +43,17 @@ function(AnnotateLoopsPipeline trgt)
   llvmir_attach_link_target(${PIPELINE_PREFIX}_link ${PIPELINE_PREFIX}_opt1)
   add_dependencies(${PIPELINE_PREFIX}_link ${PIPELINE_PREFIX}_opt1)
 
+  get_target_property(LINKER_LANG ${PIPELINE_PREFIX}_link LINKER_LANGUAGE)
+
   set(PIPELINE_INPUT_FILE
     "$ENV{HARNESS_INPUT_DIR}${BMK_NAME}/cxx_user_functions.txt")
 
-  if(EXISTS ${PIPELINE_INPUT_FILE})
-    set(PIPELINE_CMDLINE_ARG "-al-fn-whitelist=${PIPELINE_INPUT_FILE}")
-  else()
-    message(STATUS "could not find file: ${PIPELINE_INPUT_FILE}")
+  if(LINK_LANGUAGE EQUAL "CXX")
+    if(EXISTS ${PIPELINE_INPUT_FILE})
+      set(PIPELINE_CMDLINE_ARG "-al-fn-whitelist=${PIPELINE_INPUT_FILE}")
+    else()
+      message(STATUS "could not find file: ${PIPELINE_INPUT_FILE}")
+    endif()
   endif()
 
   llvmir_attach_opt_pass_target(${PIPELINE_PREFIX}_opt2
