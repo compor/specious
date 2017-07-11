@@ -41,7 +41,7 @@ function(SimplifyLoopExitsFrontIterativePipeline trgt)
   endif()
 
   set(PIPELINE_INPUT_FILE
-    "$ENV{HARNESS_INPUT_DIR}${BMK_NAME}/ClassifyLoopsWithId-multiexit_with_no_inner_loop_exits.txt")
+    "$ENV{HARNESS_INPUT_DIR}${BMK_NAME}/$ENV{SLEFI_LOOP_ID_WHILELIST_FILE}")
 
   set(LoopIDs "")
   if(EXISTS ${PIPELINE_INPUT_FILE})
