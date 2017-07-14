@@ -77,19 +77,19 @@ if [ "$SHOW_HELP" -ne 0 ]; then
   exit 0
 fi
 
-if [ -z "$BMK_CONFIG_FILE" -o ! -e "$BMK_CONFIG_FILE" ]; then
+if [ -z ${BMK_CONFIG_FILE:+x} -o ! -e ${BMK_CONFIG_FILE} ]; then
   echo "error: benchmark config file was not provided or does not exist" > $ERRS
 
   exit 1
 fi
 
-if [ -z "$BMK_SOURCE_DIR" -o ! -e "$BMK_SOURCE_DIR" ]; then
+if [ -z ${BMK_SOURCE_DIR:+x} -o ! -e ${BMK_SOURCE_DIR} ]; then
   echo "error: benchmark source dir was not provided or does not exist" > $ERRS
 
   exit 1
 fi
 
-if [ -z "$BMK_TARGET_DIR" -o ! -e "$BMK_TARGET_DIR" ]; then
+if [ -z ${BMK_TARGET_DIR:+x} -o ! -e ${BMK_TARGET_DIR} ]; then
   echo "error: benchmark target dir was not provided or does not exist" > $ERRS
 
   exit 1
