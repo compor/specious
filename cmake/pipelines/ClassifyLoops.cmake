@@ -1,5 +1,7 @@
 # cmake file
 
+message(STATUS "setting up pipeline ClassifyLoops.")
+
 find_package(ClassifyLoops CONFIG)
 
 if(NOT ClassifyLoops_FOUND)

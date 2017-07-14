@@ -1,5 +1,7 @@
 # cmake file
 
+message(STATUS "setting up pipeline SimplifyLoopExitsFront.")
+
 find_package(SimplifyLoopExitsFront CONFIG)
 
 if(NOT SimplifyLoopExitsFront_FOUND)

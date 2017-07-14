@@ -1,5 +1,7 @@
 # cmake file
 
+message(STATUS "setting up pipeline BasicBitcodeGen.")
+
 # configuration
 
 macro(BasicBitcodeGenPipelineSetup)

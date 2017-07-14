@@ -1,5 +1,7 @@
 # cmake file
 
+message(STATUS "setting up pipeline ApplyIOAttribute.")
+
 find_package(ApplyIOAttribute CONFIG)
 
 if(NOT ApplyIOAttribute_FOUND)

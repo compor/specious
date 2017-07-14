@@ -1,5 +1,7 @@
 # cmake file
 
+message(STATUS "setting up pipeline PropagateAttributes.")
+
 find_package(PropagateAttributes CONFIG)
 
 if(NOT PropagateAttributes_FOUND)

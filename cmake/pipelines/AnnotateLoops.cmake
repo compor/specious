@@ -1,5 +1,7 @@
 # cmake file
 
+message(STATUS "setting up pipeline AnnotateLoops.")
+
 find_package(AnnotateLoops CONFIG)
 
 if(NOT AnnotateLoops_FOUND)

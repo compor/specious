@@ -1,5 +1,7 @@
 # cmake file
 
+message(STATUS "setting up pipeline LoopC14N.")
+
 # configuration
 
 macro(AttachLoopC14NPipelineSetup)

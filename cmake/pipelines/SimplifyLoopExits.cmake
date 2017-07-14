@@ -1,6 +1,8 @@
 # cmake file
 
-find_package(SimplifyLoopExits CONFIG)
+message(STATUS "setting up pipeline SimplifyLoopExits.")
+
+ind_package(SimplifyLoopExits CONFIG)
 
 if(NOT SimplifyLoopExits_FOUND)
   message(WARNING "package SimplifyLoopExits was not found; skipping.")
