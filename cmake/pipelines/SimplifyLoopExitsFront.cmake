@@ -78,6 +78,10 @@ function(SimplifyLoopExitsFrontPipeline trgt)
 
   # installation
   get_property(bmk_name TARGET ${trgt} PROPERTY BMK_NAME)
+  set(DEST_DIR "CPU2006/${bmk_name}")
+
+  install(TARGETS ${PIPELINE_PREFIX}_bc_exe
+    DESTINATION ${DEST_DIR} OPTIONAL)
 
   InstallSimplifyLoopExitsFrontPipelineLLVMIR(${PIPELINE_PREFIX}_link ${bmk_name})
 endfunction()
