@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+
+# initialize configuration vars
+
+CONFIG_TYPE=""
+RUN_KEY=""
+
+BMK_BIN_NAME="@BMK_BIN_NAME@"
+BMK_DATA_DIR="@BMK_DATA_DIR@"
+
+
+# set configuration vars
+
+if [ -z ${1:+x} ]; then 
+  echo "error: config type was not provided" 
+
+  exit 1
+fi
+
+CONFIG_TYPE=${1}
+
+if [ -z ${2:+x} ]; then 
+  echo "error: run key was not provided" 
+
+  exit 1
+fi
+
+RUN_KEY=${2}
+
+#
+
+mkdir -p ${RUN_KEY}
+
+cp -rf ./${BMK_BIN_NAME} ${RUN_KEY}
+cp -rf ./${BMK_DATA_DIR}/test/input/* ${RUN_KEY}
+
+pushd ${RUN_KEY}
+
+./${BMK_BIN_NAME} 20 reference.dat 0 1 100_100_130_cf_a.of > ${RUN_KEY}.out
+
+RC=$?
+
+popd
+
+
+exit ${RC}
+
