@@ -1,6 +1,6 @@
 # cmake file
 
-message(STATUS "setting up pipeline SimplifyLoopExitsFront.")
+message(STATUS "setting up pipeline SimplifyLoopExitsFront")
 
 find_package(SimplifyLoopExitsFront CONFIG)
 

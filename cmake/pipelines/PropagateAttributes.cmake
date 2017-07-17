@@ -1,6 +1,6 @@
 # cmake file
 
-message(STATUS "setting up pipeline PropagateAttributes.")
+message(STATUS "setting up pipeline PropagateAttributes")
 
 find_package(PropagateAttributes CONFIG)
 

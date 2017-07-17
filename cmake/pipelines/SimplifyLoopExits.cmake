@@ -1,6 +1,6 @@
 # cmake file
 
-message(STATUS "setting up pipeline SimplifyLoopExits.")
+message(STATUS "setting up pipeline SimplifyLoopExits")
 
 ind_package(SimplifyLoopExits CONFIG)
 

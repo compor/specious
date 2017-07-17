@@ -1,6 +1,6 @@
 # cmake file
 
-message(STATUS "setting up pipeline MixedPropagateAttributes.")
+message(STATUS "setting up pipeline MixedPropagateAttributes")
 
 find_package(PropagateAttributes CONFIG)
 

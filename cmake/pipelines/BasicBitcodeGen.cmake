@@ -1,6 +1,6 @@
 # cmake file
 
-message(STATUS "setting up pipeline BasicBitcodeGen.")
+message(STATUS "setting up pipeline BasicBitcodeGen")
 
 # configuration
 

@@ -1,0 +1,11 @@
+BasicBitcodeGen
+LoopC14N
+ApplyIOAttribute
+PropagateAttributes
+MixedPropagateAttributes
+AnnotateLoops
+ClassifyLoops
+ClassifyLoopsWithId
+SimplifyLoopExits
+SimplifyLoopExitsFront
+SimplifyLoopExitsFrontIterative

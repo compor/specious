@@ -1,6 +1,6 @@
 # cmake file
 
-message(STATUS "setting up pipeline LoopC14N.")
+message(STATUS "setting up pipeline LoopC14N")
 
 # configuration
 

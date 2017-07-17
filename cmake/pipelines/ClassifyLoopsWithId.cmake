@@ -1,6 +1,6 @@
 # cmake file
 
-message(STATUS "setting up pipeline ClassifyLoopsWithId.")
+message(STATUS "setting up pipeline ClassifyLoopsWithId")
 
 find_package(ClassifyLoops CONFIG)
 

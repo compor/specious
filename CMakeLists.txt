@@ -98,18 +98,20 @@ list(APPEND CMAKE_MODULE_PATH "${HARNESS_CMAKE_FRAGMENT_DIR}")
 
 include(BmkBasicInstall)
 
+
 if(LLVM_IR_UTIL_FOUND)
-  include(BasicBitcodeGen)
-  include(LoopC14N)
-  include(ApplyIOAttribute)
-  include(PropagateAttributes)
-  include(MixedPropagateAttributes)
-  include(AnnotateLoops)
-  include(ClassifyLoops)
-  include(ClassifyLoopsWithId)
-  include(SimplifyLoopExits)
-  include(SimplifyLoopExitsFront)
-  include(SimplifyLoopExitsFrontIterative)
+  file(STRINGS ${HARNESS_PIPELINE_CONFIG_FILE} PIPELINES)
+
+  if(NOT HARNESS_PIPELINE_CONFIG_FILE)
+    message(FATAL_ERROR "Benchmark config file HARNESS_PIPELINE_CONFIG_FILE is not set")
+  elseif(NOT EXISTS ${HARNESS_PIPELINE_CONFIG_FILE})
+    message(FATAL_ERROR "Benchmark config file does not exist: ${HARNESS_PIPELINE_CONFIG_FILE}")
+  endif()
+
+  foreach(PLINE ${PIPELINES})
+    message(STATUS "including pipeline: ${PLINE}")
+    include(${PLINE})
+  endforeach()
 endif()
 
 

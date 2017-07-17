@@ -1,6 +1,6 @@
 # cmake file
 
-message(STATUS "setting up pipeline ApplyIOAttribute.")
+message(STATUS "setting up pipeline ApplyIOAttribute")
 
 find_package(ApplyIOAttribute CONFIG)
 

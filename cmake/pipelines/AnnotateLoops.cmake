@@ -1,6 +1,6 @@
 # cmake file
 
-message(STATUS "setting up pipeline AnnotateLoops.")
+message(STATUS "setting up pipeline AnnotateLoops")
 
 find_package(AnnotateLoops CONFIG)
 
