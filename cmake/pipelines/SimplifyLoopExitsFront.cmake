@@ -83,10 +83,22 @@ function(SimplifyLoopExitsFrontPipeline trgt)
   install(TARGETS ${PIPELINE_PREFIX}_bc_exe
     DESTINATION ${DEST_DIR} OPTIONAL)
 
-  get_filename_component(ABS_DATA_DIR data REALPATH)
-  install(DIRECTORY ${ABS_DATA_DIR}/ DESTINATION
-    ${DEST_DIR}/${PIPELINE_NAME}_data)
+  set(BMK_BIN_NAME "${PIPELINE_PREFIX}_bc_exe")
 
+  get_filename_component(ABS_DATA_DIR data REALPATH)
+  set(BMK_DATA_DIR "${PIPELINE_NAME}_data")
+
+  install(DIRECTORY ${ABS_DATA_DIR}/ DESTINATION
+    ${DEST_DIR}/${BMK_DATA_DIR})
+
+  configure_file("scripts/run.sh.in" "scripts/${PIPELINE_PREFIX}_run.sh" @ONLY)
+
+  install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/scripts/
+    DESTINATION ${DEST_DIR}
+    PATTERN "*.sh"
+    PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE)
+
+  # IR installation
   InstallSimplifyLoopExitsFrontPipelineLLVMIR(${PIPELINE_PREFIX}_link ${bmk_name})
 endfunction()
 
