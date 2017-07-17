@@ -83,6 +83,10 @@ function(SimplifyLoopExitsFrontPipeline trgt)
   install(TARGETS ${PIPELINE_PREFIX}_bc_exe
     DESTINATION ${DEST_DIR} OPTIONAL)
 
+  get_filename_component(ABS_DATA_DIR data REALPATH)
+  install(DIRECTORY ${ABS_DATA_DIR}/ DESTINATION
+    ${DEST_DIR}/${PIPELINE_NAME}_data)
+
   InstallSimplifyLoopExitsFrontPipelineLLVMIR(${PIPELINE_PREFIX}_link ${bmk_name})
 endfunction()
 
