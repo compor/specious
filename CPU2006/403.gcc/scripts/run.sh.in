@@ -1,0 +1,59 @@
+#!/usr/bin/env bash
+
+# initialize configuration vars
+
+CONFIG_TYPE=""
+RUN_KEY=""
+
+BMK_BIN_NAME="@BMK_BIN_NAME@"
+BMK_DATA_DIR="@BMK_DATA_DIR@"
+
+
+# set configuration vars
+
+if [ -z ${1:+x} ]; then 
+  echo "error: config type was not provided" 
+
+  exit 1
+fi
+
+CONFIG_TYPE=${1}
+
+if [ -z ${2:+x} ]; then 
+  echo "error: run key was not provided" 
+
+  exit 1
+fi
+
+RUN_KEY=${2}
+
+#
+
+mkdir -p ${RUN_KEY}
+
+cp -rf ./${BMK_BIN_NAME} ${RUN_KEY}
+cp -rf ./${BMK_DATA_DIR}/${CONFIG_TYPE}/input/* ${RUN_KEY}
+
+pushd ${RUN_KEY}
+
+if [ ${CONFIG_TYPE} == "test" ]; then
+  ./${BMK_BIN_NAME} cccp.i -o cccp.s > ${RUN_KEY}.out
+else
+  ./${BMK_BIN_NAME} 166.i -o 166.s > ${RUN_KEY}.out
+  ./${BMK_BIN_NAME} BMK_BIN_NAME200.i -o 200.s >> ${RUN_KEY}.out 
+  ./${BMK_BIN_NAME} BMK_BIN_NAMEc-typeck.i -o c-typeck.s >> ${RUN_KEY}.out 
+  ./${BMK_BIN_NAME} BMK_BIN_NAMEcp-decl.i -o cp-decl.s >> ${RUN_KEY}.out 
+  ./${BMK_BIN_NAME} BMK_BIN_NAMEexpr.i -o expr.s >> ${RUN_KEY}.out 
+  ./${BMK_BIN_NAME} BMK_BIN_NAMEexpr2.i -o expr2.s >> ${RUN_KEY}.out 
+  ./${BMK_BIN_NAME} BMK_BIN_NAMEg23.i -o g23.s >> ${RUN_KEY}.out 
+  ./${BMK_BIN_NAME} BMK_BIN_NAMEs04.i -o s04.s >> ${RUN_KEY}.out 
+  ./${BMK_BIN_NAME} BMK_BIN_NAMEscilab.i -o scilab.s >> ${RUN_KEY}.out 
+fi
+
+RC=$?
+
+popd
+
+
+exit ${RC}
+
