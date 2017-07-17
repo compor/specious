@@ -1,7 +1,7 @@
 # cmake file
 
-if(COMMAND SetupBmkBasicInstall)
-  SetupBmkBasicInstall(${BMK_PROJECT_NAME})
+if(COMMAND BmkBasicInstall)
+  BmkBasicInstall(${BMK_PROJECT_NAME})
 endif()
 
 if(COMMAND AttachBasicBitcodeGenPipeline)
