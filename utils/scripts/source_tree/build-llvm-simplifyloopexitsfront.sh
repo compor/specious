@@ -23,7 +23,7 @@ else
 fi
 
 
-PIPELINE_CONFIG_FILE="${SRC_DIR}/configs/pipelines/sle.txt"
+PIPELINE_CONFIG_FILE="${SRC_DIR}/configs/pipelines/slef.txt"
 BMK_CONFIG_FILE="${SRC_DIR}/configs/all_except_fortran.txt"
 
 if [ -z ${ANNOTATELOOPS_DIR+x} ]; then 
