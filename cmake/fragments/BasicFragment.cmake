@@ -44,6 +44,10 @@ if(COMMAND SimplifyLoopExitsFrontPipeline)
   SimplifyLoopExitsFrontPipeline(${BMK_PROJECT_NAME})
 endif()
 
+if(COMMAND ClassifyLoopsWithId2Pipeline)
+  ClassifyLoopsWithId2Pipeline(${BMK_PROJECT_NAME})
+endif()
+
 if(COMMAND SimplifyLoopExitsFrontIterativePipeline)
   SimplifyLoopExitsFrontIterativePipeline(${BMK_PROJECT_NAME})
 endif()
