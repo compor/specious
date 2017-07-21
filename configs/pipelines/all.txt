@@ -1,3 +1,4 @@
+BmkBasicInstall
 BasicBitcodeGen
 LoopC14N
 ApplyIOAttribute
