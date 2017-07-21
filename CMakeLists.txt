@@ -39,6 +39,7 @@ set(HARNESS_CMAKE_PIPELINE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/cmake/pipelines/")
 # aggregate list variables for appending commands 
 # per each benchmark without editing each cmake file separately
 set(HARNESS_CMAKE_FRAGMENT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/cmake/fragments/")
+set(HARNESS_CMAKE_BINARY_FRAGMENT_DIR "${CMAKE_CURRENT_BINARY_DIR}/cmake/fragments/")
 set(HARNESS_CMAKE_FRAGMENT_FILES "")
 
 set(HARNESS_LLVMIR_CMAKE_FRAGMENT_FILES "")
@@ -97,6 +98,7 @@ endif()
 
 list(APPEND CMAKE_MODULE_PATH "${HARNESS_CMAKE_PIPELINE_DIR}")
 list(APPEND CMAKE_MODULE_PATH "${HARNESS_CMAKE_FRAGMENT_DIR}")
+list(APPEND CMAKE_MODULE_PATH "${HARNESS_CMAKE_BINARY_FRAGMENT_DIR}")
 
 include(BmkBasicInstall)
 
@@ -114,6 +116,10 @@ if(LLVM_IR_UTIL_FOUND)
     message(STATUS "including pipeline: ${PLINE}")
     include(${PLINE})
   endforeach()
+
+  create_file_fragment(FILENAME 
+    ${HARNESS_CMAKE_BINARY_FRAGMENT_DIR}/BasicFragment.cmake 
+    PIPELINES ${PIPELINES})
 endif()
 
 
