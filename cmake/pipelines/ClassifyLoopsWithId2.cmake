@@ -11,7 +11,6 @@ if(NOT ClassifyLoops_FOUND)
 endif()
 
 get_target_property(SLE_LIB_LOCATION LLVMClassifyLoopsPass LOCATION)
-get_target_property(DEPENDEE LLVMClassifyLoopsPass DEPENDEE)
 
 # configuration
 
@@ -56,16 +55,8 @@ function(ClassifyLoopsWithId2Pipeline trgt)
     FILENAME "$ENV{HARNESS_INPUT_DIR}${BMK_NAME}/cxx_user_functions.txt"
     CMDLINE_ARG PIPELINE_CMDLINE_ARG5)
 
-  set(LOAD_DEPENDENCY_CMDLINE_ARG "")
-  if(DEPENDEE)
-    foreach(dep ${DEPENDEE})
-      list(APPEND LOAD_DEPENDENCY_CMDLINE_ARG -load;${dep})
-    endforeach()
-  endif()
-
   llvmir_attach_opt_pass_target(${PIPELINE_PREFIX}_link
     ${DEPENDEE_TRGT}
-    ${LOAD_DEPENDENCY_CMDLINE_ARG}
     -load ${SLE_LIB_LOCATION}
     -classify-loops
     ${PIPELINE_CMDLINE_ARG1}
