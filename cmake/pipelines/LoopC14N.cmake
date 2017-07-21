@@ -4,14 +4,14 @@ message(STATUS "setting up pipeline LoopC14N")
 
 # configuration
 
-macro(AttachLoopC14NPipelineSetup)
+macro(LoopC14NPipelineSetup)
   set(PIPELINE_NAME "loopc14n")
   set(PIPELINE_INSTALL_TARGET "${PIPELINE_NAME}-install")
 endmacro()
 
 
-function(AttachLoopC14NPipeline trgt)
-  AttachLoopC14NPipelineSetup()
+function(LoopC14NPipeline trgt)
+  LoopC14NPipelineSetup()
 
   if(NOT TARGET ${PIPELINE_NAME})
     add_custom_target(${PIPELINE_NAME})
@@ -58,7 +58,7 @@ endfunction()
 
 
 function(InstallLoopC14NPipelineLLVMIR pipeline_part_trgt bmk_name)
-  AttachLoopC14NPipelineSetup()
+  LoopC14NPipelineSetup()
 
   if(NOT TARGET ${PIPELINE_INSTALL_TARGET})
     add_custom_target(${PIPELINE_INSTALL_TARGET})

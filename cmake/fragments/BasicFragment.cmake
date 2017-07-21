@@ -4,12 +4,12 @@ if(COMMAND BmkBasicInstall)
   BmkBasicInstall(${BMK_PROJECT_NAME})
 endif()
 
-if(COMMAND AttachBasicBitcodeGenPipeline)
-  AttachBasicBitcodeGenPipeline(${BMK_PROJECT_NAME})
+if(COMMAND BasicBitcodeGenPipeline)
+  BasicBitcodeGenPipeline(${BMK_PROJECT_NAME})
 endif()
 
-if(COMMAND AttachLoopC14NPipeline)
-  AttachLoopC14NPipeline(${BMK_PROJECT_NAME})
+if(COMMAND LoopC14NPipeline)
+  LoopC14NPipeline(${BMK_PROJECT_NAME})
 endif()
 
 if(COMMAND ApplyIOAttributePipeline)

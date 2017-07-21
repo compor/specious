@@ -10,7 +10,7 @@ macro(BasicBitcodeGenPipelineSetup)
 endmacro()
 
 
-function(AttachBasicBitcodeGenPipeline trgt)
+function(BasicBitcodeGenPipeline trgt)
   BasicBitcodeGenPipelineSetup()
 
   if(NOT TARGET ${PIPELINE_NAME})
