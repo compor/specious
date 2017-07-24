@@ -55,7 +55,7 @@ function(LoopRuntimeProfilerPipeline trgt)
   llvmir_attach_executable(${PIPELINE_PREFIX}_bc_exe ${PIPELINE_PREFIX}_link)
   add_dependencies(${PIPELINE_PREFIX}_bc_exe ${PIPELINE_PREFIX}_link)
 
-  target_link_libraries(${PIPELINE_PREFIX}_bc_exe lrp_rt m)
+  target_link_libraries(${PIPELINE_PREFIX}_bc_exe lrp_timing_rt m)
 
   ## pipeline aggregate targets
   add_custom_target(${PIPELINE_SUBTARGET} DEPENDS
