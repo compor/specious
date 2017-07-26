@@ -23,7 +23,7 @@ else
 fi
 
 
-PIPELINE_CONFIG_FILE="${SRC_DIR}/configs/pipelines/loopruntimeprofiler_with_al_slef.txt"
+PIPELINE_CONFIG_FILE="${SRC_DIR}/configs/pipelines/loopruntimeprofiler_timing_with_al_slef.txt"
 BMK_CONFIG_FILE="${SRC_DIR}/configs/all_except_fortran.txt"
 
 if [ -z ${LOOPRUNTIMEPROFILER_DIR+x} ]; then 
