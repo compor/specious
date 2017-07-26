@@ -3,4 +3,4 @@ BasicBitcodeGen
 LoopC14N
 AnnotateLoops
 SimplifyLoopExitsFront
-LoopRuntimeProfiler
+LoopRuntimeProfilerTiming
