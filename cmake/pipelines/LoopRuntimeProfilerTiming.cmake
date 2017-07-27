@@ -1,6 +1,6 @@
 # cmake file
 
-message(STATUS "setting up pipeline LoopRuntimeProfiler")
+message(STATUS "setting up pipeline LoopRuntimeProfilerTiming")
 
 find_package(LoopRuntimeProfiler CONFIG)
 
@@ -14,14 +14,14 @@ get_target_property(LRP_LIB_LOCATION LLVMLoopRuntimeProfilerPass LOCATION)
 
 # configuration
 
-macro(LoopRuntimeProfilerPipelineSetup)
-  set(PIPELINE_NAME "LoopRuntimeProfiler")
+macro(LoopRuntimeProfilerTimingPipelineSetup)
+  set(PIPELINE_NAME "LoopRuntimeProfilerTiming")
   set(PIPELINE_INSTALL_TARGET "${PIPELINE_NAME}-install")
 endmacro()
 
 
-function(LoopRuntimeProfilerPipeline trgt)
-  LoopRuntimeProfilerPipelineSetup()
+function(LoopRuntimeProfilerTimingPipeline trgt)
+  LoopRuntimeProfilerTimingPipelineSetup()
 
   if(NOT TARGET ${PIPELINE_NAME})
     add_custom_target(${PIPELINE_NAME})
@@ -89,12 +89,12 @@ function(LoopRuntimeProfilerPipeline trgt)
     PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE)
 
   # IR installation
-  InstallLoopRuntimeProfilerPipelineLLVMIR(${PIPELINE_PREFIX}_link ${bmk_name})
+  InstallLoopRuntimeProfilerTimingPipelineLLVMIR(${PIPELINE_PREFIX}_link ${bmk_name})
 endfunction()
 
 
-function(InstallLoopRuntimeProfilerPipelineLLVMIR pipeline_part_trgt bmk_name)
-  LoopRuntimeProfilerPipelineSetup()
+function(InstallLoopRuntimeProfilerTimingPipelineLLVMIR pipeline_part_trgt bmk_name)
+  LoopRuntimeProfilerTimingPipelineSetup()
 
   if(NOT TARGET ${PIPELINE_INSTALL_TARGET})
     add_custom_target(${PIPELINE_INSTALL_TARGET})
