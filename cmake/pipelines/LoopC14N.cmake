@@ -5,7 +5,7 @@ message(STATUS "setting up pipeline LoopC14N")
 # configuration
 
 macro(LoopC14NPipelineSetup)
-  set(PIPELINE_NAME "loopc14n")
+  set(PIPELINE_NAME "LoopC14N")
   set(PIPELINE_INSTALL_TARGET "${PIPELINE_NAME}-install")
 endmacro()
 
