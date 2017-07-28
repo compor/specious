@@ -35,7 +35,10 @@ function(PollyPipeline trgt)
     ${DEPENDEE_TRGT}
     -load $ENV{POLLY_LIB_LOCATION}
     -polly-canonicalize
-    -polly-export-jscop)
+    -polly-scops
+    -polly-export-jscop
+    -polly-codegen
+    -polly-parallel)
   add_dependencies(${PIPELINE_PREFIX}_link ${DEPENDEE_TRGT})
 
   llvmir_attach_executable(${PIPELINE_PREFIX}_bc_exe ${PIPELINE_PREFIX}_link)
