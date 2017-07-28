@@ -59,6 +59,7 @@ function(SimplifyLoopExitsFrontPipeline trgt)
     -slef-loop-depth-ub=1
     -slef-loop-exiting-block-depth-ub=1
     ${PIPELINE_CMDLINE_ARG})
+  add_dependencies(${PIPELINE_PREFIX}_link ${DEPENDEE_TRGT})
 
   #-slef-stats=${HARNESS_REPORT_DIR}/${BMK_NAME}-${PIPELINE_NAME}.txt
 
