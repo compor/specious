@@ -26,11 +26,11 @@ fi
 PIPELINE_CONFIG_FILE="${SRC_DIR}/configs/pipelines/polly.txt"
 BMK_CONFIG_FILE="${SRC_DIR}/configs/all_except_fortran.txt"
 
-#if [ -z ${LLVMPOLLY_DIR+x} ]; then 
-  #echo "error: LLVMPOLLY_DIR is not set"
+if [ -z ${LLVMPOLLY_ROOT+x} ]; then 
+  echo "error: LLVMPOLLY_ROOT is not set"
 
-  #exit 2
-#fi
+  exit 2
+fi
 
 
 # print configuration vars
@@ -58,6 +58,7 @@ CC=clang CXX=clang++ \
   -DHARNESS_USE_LLVM=On \
   -DHARNESS_PIPELINE_CONFIG_FILE=${PIPELINE_CONFIG_FILE} \
   -DHARNESS_BMK_CONFIG_FILE=${BMK_CONFIG_FILE} \
+  -DLLVMPOLLY_ROOT=${LLVMPOLLY_ROOT} \
   "${SRC_DIR}"
 
 
