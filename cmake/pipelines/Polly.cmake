@@ -2,9 +2,10 @@
 
 message(STATUS "setting up pipeline Polly")
 
-if("$ENV{POLLY_LIB_LOCATION}" STREQUAL "")
+find_package(LLVMPolly REQUIRED)
+
+if(NOT LLVMPOLLY_FOUND)
   message(WARNING "package Polly was not found; skipping.")
-  message(WARNING "POLLY_LIB_LOCATION was not set; skipping.")
 
   return()
 endif()
@@ -33,7 +34,7 @@ function(PollyPipeline trgt)
 
   llvmir_attach_opt_pass_target(${PIPELINE_PREFIX}_link
     ${DEPENDEE_TRGT}
-    -load $ENV{POLLY_LIB_LOCATION}
+    -load ${LLVMPOLLY_SHARED_LIBRARY}
     -polly-canonicalize
     -polly-scops
     -polly-export-jscop
