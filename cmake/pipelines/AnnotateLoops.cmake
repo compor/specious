@@ -1,27 +1,62 @@
 # cmake file
 
-message(STATUS "setting up pipeline AnnotateLoops")
-
-find_package(AnnotateLoops CONFIG)
-
-if(NOT AnnotateLoops_FOUND)
-  message(WARNING "package AnnotateLoops was not found; skipping.")
-
-  return()
-endif()
-
-get_target_property(ANNOTLOOPS_LIB_LOCATION LLVMAnnotateLoopsPass LOCATION)
-
-# configuration
-
-macro(AnnotateLoopsPipelineSetup)
+macro(AnnotateLoopsPipelineSetupNames)
   set(PIPELINE_NAME "AnnotateLoops")
   set(PIPELINE_INSTALL_TARGET "${PIPELINE_NAME}-install")
 endmacro()
 
+macro(AnnotateLoopsPipelineSetup)
+  AnnotateLoopsPipelineSetupNames()
+
+  message(STATUS "setting up pipeline ${PIPELINE_NAME}")
+
+  if(NOT DEFINED ENV{HARNESS_INPUT_DIR})
+    message(FATAL_ERROR
+      "${PIPELINE_NAME} env variable HARNESS_INPUT_DIR is not defined")
+  endif()
+
+  if(NOT DEFINED ENV{HARNESS_REPORT_DIR})
+    message(FATAL_ERROR
+      "${PIPELINE_NAME} env variable HARNESS_REPORT_DIR is not defined")
+  endif()
+
+  if(NOT DEFINED ENV{ANNOTATELOOPS_WHITELIST_FILE})
+    message(FATAL_ERROR
+      "${PIPELINE_NAME} env variable ANNOTATELOOPS_WHITELIST_FILE is not defined")
+  endif()
+
+  if(NOT IS_DIRECTORY $ENV{HARNESS_INPUT_DIR})
+    message(FATAL_ERROR "${PIPELINE_NAME} HARNESS_INPUT_DIR does not exist")
+  endif()
+
+  if(NOT IS_DIRECTORY $ENV{HARNESS_REPORT_DIR})
+    message(FATAL_ERROR "${PIPELINE_NAME} HARNESS_REPORT_DIR does not exist")
+  endif()
+
+  message(STATUS
+    "${PIPELINE_NAME} uses env variable: HARNESS_INPUT_DIR=$ENV{HARNESS_INPUT_DIR}")
+  message(STATUS
+    "${PIPELINE_NAME} uses env variable: HARNESS_REPORT_DIR=$ENV{HARNESS_REPORT_DIR}")
+  message(STATUS
+    "${PIPELINE_NAME} uses env variable: ANNOTATELOOPS_WHITELIST_FILE=$ENV{ANNOTATELOOPS_WHITELIST_FILE}")
+
+  #
+
+  find_package(AnnotateLoops CONFIG)
+
+  if(NOT AnnotateLoops_FOUND)
+    message(FATAL_ERROR "package AnnotateLoops was not found")
+  endif()
+
+  get_target_property(ANNOTATELOOPS_LIB_LOCATION LLVMAnnotateLoopsPass LOCATION)
+endmacro()
+
+AnnotateLoopsPipelineSetup()
+
+#
 
 function(AnnotateLoopsPipeline trgt)
-  AnnotateLoopsPipelineSetup()
+  AnnotateLoopsPipelineSetupNames()
 
   if(NOT TARGET ${PIPELINE_NAME})
     add_custom_target(${PIPELINE_NAME})
@@ -31,6 +66,10 @@ function(AnnotateLoopsPipeline trgt)
   set(PIPELINE_PREFIX ${PIPELINE_SUBTARGET})
 
   ## pipeline targets and chaining
+
+  file(TO_CMAKE_PATH "$ENV{HARNESS_REPORT_DIR}/${BMK_NAME}-${PIPELINE_NAME}.txt"
+    REPORT_FILE)
+
   llvmir_attach_bc_target(${PIPELINE_PREFIX}_bc ${trgt})
   add_dependencies(${PIPELINE_PREFIX}_bc ${trgt})
 
@@ -47,8 +86,9 @@ function(AnnotateLoopsPipeline trgt)
 
   get_target_property(LINKER_LANG ${PIPELINE_PREFIX}_link LINKER_LANGUAGE)
 
-  set(PIPELINE_INPUT_FILE
-    "$ENV{HARNESS_INPUT_DIR}${BMK_NAME}/cxx_user_functions.txt")
+  file(TO_CMAKE_PATH
+    "$ENV{HARNESS_INPUT_DIR}/${BMK_NAME}/$ENV{ANNOTATELOOPS_WHITELIST_FILE}"
+    PIPELINE_INPUT_FILE)
 
   if(LINK_LANGUAGE EQUAL "CXX")
     if(EXISTS ${PIPELINE_INPUT_FILE})
@@ -60,11 +100,11 @@ function(AnnotateLoopsPipeline trgt)
 
   llvmir_attach_opt_pass_target(${PIPELINE_PREFIX}_opt2
     ${PIPELINE_PREFIX}_link
-    -load ${ANNOTLOOPS_LIB_LOCATION}
+    -load ${ANNOTATELOOPS_LIB_LOCATION}
     -annotate-loops
     -al-loop-start-id=2
     -al-loop-id-interval=4
-    -al-stats=${HARNESS_REPORT_DIR}/${BMK_NAME}-${PIPELINE_NAME}.txt
+    -al-stats=${REPORT_FILE}
     ${PIPELINE_CMDLINE_ARG})
   add_dependencies(${PIPELINE_PREFIX}_opt2 ${PIPELINE_PREFIX}_link)
 
@@ -92,7 +132,7 @@ endfunction()
 
 
 function(InstallAnnotateLoopsPipelineLLVMIR pipeline_part_trgt bmk_name)
-  AnnotateLoopsPipelineSetup()
+  AnnotateLoopsPipelineSetupNames()
 
   if(NOT TARGET ${PIPELINE_INSTALL_TARGET})
     add_custom_target(${PIPELINE_INSTALL_TARGET})
