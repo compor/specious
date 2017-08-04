@@ -34,8 +34,9 @@ function(LoopRuntimeProfilerDepthPipeline trgt)
 
   ## pipeline targets and chaining
 
-  set(PIPELINE_INPUT_FILE
-    "$ENV{HARNESS_INPUT_DIR}${BMK_NAME}/$ENV{LRP_LOOP_ID_WHITELIST_FILE}")
+  file(TO_CMAKE_PATH
+    "$ENV{HARNESS_INPUT_DIR}/${BMK_NAME}/$ENV{LRP_LOOP_ID_WHITELIST_FILE}"
+    PIPELINE_INPUT_FILE)
 
   if(EXISTS ${PIPELINE_INPUT_FILE})
     set(PIPELINE_CMDLINE_ARG "-lrp-loop-id-whitelist=${PIPELINE_INPUT_FILE}")
@@ -43,15 +44,16 @@ function(LoopRuntimeProfilerDepthPipeline trgt)
     message(STATUS "could not find file: ${PIPELINE_INPUT_FILE}")
   endif()
 
+  file(TO_CMAKE_PATH "$ENV{HARNESS_REPORT_DIR}/${BMK_NAME}-${PIPELINE_NAME}"
+    REPORT_FILE_PREFIX)
+
   llvmir_attach_opt_pass_target(${PIPELINE_PREFIX}_link
     ${DEPENDEE_TRGT}
     -load ${LRP_LIB_LOCATION}
     -loop-runtime-profiler
     -lrp-mode=module
     -lrp-loop-depth-ub=1
-    ${PIPELINE_CMDLINE_ARG})
-
-  #-slef-stats=${HARNESS_REPORT_DIR}/${BMK_NAME}-${PIPELINE_NAME}.txt
+    -lrp-report=${REPORT_FILE_PREFIX})
 
   llvmir_attach_executable(${PIPELINE_PREFIX}_bc_exe ${PIPELINE_PREFIX}_link)
   add_dependencies(${PIPELINE_PREFIX}_bc_exe ${PIPELINE_PREFIX}_link)
