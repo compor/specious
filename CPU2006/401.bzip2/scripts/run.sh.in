@@ -7,7 +7,7 @@ RUN_KEY=""
 
 BMK_BIN_NAME="@BMK_BIN_NAME@"
 BMK_DATA_DIR="@BMK_DATA_DIR@"
-
+BMK_BIN_PREAMBLE=@BMK_BIN_PREAMBLE@
 
 # set configuration vars
 
@@ -38,15 +38,15 @@ cp -rf ./${BMK_DATA_DIR}/${CONFIG_TYPE}/input/* ${RUN_KEY}
 pushd ${RUN_KEY}
 
 if [ ${CONFIG_TYPE} == "test" ]; then
-  ./${BMK_BIN_NAME} input.program 5 > ${RUN_KEY}.out
-  ./${BMK_BIN_NAME} dryer.jpg 2 >> ${RUN}.out
+  ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} input.program 5 > ${RUN_KEY}.out
+  ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} dryer.jpg 2 >> ${RUN_KEY}.out
 else
-  ./${BMK_BIN_NAME} input.source 280 > ${RUN_KEY}.out
-  ./${BMK_BIN_NAME} chicken.jpg 30 >> ${RUN_KEY}.out
-  ./${BMK_BIN_NAME} liberty.jpg 30 >> ${RUN_KEY}.out
-  ./${BMK_BIN_NAME} input.program 280 >> ${RUN_KEY}.out
-  ./${BMK_BIN_NAME} text.html 280 >> ${RUN_KEY}.out
-  ./${BMK_BIN_NAME} input.combined 200 >> ${RUN_KEY}.out
+  ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} input.source 280 > ${RUN_KEY}.out
+  ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} chicken.jpg 30 >> ${RUN_KEY}.out
+  ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} liberty.jpg 30 >> ${RUN_KEY}.out
+  ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} input.program 280 >> ${RUN_KEY}.out
+  ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} text.html 280 >> ${RUN_KEY}.out
+  ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} input.combined 200 >> ${RUN_KEY}.out
 fi
 
 RC=$?

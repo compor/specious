@@ -61,7 +61,7 @@ function(CallgrindPipeline trgt)
   set(BMK_BIN_NAME "${PIPELINE_PREFIX}_bc_exe")
 
   set(BMK_BIN_PREAMBLE
-    "valgrind --tool=callgrind --callgrind-out-file=${BMK_BIN_NAME}.callgrind")
+    "\"valgrind --tool=callgrind --callgrind-out-file=${BMK_BIN_NAME}.callgrind\"")
 
   get_filename_component(ABS_DATA_DIR data REALPATH)
   set(BMK_DATA_DIR "${PIPELINE_NAME}_data")

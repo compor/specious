@@ -7,6 +7,7 @@ RUN_KEY=""
 
 BMK_BIN_NAME="@BMK_BIN_NAME@"
 BMK_DATA_DIR="@BMK_DATA_DIR@"
+BMK_BIN_PREAMBLE=@BMK_BIN_PREAMBLE@
 
 
 # set configuration vars
@@ -37,9 +38,9 @@ cp -rf ./${BMK_DATA_DIR}/${CONFIG_TYPE}/input/* ${RUN_KEY}
 pushd ${RUN_KEY}
 
 if [ ${CONFIG_TYPE} == "test" ]; then
-  ./${BMK_BIN_NAME} 33 5 > ${RUN_KEY}.out
+  ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} 33 5 > ${RUN_KEY}.out
 else
-  ./${BMK_BIN_NAME} 1397 8 > ${RUN_KEY}.out
+  ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} 1397 8 > ${RUN_KEY}.out
 fi
 
 RC=$?
