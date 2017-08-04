@@ -47,6 +47,7 @@ function(LoopRuntimeProfilerDepthPipeline trgt)
     ${DEPENDEE_TRGT}
     -load ${LRP_LIB_LOCATION}
     -loop-runtime-profiler
+    -lrp-mode=module
     -lrp-loop-depth-ub=1
     ${PIPELINE_CMDLINE_ARG})
 
