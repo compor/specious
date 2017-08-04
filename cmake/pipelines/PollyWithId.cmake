@@ -27,7 +27,7 @@ macro(PollyWithIdPipelineSetup)
   find_package(LLVMPolly REQUIRED)
 
   if(NOT LLVMPOLLY_FOUND)
-    message(FATAL_ERROR "$PIPELINE_NAME} package Polly was not found")
+    message(FATAL_ERROR "${PIPELINE_NAME} package Polly was not found")
   endif()
 endmacro()
 
