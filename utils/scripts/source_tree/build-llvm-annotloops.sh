@@ -23,6 +23,7 @@ else
 fi
 
 
+PIPELINE_CONFIG_FILE="${SRC_DIR}/configs/pipelines/annotateloops.txt"
 BMK_CONFIG_FILE="${SRC_DIR}/configs/all_except_fortran.txt"
 
 if [ -z ${ANNOTATELOOPS_DIR+x} ]; then 
@@ -54,6 +55,7 @@ CC=clang CXX=clang++ \
   -DCMAKE_MODULE_LINKER_FLAGS="${LINKER_FLAGS}" \
   -DCMAKE_INSTALL_PREFIX="${INSTALL_PREFIX}" \
   -DHARNESS_USE_LLVM=On \
+  -DHARNESS_PIPELINE_CONFIG_FILE=${PIPELINE_CONFIG_FILE} \
   -DHARNESS_BMK_CONFIG_FILE=${BMK_CONFIG_FILE} \
   -DAnnotateLoops_DIR=${ANNOTATELOOPS_DIR} \
   "${SRC_DIR}"
