@@ -33,14 +33,18 @@ RUN_KEY=${2}
 mkdir -p ${RUN_KEY}
 
 cp -rf ./${BMK_BIN_NAME} ${RUN_KEY}
+cp -rf ./${BMK_DATA_DIR}/all/input/* ${RUN_KEY}
 cp -rf ./${BMK_DATA_DIR}/${CONFIG_TYPE}/input/* ${RUN_KEY}
 
 pushd ${RUN_KEY}
 
 if [ ${CONFIG_TYPE} == "test" ]; then
   ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} 20 reference.dat 0 1 100_100_130_cf_a.of > ${RUN_KEY}.out
-else
+elif [ ${CONFIG_TYPE} == "ref" ]; then
   ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} 3000 reference.dat 0 0 100_100_130_ldc.of > ${RUN_KEY}.out
+else
+  echo "unknown input set" > ${RUN_KEY}.out
+  false
 fi
 
 RC=$?

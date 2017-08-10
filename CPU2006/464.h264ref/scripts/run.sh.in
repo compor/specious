@@ -40,10 +40,13 @@ pushd ${RUN_KEY}
 
 if [ ${CONFIG_TYPE} == "test" ]; then
   ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} -d foreman_test_encoder_baseline.cfg > ${RUN_KEY}.out
-else
+elif [ ${CONFIG_TYPE} == "ref" ]; then
   ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} -d foreman_ref_encoder_baseline.cfg > ${RUN_KEY}.out
   ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} -d foreman_ref_encoder_main.cfg >> ${RUN_KEY}.out
   ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} -d sss_encoder_main.cfg >> ${RUN_KEY}.out
+else
+  echo "unknown input set" > ${RUN_KEY}.out
+  false
 fi
 
 RC=$?

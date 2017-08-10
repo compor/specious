@@ -33,6 +33,7 @@ RUN_KEY=${2}
 mkdir -p ${RUN_KEY}
 
 cp -rf ./${BMK_BIN_NAME} ${RUN_KEY}
+cp -rf ./${BMK_DATA_DIR}/all/input/* ${RUN_KEY}
 cp -rf ./${BMK_DATA_DIR}/${CONFIG_TYPE}/input/* ${RUN_KEY}
 
 pushd ${RUN_KEY}
@@ -46,10 +47,13 @@ if [ ${CONFIG_TYPE} == "test" ]; then
   ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} -I. -I./lib ref.pl >> ${RUN}.out
   ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} -I. -I./lib regmesg.pl >> ${RUN}.out
   ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} -I. -I./lib test.pl >> ${RUN}.out
-else
+elif [ ${CONFIG_TYPE} == "ref" ]; then
   ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} -I./lib checkspam.pl 2500 5 25 11 150 1 1 1 1 >> ${RUN}.out
   ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} -I./lib diffmail.pl 4 800 10 17 19 300 >> ${RUN}.out
   ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} -I./lib splitmail.pl 1600 12 26 16 4500 >> ${RUN}.out
+else
+  echo "unknown input set" > ${RUN_KEY}.out
+  false
 fi
 
 RC=$?
