@@ -140,6 +140,8 @@ endif()
 # configuration
 #
 
+set(CMAKE_INSTALL_MESSAGE "LAZY")
+
 # concatenate fragment lists
 set(HARNESS_CMAKE_FRAGMENT_FILES BasicFragment)
 
