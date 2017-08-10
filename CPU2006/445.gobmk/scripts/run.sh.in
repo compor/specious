@@ -4,6 +4,9 @@
 
 CONFIG_TYPE=""
 RUN_KEY=""
+SR_KEY=0
+
+subrun() { SR_KEY=$((SR_KEY+1)); }
 
 BMK_BIN_NAME="@BMK_BIN_NAME@"
 BMK_DATA_DIR="@BMK_DATA_DIR@"
@@ -39,21 +42,34 @@ cp -rf ./${BMK_DATA_DIR}/${CONFIG_TYPE}/input/* ${RUN_KEY}
 pushd ${RUN_KEY}
 
 if [ ${CONFIG_TYPE} == "test" ]; then
-  ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} --quiet --mode gtp < capture.tst > ${RUN_KEY}.out
-  ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} --quiet --mode gtp < connect.tst >> ${RUN_KEY}.out
-  ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} --quiet --mode gtp < connect_rot.tst >> ${RUN}.out
-  ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} --quiet --mode gtp < connection.tst >> ${RUN}.out
-  ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} --quiet --mode gtp < connection_rot.tst >> ${RUN}.out
-  ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} --quiet --mode gtp < cutstone.tst >> ${RUN}.out
-  ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} --quiet --mode gtp < dniwog.tst >> ${RUN}.out
+  ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} --quiet --mode gtp < capture.tst > ${RUN_KEY}.out.${SR_KEY}
+  subrun
+  ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} --quiet --mode gtp < connect.tst > ${RUN_KEY}.out.${SR_KEY}
+  subrun
+  ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} --quiet --mode gtp < connect_rot.tst > ${RUN}.out.${SR_KEY}
+  subrun
+  ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} --quiet --mode gtp < connection.tst > ${RUN}.out.${SR_KEY}
+  subrun
+  ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} --quiet --mode gtp < connection_rot.tst > ${RUN}.out.${SR_KEY}
+  subrun
+  ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} --quiet --mode gtp < cutstone.tst > ${RUN}.out.${SR_KEY}
+  subrun
+  ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} --quiet --mode gtp < dniwog.tst > ${RUN}.out.${SR_KEY}
+  subrun
 elif [ ${CONFIG_TYPE} == "ref" ]; then
-  ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} --quiet --mode gtp < 13x13.tst > ${RUN_KEY}.out
-  ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} --quiet --mode gtp < nngs.tst >> ${RUN_KEY}.out
-  ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} --quiet --mode gtp < score2.tst >> ${RUN_KEY}.out
-  ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} --quiet --mode gtp < trevorc.tst >> ${RUN_KEY}.out
-  ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} --quiet --mode gtp < trevord.tst >> ${RUN_KEY}.out
+  ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} --quiet --mode gtp < 13x13.tst > ${RUN_KEY}.out.${SR_KEY}
+  subrun
+  ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} --quiet --mode gtp < nngs.tst > ${RUN_KEY}.out.${SR_KEY}
+  subrun
+  ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} --quiet --mode gtp < score2.tst > ${RUN_KEY}.out.${SR_KEY}
+  subrun
+  ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} --quiet --mode gtp < trevorc.tst > ${RUN_KEY}.out.${SR_KEY}
+  subrun
+  ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} --quiet --mode gtp < trevord.tst > ${RUN_KEY}.out.${SR_KEY}
+  subrun
 else
-  echo "unknown input set" > ${RUN_KEY}.out
+  echo "unknown input set" > ${RUN_KEY}.out.${SR_KEY}
+  subrun
   false
 fi
 

@@ -4,6 +4,9 @@
 
 CONFIG_TYPE=""
 RUN_KEY=""
+SR_KEY=0
+
+subrun() { SR_KEY=$((SR_KEY+1)); }
 
 BMK_BIN_NAME="@BMK_BIN_NAME@"
 BMK_DATA_DIR="@BMK_DATA_DIR@"
@@ -42,8 +45,8 @@ if [ ${CONFIG_TYPE} == "test" ]; then
   ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} -d foreman_test_encoder_baseline.cfg > ${RUN_KEY}.out
 elif [ ${CONFIG_TYPE} == "ref" ]; then
   ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} -d foreman_ref_encoder_baseline.cfg > ${RUN_KEY}.out
-  ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} -d foreman_ref_encoder_main.cfg >> ${RUN_KEY}.out
-  ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} -d sss_encoder_main.cfg >> ${RUN_KEY}.out
+  ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} -d foreman_ref_encoder_main.cfg > ${RUN_KEY}.out
+  ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} -d sss_encoder_main.cfg > ${RUN_KEY}.out
 else
   echo "unknown input set" > ${RUN_KEY}.out
   false

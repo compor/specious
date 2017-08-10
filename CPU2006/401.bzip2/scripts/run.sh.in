@@ -4,6 +4,9 @@
 
 CONFIG_TYPE=""
 RUN_KEY=""
+SR_KEY=0
+
+subrun() { SR_KEY=$((SR_KEY+1)); }
 
 BMK_BIN_NAME="@BMK_BIN_NAME@"
 BMK_DATA_DIR="@BMK_DATA_DIR@"
@@ -39,16 +42,24 @@ pushd ${RUN_KEY}
 
 if [ ${CONFIG_TYPE} == "test" ]; then
   ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} input.program 5 > ${RUN_KEY}.out
-  ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} dryer.jpg 2 >> ${RUN_KEY}.out
+  ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} dryer.jpg 2 > ${RUN_KEY}.out.${SR_KEY}
+  subrun
 elif [ ${CONFIG_TYPE} == "ref" ]; then
-  ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} input.source 280 > ${RUN_KEY}.out
-  ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} chicken.jpg 30 >> ${RUN_KEY}.out
-  ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} liberty.jpg 30 >> ${RUN_KEY}.out
-  ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} input.program 280 >> ${RUN_KEY}.out
-  ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} text.html 280 >> ${RUN_KEY}.out
-  ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} input.combined 200 >> ${RUN_KEY}.out
+  ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} input.source 280 > ${RUN_KEY}.out.${SR_KEY}
+  subrun
+  ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} chicken.jpg 30 > ${RUN_KEY}.out.${SR_KEY}
+  subrun
+  ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} liberty.jpg 30 > ${RUN_KEY}.out.${SR_KEY}
+  subrun
+  ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} input.program 280 > ${RUN_KEY}.out.${SR_KEY}
+  subrun
+  ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} text.html 280 > ${RUN_KEY}.out.${SR_KEY}
+  subrun
+  ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} input.combined 200 > ${RUN_KEY}.out.${SR_KEY}
+  subrun
 else
-  echo "unknown input set" > ${RUN_KEY}.out
+  echo "unknown input set" > ${RUN_KEY}.out.${SR_KEY}
+  subrun
   false
 fi
 

@@ -4,6 +4,9 @@
 
 CONFIG_TYPE=""
 RUN_KEY=""
+SR_KEY=0
+
+subrun() { SR_KEY=$((SR_KEY+1)); }
 
 BMK_BIN_NAME="@BMK_BIN_NAME@"
 BMK_DATA_DIR="@BMK_DATA_DIR@"
