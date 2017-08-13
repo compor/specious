@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
 # initialize configuration vars
 
 CONFIG_TYPE=""
@@ -7,6 +9,8 @@ RUN_KEY=""
 SR_KEY=0
 
 subrun() { SR_KEY=$((SR_KEY+1)); }
+
+source ${DIR}/../preamble/${PIPELINE_NAME}preamble.sh
 
 BMK_BIN_NAME="@BMK_BIN_NAME@"
 BMK_DATA_DIR="@BMK_DATA_DIR@"
@@ -45,7 +49,11 @@ if [ ${CONFIG_TYPE} == "test" ]; then
   ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} --fixed 0 --mean 325 --num 45000 --sd 200 --seed 0 bombesin.hmm > ${RUN_KEY}.out
 elif [ ${CONFIG_TYPE} == "ref" ]; then
   ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} nph3.hmm swiss41 > ${RUN_KEY}.out
+  post_subrun
+  subrun
   ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} --fixed 0 --mean 500 --num 500000 --sd 350 --seed 0 retro.hmm > ${RUN_KEY}.out
+  post_subrun
+  subrun
 else
   echo "unknown input set" > ${RUN_KEY}.out
   false

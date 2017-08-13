@@ -2,11 +2,15 @@
 
 # initialize configuration vars
 
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
 CONFIG_TYPE=""
 RUN_KEY=""
 SR_KEY=0
 
 subrun() { SR_KEY=$((SR_KEY+1)); }
+
+source ${DIR}/../preamble/${PIPELINE_NAME}preamble.sh
 
 BMK_BIN_NAME="@BMK_BIN_NAME@"
 BMK_DATA_DIR="@BMK_DATA_DIR@"
@@ -43,27 +47,38 @@ pushd ${RUN_KEY}
 
 if [ ${CONFIG_TYPE} == "test" ]; then
   ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} -I. -I./lib attrs.pl > ${RUN_KEY}.out.${SR_KEY}
+  post_subrun
   subrun
   ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} -I. -I./lib gv.pl > ${RUN}.out.${SR_KEY}
+  post_subrun
   subrun
   ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} -I. -I./lib makerand.pl > ${RUN}.out.${SR_KEY}
+  post_subrun
   subrun
   ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} -I. -I./lib pack.pl > ${RUN}.out.${SR_KEY}
+  post_subrun
   subrun
   ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} -I. -I./lib redef.pl > ${RUN}.out.${SR_KEY}
+  post_subrun
   subrun
   ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} -I. -I./lib ref.pl > ${RUN}.out.${SR_KEY}
+  post_subrun
   subrun
   ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} -I. -I./lib regmesg.pl > ${RUN}.out.${SR_KEY}
+  post_subrun
   subrun
   ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} -I. -I./lib test.pl > ${RUN}.out.${SR_KEY}
+  post_subrun
   subrun
 elif [ ${CONFIG_TYPE} == "ref" ]; then
   ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} -I./lib checkspam.pl 2500 5 25 11 150 1 1 1 1 > ${RUN}.out.${SR_KEY}
+  post_subrun
   subrun
   ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} -I./lib diffmail.pl 4 800 10 17 19 300 > ${RUN}.out.${SR_KEY}
+  post_subrun
   subrun
   ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} -I./lib splitmail.pl 1600 12 26 16 4500 > ${RUN}.out.${SR_KEY}
+  post_subrun
   subrun
 else
   echo "unknown input set" > ${RUN_KEY}.out.${SR_KEY}

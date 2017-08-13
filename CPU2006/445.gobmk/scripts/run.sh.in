@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
 # initialize configuration vars
 
 CONFIG_TYPE=""
@@ -7,6 +9,8 @@ RUN_KEY=""
 SR_KEY=0
 
 subrun() { SR_KEY=$((SR_KEY+1)); }
+
+source ${DIR}/../preamble/${PIPELINE_NAME}preamble.sh
 
 BMK_BIN_NAME="@BMK_BIN_NAME@"
 BMK_DATA_DIR="@BMK_DATA_DIR@"
@@ -43,34 +47,48 @@ pushd ${RUN_KEY}
 
 if [ ${CONFIG_TYPE} == "test" ]; then
   ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} --quiet --mode gtp < capture.tst > ${RUN_KEY}.out.${SR_KEY}
+  post_subrun
   subrun
   ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} --quiet --mode gtp < connect.tst > ${RUN_KEY}.out.${SR_KEY}
+  post_subrun
   subrun
   ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} --quiet --mode gtp < connect_rot.tst > ${RUN}.out.${SR_KEY}
+  post_subrun
   subrun
   ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} --quiet --mode gtp < connection.tst > ${RUN}.out.${SR_KEY}
+  post_subrun
   subrun
   ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} --quiet --mode gtp < connection_rot.tst > ${RUN}.out.${SR_KEY}
+  post_subrun
   subrun
   ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} --quiet --mode gtp < cutstone.tst > ${RUN}.out.${SR_KEY}
+  post_subrun
   subrun
   ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} --quiet --mode gtp < dniwog.tst > ${RUN}.out.${SR_KEY}
+  post_subrun
   subrun
 elif [ ${CONFIG_TYPE} == "ref" ]; then
   ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} --quiet --mode gtp < 13x13.tst > ${RUN_KEY}.out.${SR_KEY}
+  post_subrun
   subrun
   ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} --quiet --mode gtp < nngs.tst > ${RUN_KEY}.out.${SR_KEY}
+  post_subrun
   subrun
   ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} --quiet --mode gtp < score2.tst > ${RUN_KEY}.out.${SR_KEY}
+  post_subrun
   subrun
   ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} --quiet --mode gtp < trevorc.tst > ${RUN_KEY}.out.${SR_KEY}
+  post_subrun
   subrun
   ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} --quiet --mode gtp < trevord.tst > ${RUN_KEY}.out.${SR_KEY}
+  post_subrun
   subrun
 else
   echo "unknown input set" > ${RUN_KEY}.out.${SR_KEY}
   subrun
   false
+
+  DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 fi
 
 RC=$?

@@ -12,6 +12,9 @@ macro(CallgrindPipelineSetup)
   message(STATUS "setting up pipeline Callgrind")
 
   #
+
+  configure_file("${CMAKE_SOURCE_DIR}/CPU2006/scripts/preamble/${PIPELINE_NAME}preamble.sh.in"
+    "CPU2006/preamble/${PIPELINE_NAME}preamble.sh" @ONLY)
 endmacro()
 
 CallgrindPipelineSetup()
@@ -61,7 +64,7 @@ function(CallgrindPipeline trgt)
   set(BMK_BIN_NAME "${PIPELINE_PREFIX}_bc_exe")
 
   set(BMK_BIN_PREAMBLE
-    "\"valgrind --tool=callgrind --callgrind-out-file=${BMK_BIN_NAME}.callgrind\"")
+    "\"valgrind --tool=callgrind --callgrind-out-file=callgrind.txt\"")
 
   get_filename_component(ABS_DATA_DIR data REALPATH)
   set(BMK_DATA_DIR "${PIPELINE_NAME}_data")

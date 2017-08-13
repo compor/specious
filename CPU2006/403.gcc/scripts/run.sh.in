@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
 # initialize configuration vars
 
 CONFIG_TYPE=""
@@ -7,6 +9,8 @@ RUN_KEY=""
 SR_KEY=0
 
 subrun() { SR_KEY=$((SR_KEY+1)); }
+
+source ${DIR}/../preamble/${PIPELINE_NAME}preamble.sh
 
 BMK_BIN_NAME="@BMK_BIN_NAME@"
 BMK_DATA_DIR="@BMK_DATA_DIR@"
@@ -46,27 +50,38 @@ if [ ${CONFIG_TYPE} == "test" ]; then
   subrun
 elif [ ${CONFIG_TYPE} == "ref" ]; then
   ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} 166.i -o 166.s > ${RUN_KEY}.out.${SR_KEY}
+  post_subrun
   subrun
-  ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} BMK_BIN_NAME200.i -o 200.s > ${RUN_KEY}.out .${SR_KEY}
+  ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} 200.i -o 200.s > ${RUN_KEY}.out .${SR_KEY}
+  post_subrun
   subrun
-  ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} BMK_BIN_NAMEc-typeck.i -o c-typeck.s > ${RUN_KEY}.out .${SR_KEY}
+  ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} c-typeck.i -o c-typeck.s > ${RUN_KEY}.out .${SR_KEY}
+  post_subrun
   subrun
-  ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} BMK_BIN_NAMEcp-decl.i -o cp-decl.s > ${RUN_KEY}.out .${SR_KEY}
+  ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} cp-decl.i -o cp-decl.s > ${RUN_KEY}.out .${SR_KEY}
+  post_subrun
   subrun
-  ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} BMK_BIN_NAMEexpr.i -o expr.s > ${RUN_KEY}.out .${SR_KEY}
+  ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} expr.i -o expr.s > ${RUN_KEY}.out .${SR_KEY}
+  post_subrun
   subrun
-  ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} BMK_BIN_NAMEexpr2.i -o expr2.s > ${RUN_KEY}.out .${SR_KEY}
+  ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} expr2.i -o expr2.s > ${RUN_KEY}.out .${SR_KEY}
+  post_subrun
   subrun
-  ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} BMK_BIN_NAMEg23.i -o g23.s > ${RUN_KEY}.out .${SR_KEY}
+  ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} g23.i -o g23.s > ${RUN_KEY}.out .${SR_KEY}
+  post_subrun
   subrun
-  ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} BMK_BIN_NAMEs04.i -o s04.s > ${RUN_KEY}.out .${SR_KEY}
+  ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} s04.i -o s04.s > ${RUN_KEY}.out .${SR_KEY}
+  post_subrun
   subrun
-  ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} BMK_BIN_NAMEscilab.i -o scilab.s > ${RUN_KEY}.out .${SR_KEY}
+  ${BMK_BIN_PREAMBLE} ./${BMK_BIN_NAME} scilab.i -o scilab.s > ${RUN_KEY}.out .${SR_KEY}
+  post_subrun
   subrun
 else
   echo "unknown input set" > ${RUN_KEY}.out.${SR_KEY}
   subrun
   false
+
+  DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 fi
 
 RC=$?

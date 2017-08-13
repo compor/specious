@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
 # initialize configuration vars
 
 CONFIG_TYPE=""
@@ -7,6 +9,8 @@ RUN_KEY=""
 SR_KEY=0
 
 subrun() { SR_KEY=$((SR_KEY+1)); }
+
+source ${DIR}/../preamble/${PIPELINE_NAME}preamble.sh
 
 BMK_BIN_NAME="@BMK_BIN_NAME@"
 BMK_DATA_DIR="@BMK_DATA_DIR@"
@@ -51,6 +55,8 @@ else
   echo "unknown input set" > ${RUN_KEY}.out.${SR_KEY}
   subrun
   false
+
+  DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 fi
 
 RC=$?
