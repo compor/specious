@@ -1,28 +1,71 @@
 # cmake file
 
-message(STATUS "setting up pipeline LoopC14N")
+include(CMakeParseArguments)
 
 # configuration
 
-macro(LoopC14NPipelineSetup)
+macro(LoopC14NPipelineSetupNames)
   set(PIPELINE_NAME "LoopC14N")
+  string(TOUPPER "${PIPELINE_NAME}" PIPELINE_NAME_UPPER)
   set(PIPELINE_INSTALL_TARGET "${PIPELINE_NAME}-install")
 endmacro()
 
 
-function(LoopC14NPipeline trgt)
-  LoopC14NPipelineSetup()
+macro(LoopC14NPipelineSetup)
+  LoopC14NPipelineSetupNames()
+
+  message(STATUS "setting up pipeline ${PIPELINE_NAME}")
+endmacro()
+
+LoopC14NPipelineSetup()
+
+#
+
+function(LoopC14NPipeline)
+  LoopC14NPipelineSetupNames()
+
+  set(options)
+  set(oneValueArgs DEPENDS)
+  set(multiValueArgs)
+  cmake_parse_arguments(${PIPELINE_NAME_UPPER}
+    "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
+
+  if("${${PIPELINE_NAME_UPPER}_DEPENDS}" STREQUAL "")
+    set(BW_COMPATIBILITY TRUE)
+  endif()
+
+  set(TRGT ${${PIPELINE_NAME_UPPER}_DEPENDS})
+
+  # apply defaults
+  if(BW_COMPATIBILITY)
+    list(GET ${PIPELINE_NAME_UPPER}_UNPARSED_ARGUMENTS 0 TRGT)
+    list(REMOVE_AT ${PIPELINE_NAME_UPPER}_UNPARSED_ARGUMENTS 0)
+
+    if("${TRGT}" STREQUAL "")
+      message(FATAL_ERROR "pipeline ${PIPELINE_NAME}: missing DEPENDS target")
+    endif()
+  endif()
+
+  list(LENGTH ${PIPELINE_NAME_UPPER}_UNPARSED_ARGUMENTS UNPARSED_ARGS_LEN)
+  if(${UNPARSED_ARGS_LEN} GREATER 0)
+    message(FATAL_ERROR "pipeline ${PIPELINE_NAME}: has extraneous arguments \
+    ${${PIPELINE_NAME_UPPER}_UNPARSED_ARGUMENTS}"
+  endif()
+
+  if(NOT TARGET ${TRGT})
+    message(FATAL_ERROR "pipeline ${PIPELINE_NAME}: ${TRGT} is not a target")
+  endif()
 
   if(NOT TARGET ${PIPELINE_NAME})
     add_custom_target(${PIPELINE_NAME})
   endif()
 
-  set(PIPELINE_SUBTARGET "${PIPELINE_NAME}_${trgt}")
+  set(PIPELINE_SUBTARGET "${PIPELINE_NAME}_${TRGT}")
   set(PIPELINE_PREFIX ${PIPELINE_SUBTARGET})
 
   ## pipeline targets and chaining
-  llvmir_attach_bc_target(${PIPELINE_PREFIX}_bc ${trgt})
-  add_dependencies(${PIPELINE_PREFIX}_bc ${trgt})
+  llvmir_attach_bc_target(${PIPELINE_PREFIX}_bc ${TRGT})
+  add_dependencies(${PIPELINE_PREFIX}_bc ${TRGT})
 
   llvmir_attach_opt_pass_target(${PIPELINE_PREFIX}_opt
     ${PIPELINE_PREFIX}_bc
@@ -51,14 +94,20 @@ function(LoopC14NPipeline trgt)
 
 
   # installation
-  get_property(bmk_name TARGET ${trgt} PROPERTY BMK_NAME)
+  get_property(bmk_name TARGET ${TRGT} PROPERTY BMK_NAME)
 
   InstallLoopC14NPipelineLLVMIR(${PIPELINE_PREFIX}_link ${bmk_name})
 endfunction()
 
 
 function(InstallLoopC14NPipelineLLVMIR pipeline_part_trgt bmk_name)
-  LoopC14NPipelineSetup()
+  LoopC14NPipelineSetupNames()
+
+  set(options)
+  set(oneValueArgs TARGET)
+  set(multiValueArgs)
+  cmake_parse_arguments(${PIPELINE_NAME_UPPER}
+    "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
   if(NOT TARGET ${PIPELINE_INSTALL_TARGET})
     add_custom_target(${PIPELINE_INSTALL_TARGET})
