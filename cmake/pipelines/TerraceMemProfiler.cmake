@@ -1,28 +1,46 @@
 # cmake file
 
-message(STATUS "setting up pipeline SimplifyLoopExits")
+message(STATUS "setting up pipeline TerraceMemProfiler")
 
-find_package(SimplifyLoopExits CONFIG)
+find_package(Terrace CONFIG)
 
-if(NOT SimplifyLoopExits_FOUND)
-  message(WARNING "package SimplifyLoopExits was not found; skipping.")
+if(NOT Terrace_FOUND)
+  message(WARNING "package Terrace was not found; skipping.")
 
   return()
 endif()
 
-get_target_property(SLE_LIB_LOCATION LLVMSimplifyLoopExitsPass LOCATION)
-get_target_property(DEPENDEE LLVMSimplifyLoopExitsPass DEPENDEE)
+find_package(MemProfiler CONFIG)
+
+if(NOT MemProfiler_FOUND)
+  message(FATAL_ERROR "package MemProfiler was not found")
+
+  return()
+endif()
+
+get_target_property(MEMPROFILER_LIB_LOCATION LLVMMemProfilerPass LOCATION)
+
+find_package(CommutativityRuntime CONFIG)
+
+if(NOT CommutativityRuntime_FOUND)
+  message(FATAL_ERROR "package CommutativityRuntime was not found")
+
+  return()
+endif()
+
+get_target_property(TERRACE_LIB_LOCATION LLVMTerracePass LOCATION)
+get_target_property(DEPENDEE LLVMTerracePass DEPENDEE)
 
 # configuration
 
-macro(SimplifyLoopExitsPipelineSetup)
-  set(PIPELINE_NAME "SimplifyLoopExits")
+macro(TerraceMemProfilerPipelineSetup)
+  set(PIPELINE_NAME "TerraceMemProfiler")
   set(PIPELINE_INSTALL_TARGET "${PIPELINE_NAME}-install")
 endmacro()
 
 
-function(SimplifyLoopExitsPipeline trgt)
-  SimplifyLoopExitsPipelineSetup()
+function(TerraceMemProfilerPipeline trgt)
+  TerraceMemProfilerPipelineSetup()
 
   if(NOT TARGET ${PIPELINE_NAME})
     add_custom_target(${PIPELINE_NAME})
@@ -32,20 +50,6 @@ function(SimplifyLoopExitsPipeline trgt)
   set(PIPELINE_PREFIX ${PIPELINE_SUBTARGET})
 
   ## pipeline targets and chaining
-  llvmir_attach_bc_target(${PIPELINE_PREFIX}_bc ${trgt})
-  add_dependencies(${PIPELINE_PREFIX}_bc ${trgt})
-
-  llvmir_attach_opt_pass_target(${PIPELINE_PREFIX}_opt1
-    ${PIPELINE_PREFIX}_bc
-    -mem2reg
-    -mergereturn
-    -simplifycfg
-    -loop-simplify)
-  add_dependencies(${PIPELINE_PREFIX}_opt1 ${PIPELINE_PREFIX}_bc)
-
-  llvmir_attach_link_target(${PIPELINE_PREFIX}_link ${PIPELINE_PREFIX}_opt1)
-  add_dependencies(${PIPELINE_PREFIX}_link ${PIPELINE_PREFIX}_opt1)
-
   set(LOAD_DEPENDENCY_CMDLINE_ARG "")
   if(DEPENDEE)
     foreach(dep ${DEPENDEE})
@@ -53,26 +57,30 @@ function(SimplifyLoopExitsPipeline trgt)
     endforeach()
   endif()
 
-  llvmir_attach_opt_pass_target(${PIPELINE_PREFIX}_opt2
-    ${PIPELINE_PREFIX}_link
+  set(DEPENDEE_TRGT "AnnotateLoops_${trgt}_opt2")
+
+  llvmir_attach_opt_pass_target(${PIPELINE_PREFIX}_opt1
+    ${DEPENDEE_TRGT}
     ${LOAD_DEPENDENCY_CMDLINE_ARG}
-    -load ${SLE_LIB_LOCATION}
-    -simplify-loop-exits
-    -sle-loop-depth-ub=1
-    -sle-loop-exiting-block-depth-ub=1
-    -sle-stats=${HARNESS_REPORT_DIR}/${BMK_NAME}-${PIPELINE_NAME}.txt)
-  add_dependencies(${PIPELINE_PREFIX}_opt2 ${PIPELINE_PREFIX}_link)
+    -load ${TERRACE_LIB_LOCATION}
+    -terrace)
+  add_dependencies(${PIPELINE_PREFIX}_opt1 ${DEPENDEE_TRGT})
+
+  llvmir_attach_opt_pass_target(${PIPELINE_PREFIX}_opt2
+    ${PIPELINE_PREFIX}_opt1
+    -load ${MEMPROFILER_LIB_LOCATION}
+    -dynapar-memprof -memprof-instrument-control=false)
+  add_dependencies(${PIPELINE_PREFIX}_opt2 ${PIPELINE_PREFIX}_opt1)
 
   llvmir_attach_executable(${PIPELINE_PREFIX}_bc_exe ${PIPELINE_PREFIX}_opt2)
   add_dependencies(${PIPELINE_PREFIX}_bc_exe ${PIPELINE_PREFIX}_opt2)
 
-  target_link_libraries(${PIPELINE_PREFIX}_bc_exe m)
+  target_link_libraries(${PIPELINE_PREFIX}_bc_exe CommutativityRuntime m)
 
   ## pipeline aggregate targets
   add_custom_target(${PIPELINE_SUBTARGET} DEPENDS
-    ${PIPELINE_PREFIX}_bc
+    ${DEPENDEE_TRGT}
     ${PIPELINE_PREFIX}_opt1
-    ${PIPELINE_PREFIX}_link
     ${PIPELINE_PREFIX}_opt2
     ${PIPELINE_PREFIX}_bc_exe)
 
@@ -82,12 +90,12 @@ function(SimplifyLoopExitsPipeline trgt)
   # installation
   get_property(bmk_name TARGET ${trgt} PROPERTY BMK_NAME)
 
-  InstallSimplifyLoopExitsPipelineLLVMIR(${PIPELINE_PREFIX}_link ${bmk_name})
+  InstallTerraceMemProfilerPipelineLLVMIR(${PIPELINE_PREFIX}_opt2 ${bmk_name})
 endfunction()
 
 
-function(InstallSimplifyLoopExitsPipelineLLVMIR pipeline_part_trgt bmk_name)
-  SimplifyLoopExitsPipelineSetup()
+function(InstallTerraceMemProfilerPipelineLLVMIR pipeline_part_trgt bmk_name)
+  TerraceMemProfilerPipelineSetup()
 
   if(NOT TARGET ${PIPELINE_INSTALL_TARGET})
     add_custom_target(${PIPELINE_INSTALL_TARGET})
