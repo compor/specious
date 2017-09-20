@@ -1,36 +1,17 @@
 #!/usr/bin/env bash
 
-# initialize configuration vars
-
-SRC_DIR=""
-INSTALL_PREFIX=""
-
-
 # set configuration vars
 
-if [ -z "$1" ]; then 
-  echo "error: source directory was not provided" 
-
-  exit 1
-fi
-
+[[ -z ${1} ]] && echo "error: source directory was not provided" && exit 1
 SRC_DIR=$1
 
-if [ -z "$2" ]; then 
-  INSTALL_PREFIX="${SRC_DIR}/../install/"
-else
-  INSTALL_PREFIX="$2"
-fi
+INSTALL_PREFIX=${2:-../install/}
 
 
 PIPELINE_CONFIG_FILE="${SRC_DIR}/configs/pipelines/loopextract-al-map.txt"
 BMK_CONFIG_FILE="${SRC_DIR}/configs/all_except_fortran.txt"
 
-if [ -z ${ANNOTATELOOPS_DIR+x} ]; then 
-  echo "error: ANNOTATELOOPS_DIR is not set"
-
-  exit 2
-fi
+[[ -z ${AnnotateLoops_DIR} ]] && echo "error: AnnotateLoops_DIR is not set" && exit 2
 
 # print configuration vars
 
@@ -57,10 +38,8 @@ CC=clang CXX=clang++ \
   -DHARNESS_USE_LLVM=On \
   -DHARNESS_PIPELINE_CONFIG_FILE=${PIPELINE_CONFIG_FILE} \
   -DHARNESS_BMK_CONFIG_FILE=${BMK_CONFIG_FILE} \
-  -DAnnotateLoops_DIR=${ANNOTATELOOPS_DIR} \
+  -DAnnotateLoops_DIR=${AnnotateLoops_DIR} \
   "${SRC_DIR}"
 
-
 exit $?
-
 
