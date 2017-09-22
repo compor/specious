@@ -1,5 +1,3 @@
 BmkBasicInstall
-BasicBitcodeGen
-LoopC14N
 AnnotateLoops
 Callgrind
