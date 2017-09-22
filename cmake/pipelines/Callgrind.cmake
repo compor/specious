@@ -13,8 +13,8 @@ macro(CallgrindPipelineSetup)
 
   #
 
-  configure_file("${CMAKE_SOURCE_DIR}/CPU2006/scripts/preamble/${PIPELINE_NAME}preamble.sh.in"
-    "CPU2006/preamble/${PIPELINE_NAME}preamble.sh" @ONLY)
+  configure_file("${CMAKE_SOURCE_DIR}/CPU2006/scripts/preamble/${PIPELINE_NAME}_preamble.sh.in"
+    "CPU2006/preamble/${PIPELINE_NAME}_preamble.sh" @ONLY)
 endmacro()
 
 CallgrindPipelineSetup()
