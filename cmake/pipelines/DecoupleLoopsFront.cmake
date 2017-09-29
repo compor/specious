@@ -35,6 +35,10 @@ function(DecoupleLoopsFrontPipeline trgt)
   set(DEPENDEE_TRGT "AnnotateLoops_${trgt}_opt2")
 
   ## pipeline targets and chaining
+  get_property(bmk_name TARGET ${trgt} PROPERTY BMK_NAME)
+  file(TO_CMAKE_PATH $ENV{HARNESS_REPORT_DIR} REPORT_DIR)
+  file(TO_CMAKE_PATH ${REPORT_DIR}/${BMK_NAME} REPORT_DIR)
+  file(MAKE_DIRECTORY ${REPORT_DIR})
 
   llvmir_attach_opt_pass_target(${PIPELINE_PREFIX}_le
     ${DEPENDEE_TRGT}
@@ -44,7 +48,10 @@ function(DecoupleLoopsFrontPipeline trgt)
   llvmir_attach_opt_pass_target(${PIPELINE_PREFIX}_dlf
     ${PIPELINE_PREFIX}_le
     -load ${DLF_LIB_LOCATION}
-    -decouple-loops-front)
+    -decouple-loops-front
+    -dlf-debug
+    -dlf-dot-cfg-only
+    -dlf-dot-dir ${REPORT_DIR})
   add_dependencies(${PIPELINE_PREFIX}_dlf ${PIPELINE_PREFIX}_le)
 
   llvmir_attach_executable(${PIPELINE_PREFIX}_bc_exe ${PIPELINE_PREFIX}_dlf)
@@ -63,7 +70,6 @@ function(DecoupleLoopsFrontPipeline trgt)
 
 
   # installation
-  get_property(bmk_name TARGET ${trgt} PROPERTY BMK_NAME)
   set(DEST_DIR "CPU2006/${bmk_name}")
 
   install(TARGETS ${PIPELINE_PREFIX}_bc_exe
