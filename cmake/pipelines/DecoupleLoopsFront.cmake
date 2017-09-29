@@ -11,6 +11,19 @@ macro(DecoupleLoopsFrontPipelineSetup)
 
   message(STATUS "setting up pipeline DecoupleLoopsFront")
 
+  if(NOT DEFINED ENV{HARNESS_REPORT_DIR})
+    message(FATAL_ERROR
+      "${PIPELINE_NAME} env variable HARNESS_REPORT_DIR is not defined")
+  endif()
+
+  file(TO_CMAKE_PATH $ENV{HARNESS_REPORT_DIR} HARNESS_REPORT_DIR)
+  if(NOT EXISTS ${HARNESS_REPORT_DIR})
+    file(MAKE_DIRECTORY ${HARNESS_REPORT_DIR})
+  endif()
+
+  message(STATUS
+    "${PIPELINE_NAME} uses env variable: HARNESS_REPORT_DIR=${HARNESS_REPORT_DIR}")
+
   #
 
   find_package(DecoupleLoopsFront CONFIG)
@@ -36,7 +49,7 @@ function(DecoupleLoopsFrontPipeline trgt)
 
   ## pipeline targets and chaining
   get_property(bmk_name TARGET ${trgt} PROPERTY BMK_NAME)
-  file(TO_CMAKE_PATH $ENV{HARNESS_REPORT_DIR} REPORT_DIR)
+  file(TO_CMAKE_PATH ${HARNESS_REPORT_DIR} REPORT_DIR)
   file(TO_CMAKE_PATH ${REPORT_DIR}/${BMK_NAME} REPORT_DIR)
   file(MAKE_DIRECTORY ${REPORT_DIR})
 
