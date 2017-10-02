@@ -63,6 +63,8 @@ function(DecoupleLoopsFrontPipeline trgt)
     -load ${DLF_LIB_LOCATION}
     -decouple-loops-front
     -dlf-debug
+    -dlf-bb-prefix
+    -dlf-report ${BMK_NAME}
     -dlf-dot-cfg-only
     -dlf-dot-dir ${REPORT_DIR})
   add_dependencies(${PIPELINE_PREFIX}_dlf ${PIPELINE_PREFIX}_le)
