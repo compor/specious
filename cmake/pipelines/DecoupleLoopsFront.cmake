@@ -64,7 +64,7 @@ function(DecoupleLoopsFrontPipeline trgt)
     -decouple-loops-front
     -dlf-debug
     -dlf-bb-prefix
-    -dlf-report ${BMK_NAME}
+    -dlf-report ${HARNESS_REPORT_DIR}/${BMK_NAME}
     -dlf-dot-cfg-only
     -dlf-dot-dir ${REPORT_DIR})
   add_dependencies(${PIPELINE_PREFIX}_dlf ${PIPELINE_PREFIX}_le)
