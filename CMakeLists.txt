@@ -79,23 +79,6 @@ if(HARNESS_USE_LLVM)
   endif()
 endif()
 
-# use Intel ICC specific flags
-if(CMAKE_C_COMPILER_ID STREQUAL "Intel" 
-    OR CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
-  set(ICC_FLAGS "${ICC_FLAGS} -O2")
-  set(ICC_FLAGS "${ICC_FLAGS} -parallel")
-  set(ICC_FLAGS "${ICC_FLAGS} -ipo")
-  set(ICC_FLAGS "${ICC_FLAGS} -xT -axT")
-  set(ICC_FLAGS "${ICC_FLAGS} -par-threshold0")
-  set(ICC_FLAGS "${ICC_FLAGS} -qopt-report=5")
-  set(ICC_FLAGS "${ICC_FLAGS} -qopt-report-phase=par")
-  #set(ICC_FLAGS "${ICC_FLAGS} -qopt-report-phase=par,loop")
-  set(ICC_FLAGS "${ICC_FLAGS} -qopt-report-file=report.txt")
-
-  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${ICC_FLAGS}")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${ICC_FLAGS}")
-endif()
-
 list(APPEND CMAKE_MODULE_PATH "${HARNESS_CMAKE_PIPELINE_DIR}")
 list(APPEND CMAKE_MODULE_PATH "${HARNESS_CMAKE_FRAGMENT_DIR}")
 list(APPEND CMAKE_MODULE_PATH "${HARNESS_CMAKE_BINARY_FRAGMENT_DIR}")
