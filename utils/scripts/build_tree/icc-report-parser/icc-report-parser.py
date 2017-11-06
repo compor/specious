@@ -2,67 +2,76 @@
 
 import sys
 import re
+import argparse
 
 
-loop_start = '^LOOP BEGIN'
-loop_end = '^LOOP END'
-loop_par = 'LOOP WAS AUTO-PARALLELIZED'
-benchmark_name = "4[0-9][0-9]\.\w"
+def icc_report_parse(input_filename, verbose):
+    top_loop_start = '^LOOP BEGIN'
+    loop_start = 'LOOP BEGIN'
+    top_loop_end = '^LOOP END'
+    loop_end = 'LOOP END'
+    loop_par = 'LOOP WAS AUTO-PARALLELIZED'
 
-
-def icc_report_parse():
-    is_top_level_loop = False
+    in_loop = False
     file_details = ''
-    benchmark = ''
-    filename = ''
+    source_filename = ''
     loop_line = ''
     loops = {}
+    loop_level = -1
+
     loop_count = 0
+    toplevel_loop_count = 0
 
+    with open(input_filename, buffering=1) as input_file:
+        for line in input_file:
+            if re.search(top_loop_start, line):
+                in_loop = True
+                parts = line.split()
+                file_details = parts[3]
 
-    for line in open(sys.argv[1]):
-        if re.search(loop_start, line):
-            is_top_level_loop = True
-            parts = line.split()
-            file_details = parts[3]
+            if re.search(loop_start, line):
+                loop_level += 1
 
-        # skip files that do not belong to the benchmark suite
-        if not re.search(benchmark_name, file_details):
-            continue
+            if re.search(top_loop_end, line):
+                in_loop = False 
 
-        if re.search(loop_end, line):
-            is_top_level_loop = True
+            if re.search(loop_end, line):
+                loop_level -= 1
+
+            if in_loop and re.search(loop_par, line):
+                path_parts = file_details.split('/')
+
+                file_parts = path_parts[len(path_parts) - 1].split('(')
+                source_filename = file_parts[0]
+                loop_line = int(file_parts[1].split(',')[0])
+
+                if not source_filename in loops:
+                    loops[source_filename] = [ (loop_line, loop_level) ]
+                else:
+                    loops[source_filename].append((loop_line, loop_level))
         
-        if is_top_level_loop and re.search(loop_par, line):
-            path_parts = file_details.split('/')
-
-            for part in path_parts:
-                if re.search(benchmark_name, part):
-                    benchmark = part
-                    break
-
-            file_parts = path_parts[len(path_parts) - 1].split('(')
-            filename = file_parts[0]
-            loop_line = file_parts[1].split(',')[0]
-
-            if len(loops) == 0:
-                loops = { benchmark : { (filename, loop_line) } }
-            else:
-                loops[benchmark].update({ (filename, loop_line) })
-
-    for k, v in loops.items():
-        print '\n'
-        print 'benchmark: ' + k
-        loop_count = 0
+    for f, v in loops.items():
         for loop in v:
-            loop_count = loop_count + 1
-            print "\t" + loop[0] + ':', loop[1]
-        print 'benchmark:', k, ' parloops: ', loop_count
+            loop_count += 1
 
+            if loop[1]:
+                toplevel_loop_count += 1
 
+            if verbose:
+                print '%s %d %d' % (f, loop[0], loop[1])
 
+    print 'total parallel loops: %d' % loop_count
+    print 'total top-level parallel loops: %d' % toplevel_loop_count
 
 
 if __name__ == "__main__":
-    icc_report_parse()
+    parser = argparse.ArgumentParser(description='Parse Intel ICC reports')
 
+    parser.add_argument('input_filename', type=str, 
+                        help='Intel ICC report file name')
+    parser.add_argument('--verbose', action='store_true', 
+                        help='Intel ICC report file name')
+
+    args = parser.parse_args()
+    
+    icc_report_parse(args.input_filename, args.verbose)
