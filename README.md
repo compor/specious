@@ -31,7 +31,7 @@ license.
    This can be automated with the relevant script found in the `utils/scripts/source_tree` subdirectory of this repo, 
    for example:
 
-   `create-symlink-bmk-subdir.sh -c suite_all.txt -s [path-to]/NPB3.3-SER-C/ -t [path-to]/nauseous/ -l src`
+   `create-symlink-bmk-subdir.sh -c suite_all.txt -s [path-to]/CPU2006/ -t [path-to]/specious/CPU2006 -l src`
 
 3. Create a directory for an out-of-source build and `cd` into it.
 4. Run `cmake` and `cmake --build .` with that appropriate options.
