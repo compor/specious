@@ -11,14 +11,14 @@ license.
 
 -   Building of all `C/C++` programs of the suite
 -   Out-of-source builds thanks to [cmake][2]
--   Capability to create LLVM bitcode files thanks to [llvm-ir-cmake-utils][3] and LLVM `opt` pass pipelines (see the
-    `config/pipelines` subdirectory).
--   Capability to configure and build any desired subset of the programs by using the corresponding configuration (see the
-    `suite_*` files in the `config` subdirectory).
+-   Optional capability to create LLVM bitcode files thanks to [llvm-ir-cmake-utils][3] and LLVM `opt` pass pipelines 
+    (see the `configs/pipelines` subdirectory).
+-   Capability to configure and build any desired subset of the programs by using the corresponding configuration (see 
+    the files in the `configs` subdirectory).
 
 ## Requirements
 
--   cmake 3.0.0 or later
+-   [cmake][2] 3.0.0 or later
 -   a sensible C/C++ compiler
 
 ## How to use
