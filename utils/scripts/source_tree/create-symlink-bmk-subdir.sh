@@ -101,6 +101,11 @@ if [ "${#BMK_SUBDIRS[@]}" -eq 0 ]; then
   exit 1
 fi
 
+# check if out dir location is given in relative form
+if [ "${BMK_SOURCE_DIR}" == "${BMK_SOURCE_DIR#/}" ]; then
+  BMK_SOURCE_DIR="$(pwd)/${BMK_SOURCE_DIR}"
+fi
+
 # print configuration vars
 
 INFO_STR="\
@@ -117,13 +122,6 @@ for BMK_SUBDIR in ${BMK_SUBDIRS[@]}; do
 done
 echo ""
 
-
-# operations
-
-# check if out dir location is given in relative form
-if [ "${BMK_SOURCE_DIR}" == "${BMK_SOURCE_DIR#/}" ]; then
-  BMK_SOURCE_DIR="$(pwd)/${BMK_SOURCE_DIR}"
-fi
 
 readarray BENCHMARKS < ${BMK_CONFIG_FILE}
 
