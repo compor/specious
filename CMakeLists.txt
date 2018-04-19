@@ -31,15 +31,16 @@ if(NOT HARNESS_REPORT_DIR)
   set(HARNESS_REPORT_DIR "${CMAKE_BINARY_DIR}/reports/")
   file(MAKE_DIRECTORY ${HARNESS_REPORT_DIR})
 endif()
-  
+
 set(HARNESS_BMK_SOURCE_SUBDIR "src")
 
 set(HARNESS_CMAKE_PIPELINE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/cmake/pipelines/")
 
-# aggregate list variables for appending commands 
+# aggregate list variables for appending commands
 # per each benchmark without editing each cmake file separately
 set(HARNESS_CMAKE_FRAGMENT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/cmake/fragments/")
-set(HARNESS_CMAKE_BINARY_FRAGMENT_DIR "${CMAKE_CURRENT_BINARY_DIR}/cmake/fragments/")
+set(HARNESS_CMAKE_BINARY_FRAGMENT_DIR
+  "${CMAKE_CURRENT_BINARY_DIR}/cmake/fragments/")
 set(HARNESS_CMAKE_FRAGMENT_FILES "")
 
 set(HARNESS_LLVMIR_CMAKE_FRAGMENT_FILES "")
@@ -56,7 +57,7 @@ set(HARNESS_INSTALL_TREE_SCRIPTS_DIR
 
 set(HARNESS_CONFIGS_DIR "${CMAKE_CURRENT_SOURCE_DIR}/configs")
 
-set(HARNESS_INVOCATIONS_DIR 
+set(HARNESS_INVOCATIONS_DIR
   "${CMAKE_CURRENT_SOURCE_DIR}/utils/invocations")
 
 add_definitions(-DSPEC_CPU)
@@ -67,15 +68,20 @@ add_definitions(-DSPEC_CPU_LINUX_X64)
 # project options checks and processing
 
 if(HARNESS_USE_LLVM)
-  find_package(LLVM REQUIRED CONFIG)
+  # finding LLVM modules is not currently required
+  #find_package(LLVM REQUIRED CONFIG)
 
-  if(LLVM_FOUND)
-    set(LLVM_LIB_DIR ${LLVM_TOOLS_BINARY_DIR}/../lib/)
+  #if(LLVM_FOUND)
+  #set(LLVM_LIB_DIR ${LLVM_TOOLS_BINARY_DIR}/../lib/)
+  #endif()
 
-    list(APPEND CMAKE_MODULE_PATH 
-      "${CMAKE_CURRENT_SOURCE_DIR}/cmake/llvm-ir-cmake-utils/cmake/")
+  list(APPEND CMAKE_MODULE_PATH
+    "${CMAKE_CURRENT_SOURCE_DIR}/cmake/llvm-ir-cmake-utils/cmake/")
 
-    include(LLVMIRUtil RESULT_VARIABLE LLVM_IR_UTIL_FOUND)
+  include(LLVMIRUtil RESULT_VARIABLE LLVM_IR_UTIL_FOUND)
+
+  if(NOT LLVM_IR_UTIL_FOUND)
+    message(FATAL_ERROR "llvm-ir-cmake-utils were not found")
   endif()
 endif()
 
@@ -86,13 +92,15 @@ list(APPEND CMAKE_MODULE_PATH "${HARNESS_CMAKE_BINARY_FRAGMENT_DIR}")
 include(BmkBasicInstall)
 
 
-if(LLVM_IR_UTIL_FOUND)
-  file(STRINGS ${HARNESS_PIPELINE_CONFIG_FILE} PIPELINES)
-
+if(HARNESS_USE_LLVM)
   if(NOT HARNESS_PIPELINE_CONFIG_FILE)
-    message(FATAL_ERROR "Benchmark config file HARNESS_PIPELINE_CONFIG_FILE is not set")
+    message(WARNING
+      "Benchmark config file variable is not set: HARNESS_PIPELINE_CONFIG_FILE")
   elseif(NOT EXISTS ${HARNESS_PIPELINE_CONFIG_FILE})
-    message(FATAL_ERROR "Benchmark config file does not exist: ${HARNESS_PIPELINE_CONFIG_FILE}")
+    message(WARNING
+      "Benchmark config file does not exist: ${HARNESS_PIPELINE_CONFIG_FILE}")
+  else()
+    file(STRINGS ${HARNESS_PIPELINE_CONFIG_FILE} PIPELINES)
   endif()
 
   foreach(PLINE ${PIPELINES})
@@ -100,8 +108,8 @@ if(LLVM_IR_UTIL_FOUND)
     include(${PLINE})
   endforeach()
 
-  create_file_fragment(FILENAME 
-    ${HARNESS_CMAKE_BINARY_FRAGMENT_DIR}/BasicFragment.cmake 
+  create_file_fragment(FILENAME
+    ${HARNESS_CMAKE_BINARY_FRAGMENT_DIR}/BasicFragment.cmake
     PIPELINES ${PIPELINES})
 endif()
 
@@ -113,9 +121,11 @@ endif()
 # project user options checks and processing
 
 if(NOT HARNESS_BMK_CONFIG_FILE)
-  message(FATAL_ERROR "Benchmark config file HARNESS_BMK_CONFIG_FILE is not set")
+  message(FATAL_ERROR
+    "Benchmark config file HARNESS_BMK_CONFIG_FILE is not set")
 elseif(NOT EXISTS ${HARNESS_BMK_CONFIG_FILE})
-  message(FATAL_ERROR "Benchmark config file does not exist: ${HARNESS_BMK_CONFIG_FILE}")
+  message(FATAL_ERROR
+    "Benchmark config file does not exist: ${HARNESS_BMK_CONFIG_FILE}")
 endif()
 
 
@@ -126,7 +136,9 @@ endif()
 set(CMAKE_INSTALL_MESSAGE "LAZY")
 
 # concatenate fragment lists
-set(HARNESS_CMAKE_FRAGMENT_FILES BasicFragment)
+if(HARNESS_USE_LLVM)
+  set(HARNESS_CMAKE_FRAGMENT_FILES BasicFragment)
+endif()
 
 file(STRINGS ${HARNESS_BMK_CONFIG_FILE} BENCHMARKS)
 
@@ -141,12 +153,12 @@ endforeach()
 install(DIRECTORY ${HARNESS_INVOCATIONS_DIR} DESTINATION .)
 install(DIRECTORY ${HARNESS_CONFIGS_DIR} DESTINATION .)
 install(DIRECTORY ${HARNESS_INSTALL_TREE_SCRIPTS_DIR} DESTINATION scripts)
-install(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/CPU2006/preamble/" 
+install(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/CPU2006/preamble/"
   DESTINATION "CPU2006/preamble/")
 
-add_custom_target(install-build-scripts 
+add_custom_target(install-build-scripts
   ALL
-  COMMAND ${CMAKE_COMMAND} -E copy_directory 
+  COMMAND ${CMAKE_COMMAND} -E copy_directory
   ${HARNESS_BUILD_TREE_SCRIPTS_SRC_DIR}
   ${HARNESS_BUILD_TREE_SCRIPTS_DEST_DIR}
   COMMENT "copying build-tree related scripts")
