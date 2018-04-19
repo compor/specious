@@ -39,7 +39,8 @@ function(create_file_cmdline_arg)
     return()
   endif()
 
-  set(${cfca_CMDLINE_ARG} "${cfca_CMDLINE_OPTION}=${cfca_FILENAME}" PARENT_SCOPE)
+  set(${cfca_CMDLINE_ARG}
+    "${cfca_CMDLINE_OPTION}=${cfca_FILENAME}" PARENT_SCOPE)
 endfunction()
 
 

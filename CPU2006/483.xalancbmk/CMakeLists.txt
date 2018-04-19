@@ -6,7 +6,7 @@ set(BMK_PROJECT_NAME "xalancbmk")
 check_bmk_processing(hasSrcDir)
 
 if(NOT ${hasSrcDir})
-  message(STATUS "skipping project: ${BMK_PROJECT_NAME}") 
+  message(STATUS "skipping project: ${BMK_PROJECT_NAME}")
   return()
 endif()
 
@@ -14,11 +14,11 @@ set(SOURCES
   AIXPlatformUtils.cpp
   CSetDefs.cpp
   BinHTTPURLInputStream.cpp
-  Win32PlatformUtils.cpp 
-  Win32MsgLoader.cpp 
-  Win32TransService.cpp 
-  Win32TransService2.cpp 
-  WinSockNetAccessor.cpp 
+  Win32PlatformUtils.cpp
+  Win32MsgLoader.cpp
+  Win32TransService.cpp
+  Win32TransService2.cpp
+  WinSockNetAccessor.cpp
   SunCCDefs.cpp
   SolarisPlatformUtils.cpp
   GCCDefs.cpp
@@ -748,7 +748,7 @@ set(SOURCES
   XercesWrapperHelper.cpp
   XercesWrapperNavigator.cpp
   XercesWrapperToXalanNodeMap.cpp
-  XalanExe.cpp) 
+  XalanExe.cpp)
 
 add_prefix(SOURCES "${HARNESS_BMK_SOURCE_SUBDIR}/" "${SOURCES}")
 
@@ -796,7 +796,7 @@ target_link_libraries(${BMK_PROJECT_NAME} m)
 # this property is required by our parasitic targets
 set_target_properties(${BMK_PROJECT_NAME} PROPERTIES LINKER_LANGUAGE CXX)
 
-# this property is used internally by our harness 
+# this property is used internally by our harness
 # because benchmark names and their main targets have different names
 set_target_properties(${BMK_PROJECT_NAME} PROPERTIES BMK_NAME ${BMK_NAME})
 

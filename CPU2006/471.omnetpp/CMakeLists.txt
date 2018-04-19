@@ -6,7 +6,7 @@ set(BMK_PROJECT_NAME "omnetpp")
 check_bmk_processing(hasSrcDir)
 
 if(NOT ${hasSrcDir})
-  message(STATUS "skipping project: ${BMK_PROJECT_NAME}") 
+  message(STATUS "skipping project: ${BMK_PROJECT_NAME}")
   return()
 endif()
 
@@ -93,7 +93,7 @@ set(SOURCES
   libs/sim/cllist.cc
   libs/sim/cpacket.cc
   libs/sim/ctopo.cc
-  libs/sim/random.cc 
+  libs/sim/random.cc
   libs/sim/std/netpack.cc
   libs/spec/spec_qsort.cc)
 
@@ -118,7 +118,7 @@ target_link_libraries(${BMK_PROJECT_NAME} m)
 # this property is required by our parasitic targets
 set_target_properties(${BMK_PROJECT_NAME} PROPERTIES LINKER_LANGUAGE CXX)
 
-# this property is used internally by our harness 
+# this property is used internally by our harness
 # because benchmark names and their main targets have different names
 set_target_properties(${BMK_PROJECT_NAME} PROPERTIES BMK_NAME ${BMK_NAME})
 
