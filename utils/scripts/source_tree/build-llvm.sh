@@ -1,58 +1,35 @@
 #!/usr/bin/env bash
 
-# initialize configuration vars
+PRJ_ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../../" && pwd)"
+SRC_DIR=${1:-$PRJ_ROOT_DIR}
+INSTALL_PREFIX=${2:-../install/}
 
-SRC_DIR=""
-INSTALL_PREFIX=""
+BMK_CONFIG_FILE="${SRC_DIR}/config/suite_all.txt"
+BMK_CLASS="S"
+BMK_CLASS="B"
+MG_BMK_CLASS="C"
+IS_BMK_CLASS="C"
 
+#
 
-# set configuration vars
-
-if [ -z "$1" ]; then 
-  echo "error: source directory was not provided" 
-
-  exit 1
-fi
-
-SRC_DIR=$1
-
-if [ -z "$2" ]; then 
-  INSTALL_PREFIX="${SRC_DIR}/../install/"
-else
-  INSTALL_PREFIX="$2"
-fi
-
-
-BMK_CONFIG_FILE="${SRC_DIR}/configs/all_except_fortran.txt"
-
-
-# print configuration vars
-
-echo "info: printing configuration vars"
-echo "info: source dir: ${SRC_DIR}"
-echo "info: install dir: ${INSTALL_PREFIX}"
-echo ""
-
-
-LINKER_FLAGS="-Wl,-L$(llvm-config --libdir) -Wl,-rpath=$(llvm-config --libdir)"
-LINKER_FLAGS="${LINKER_FLAGS} -lc++ -lc++abi" 
+C_FLAGS="-g -Wall -O2 -mcmodel=medium"
+#LINKER_FLAGS="-Wl,-L$(llvm-config --libdir) -Wl,-rpath=$(llvm-config --libdir)"
+#LINKER_FLAGS="${LINKER_FLAGS} -lc++ -lc++abi" 
 
 CC=clang CXX=clang++ \
-  cmake \
+cmake \
+  -GNinja \
   -DCMAKE_POLICY_DEFAULT_CMP0056=NEW \
   -DCMAKE_EXPORT_COMPILE_COMMANDS=On \
-  -DLLVM_DIR=$(llvm-config --prefix)/share/llvm/cmake/ \
   -DCMAKE_BUILD_TYPE=Debug \
-  -DCMAKE_CXX_FLAGS="-stdlib=libc++" \
+  -DCMAKE_C_FLAGS="${C_FLAGS}" \
   -DCMAKE_EXE_LINKER_FLAGS="${LINKER_FLAGS}" \
   -DCMAKE_SHARED_LINKER_FLAGS="${LINKER_FLAGS}" \
   -DCMAKE_MODULE_LINKER_FLAGS="${LINKER_FLAGS}" \
   -DCMAKE_INSTALL_PREFIX="${INSTALL_PREFIX}" \
-  -DHARNESS_USE_LLVM=On \
   -DHARNESS_BMK_CONFIG_FILE=${BMK_CONFIG_FILE} \
+  -DBMK_CLASS=${BMK_CLASS} \
+  -DMG_BMK_CLASS=${MG_BMK_CLASS} \
+  -DIS_BMK_CLASS=${IS_BMK_CLASS} \
   "${SRC_DIR}"
-
-
-exit $?
-
 
