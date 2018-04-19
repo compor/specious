@@ -1,28 +1,25 @@
 #!/usr/bin/env bash
 
-[[ -z ${1} ]] && echo "error: source directory was not provided" && exit 1
-SRC_DIR=$1
-
+PRJ_ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../../" && pwd)"
+SRC_DIR=${1:-$PRJ_ROOT_DIR}
 INSTALL_PREFIX=${2:-../install/}
 
 PIPELINE_CONFIG_FILE=${3:-${SRC_DIR}/configs/pipelines/terracememprofiler.txt}
 BMK_CONFIG_FILE=${4:-${SRC_DIR}/configs/all_except_fortran.txt}
 
-[[ -z ${AnnotateLoops_DIR} ]] && echo "error: AnnotateLoops_DIR is not set"
-[[ -z ${Terrace_DIR} ]] && echo "error: Terrace_DIR is not set"
-[[ -z ${MemProfiler_DIR} ]] && echo "error: MemProfiler_DIR is not set"
-[[ -z ${CommutativityRuntime_DIR} ]] && echo "error: CommutativityRuntime_DIR is not set"
-
-#
+[[ -z "${ANNOTATELOOPS_DIR}" ]] && echo "ANNOTATELOOPS_DIR is not set" && exit 1
+[[ -z "${TERRACE_DIR}" ]] && echo "error: TERRACE_DIR is not set" && exit 1
+[[ -z "${MEMPROFILER_DIR}" ]] && echo "error: MEMPROFILER_DIR is not set" && exit 1
+[[ -z "${COMMUTATIVITYRUNTIME_DIR}" ]] && echo "error: COMMUTATIVITYRUNTIME_DIR is not set"
 
 LINKER_FLAGS="-Wl,-L$(llvm-config --libdir) -Wl,-rpath=$(llvm-config --libdir)"
-LINKER_FLAGS="${LINKER_FLAGS} -lc++ -lc++abi" 
+LINKER_FLAGS="${LINKER_FLAGS} -lc++ -lc++abi"
 
 CC=clang CXX=clang++ \
   cmake \
+  -GNinja \
   -DCMAKE_POLICY_DEFAULT_CMP0056=NEW \
   -DCMAKE_EXPORT_COMPILE_COMMANDS=On \
-  -DLLVM_DIR=$(llvm-config --prefix)/share/llvm/cmake/ \
   -DCMAKE_BUILD_TYPE=Debug \
   -DCMAKE_CXX_FLAGS="-stdlib=libc++" \
   -DCMAKE_EXE_LINKER_FLAGS="${LINKER_FLAGS}" \
@@ -30,13 +27,11 @@ CC=clang CXX=clang++ \
   -DCMAKE_MODULE_LINKER_FLAGS="${LINKER_FLAGS}" \
   -DCMAKE_INSTALL_PREFIX="${INSTALL_PREFIX}" \
   -DHARNESS_USE_LLVM=On \
-  -DHARNESS_PIPELINE_CONFIG_FILE=${PIPELINE_CONFIG_FILE} \
-  -DHARNESS_BMK_CONFIG_FILE=${BMK_CONFIG_FILE} \
-  -DTerrace_DIR=${AnnotateLoops_DIR} \
-  -DTerrace_DIR=${Terrace_DIR} \
-  -DMemProfiler_DIR=${MemProfiler_DIR} \
-  -DCommutativityRuntime_DIR=${CommutativityRuntime_DIR} \
+  -DHARNESS_PIPELINE_CONFIG_FILE="${PIPELINE_CONFIG_FILE}" \
+  -DHARNESS_BMK_CONFIG_FILE="${BMK_CONFIG_FILE}" \
+  -DTerrace_DIR="${ANNOTATELOOPS_DIR}" \
+  -DTerrace_DIR="${TERRACE_DIR}" \
+  -DMemProfiler_DIR="${MEMPROFILER_DIR}" \
+  -DCommutativityRuntime_DIR="${COMMUTATIVITYRUNTIME_DIR}" \
   "${SRC_DIR}"
-
-exit $?
 

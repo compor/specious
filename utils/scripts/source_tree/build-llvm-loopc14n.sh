@@ -8,13 +8,12 @@ BMK_CONFIG_FILE="${SRC_DIR}/configs/all_except_fortran.txt"
 
 PIPELINE_CONFIG_FILE="${SRC_DIR}/configs/pipelines/loopc14n.txt"
 
-#
-
 LINKER_FLAGS="-Wl,-L$(llvm-config --libdir) -Wl,-rpath=$(llvm-config --libdir)"
 LINKER_FLAGS="${LINKER_FLAGS} -lc++ -lc++abi"
 
 CC=clang CXX=clang++ \
   cmake \
+  -GNinja \
   -DCMAKE_POLICY_DEFAULT_CMP0056=NEW \
   -DCMAKE_EXPORT_COMPILE_COMMANDS=On \
   -DCMAKE_BUILD_TYPE=Debug \

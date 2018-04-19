@@ -6,13 +6,11 @@ INSTALL_PREFIX=${2:-../install/}
 
 BMK_CONFIG_FILE="${SRC_DIR}/configs/all_except_fortran.txt"
 
-#
-
 LINKER_FLAGS="-Wl,-L$(llvm-config --libdir) -Wl,-rpath=$(llvm-config --libdir)"
 LINKER_FLAGS="${LINKER_FLAGS} -lc++ -lc++abi"
 
 CC=clang CXX=clang++ \
-cmake \
+  cmake \
   -GNinja \
   -DCMAKE_POLICY_DEFAULT_CMP0056=NEW \
   -DCMAKE_EXPORT_COMPILE_COMMANDS=On \

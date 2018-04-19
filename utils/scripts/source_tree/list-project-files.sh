@@ -20,7 +20,7 @@ OUTPUT_SUFFIX=".project_files.txt"
 CMDOPTS=":c:s:o:d:qh"
 
 HELP_STRING="\
-Usage: ${0} OPTIONS
+  Usage: ${0} OPTIONS
 
 -c file    benchmark config file
 -s dir     benchmark source directory
@@ -69,13 +69,13 @@ if [ "$SHOW_HELP" -ne 0 ]; then
   exit 0
 fi
 
-if [ -z ${BMK_CONFIG_FILE:+x} -o ! -e ${BMK_CONFIG_FILE} ]; then
+if [ -z "${BMK_CONFIG_FILE:+x}" -o ! -e "${BMK_CONFIG_FILE}" ]; then
   echo "error: benchmark config file was not provided or does not exist" > $ERRS
 
   exit 1
 fi
 
-if [ -z ${BMK_SOURCE_DIR:+x} -o ! -e ${BMK_SOURCE_DIR} ]; then
+if [ -z "${BMK_SOURCE_DIR:+x}" -o ! -e "${BMK_SOURCE_DIR}" ]; then
   echo "error: benchmark source dir was not provided or does not exist" > $ERRS
 
   exit 1
@@ -85,7 +85,7 @@ fi
 # print configuration vars
 
 INFO_STR="\
-info: printing configuration vars
+  info: printing configuration vars
 info: benchmark config file: ${BMK_CONFIG_FILE}
 info: benchmark source dir: ${BMK_SOURCE_DIR}
 info: output dir: ${OUTPUT_DIRNAME}
@@ -112,21 +112,21 @@ if [ "${OUTPUT_DIRNAME}" == "${OUTPUT_DIRNAME#/}" ]; then
   OUTPUT_DIRNAME=$(pwd)/${OUTPUT_DIRNAME}
 fi
 
-readarray BENCHMARKS < ${BMK_CONFIG_FILE}
+readarray BENCHMARKS < "${BMK_CONFIG_FILE}"
 
-for BMK in ${BENCHMARKS[@]}; do
+for BMK in "${BENCHMARKS[@]}"; do
   OUTFILENAME=${BMK}${OUTPUT_SUFFIX}
 
-  pushd ${BMK_SOURCE_DIR}/${BMK}/src/ > $OUTS
+  pushd "${BMK_SOURCE_DIR}/${BMK}/src/" > $OUTS
 
   find . \
-       -iname '*.h' \
+    -iname '*.h' \
     -o -iname '*.hpp' \
     -o -iname '*.hxx' \
     -o -iname '*.c' \
     -o -iname '*.cpp' \
-    -o -iname '*.cxx' > ${OUTPUT_DIRNAME}/${OUTFILENAME}
-  
+    -o -iname '*.cxx' > "${OUTPUT_DIRNAME}/${OUTFILENAME}"
+
   popd > $OUTS
 done
 

@@ -23,7 +23,7 @@ declare -a BMK_SUBDIRS
 CMDOPTS=":c:s:t:l:Rqh"
 
 HELP_STRING="\
-Usage: ${0} OPTIONS
+  Usage: ${0} OPTIONS
 
 -c file    benchmark config file
 -s dir     benchmark source directory
@@ -77,19 +77,19 @@ if [ "$SHOW_HELP" -ne 0 ]; then
   exit 0
 fi
 
-if [ -z ${BMK_CONFIG_FILE:+x} -o ! -e ${BMK_CONFIG_FILE} ]; then
+if [ -z "${BMK_CONFIG_FILE:+x}" -o ! -e "${BMK_CONFIG_FILE}" ]; then
   echo "error: benchmark config file was not provided or does not exist" > $ERRS
 
   exit 1
 fi
 
-if [ -z ${BMK_SOURCE_DIR:+x} -o ! -e ${BMK_SOURCE_DIR} ]; then
+if [ -z "${BMK_SOURCE_DIR:+x}" -o ! -e "${BMK_SOURCE_DIR}" ]; then
   echo "error: benchmark source dir was not provided or does not exist" > $ERRS
 
   exit 1
 fi
 
-if [ -z ${BMK_TARGET_DIR:+x} -o ! -e ${BMK_TARGET_DIR} ]; then
+if [ -z "${BMK_TARGET_DIR:+x}" -o ! -e "${BMK_TARGET_DIR}" ]; then
   echo "error: benchmark target dir was not provided or does not exist" > $ERRS
 
   exit 1
@@ -108,8 +108,7 @@ fi
 
 # print configuration vars
 
-INFO_STR="\
-info: printing configuration vars
+INFO_STR="info: printing configuration vars
 info: operation mode: ${OP_MODE_STR}
 info: benchmark config file: ${BMK_CONFIG_FILE}
 info: benchmark source dir: ${BMK_SOURCE_DIR}
@@ -117,17 +116,17 @@ info: benchmark target dir: ${BMK_TARGET_DIR}
 info: benchmark subdirs: "
 
 echo -n "$INFO_STR" > $OUTS
-for BMK_SUBDIR in ${BMK_SUBDIRS[@]}; do
+for BMK_SUBDIR in "${BMK_SUBDIRS[@]}"; do
   echo -n "${BMK_SUBDIR} " > $OUTS
 done
 echo ""
 
 
-readarray BENCHMARKS < ${BMK_CONFIG_FILE}
+readarray BENCHMARKS < "${BMK_CONFIG_FILE}"
 
 for BMK in "${BENCHMARKS[@]}"; do
   # trim whitespace
-  BMK=$(echo $BMK | xargs)
+  BMK=$(echo "$BMK" | xargs)
 
   # 2 modes of operation
   if [ "$BMK_RM_LINKS" -eq 0 ]; then
@@ -137,16 +136,16 @@ for BMK in "${BENCHMARKS[@]}"; do
       # trim whitespace
       BMK_SUBDIR=$(echo $BMK_SUBDIR | xargs)
 
-      [ -z ${BMK_SUBDIR} ] && continue
+      [ -z "${BMK_SUBDIR}" ] && continue
 
       ABSOLUTE_BMK_SUBDIR="${BMK_SOURCE_DIR}/${BMK}/${BMK_SUBDIR}"
       echo "${ABSOLUTE_BMK_SUBDIR}" > $OUTS
 
-      [ ! -d ${ABSOLUTE_BMK_SUBDIR} ] && continue
+      [ ! -d "${ABSOLUTE_BMK_SUBDIR}" ] && continue
 
       pushd "${BMK_TARGET_DIR}/${BMK}" > $OUTS
 
-      ln -sf ${ABSOLUTE_BMK_SUBDIR}
+      ln -sf "${ABSOLUTE_BMK_SUBDIR}"
 
       popd > $OUTS
     done
