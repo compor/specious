@@ -1,4 +1,4 @@
 [submodule "cmake/llvm-ir-cmake-utils"]
 	path = cmake/llvm-ir-cmake-utils
-	url = git@github.com:compor/llvm-ir-cmake-utils.git
+	url = https://github.com/compor/llvm-ir-cmake-utils.git
 	branch = master
