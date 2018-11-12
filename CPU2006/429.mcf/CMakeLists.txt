@@ -27,7 +27,7 @@ add_prefix(SOURCES "${HARNESS_BMK_SOURCE_SUBDIR}/" "${SOURCES}")
 
 add_executable(${BMK_PROJECT_NAME} ${SOURCES})
 
-add_definitions(-DWANT_STDC_PROTO)
+target_compile_definitions(${BMK_PROJECT_NAME} PUBLIC -DWANT_STDC_PROTO)
 
 target_include_directories(${BMK_PROJECT_NAME} PUBLIC
   "${CMAKE_CURRENT_SOURCE_DIR}/${HARNESS_BMK_SOURCE_SUBDIR}")

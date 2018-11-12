@@ -132,8 +132,8 @@ add_prefix(SOURCES "${HARNESS_BMK_SOURCE_SUBDIR}/" "${SOURCES}")
 
 add_executable(${BMK_PROJECT_NAME} ${SOURCES})
 
-add_definitions(-DBOOST_DISABLE_THREADS)
-add_definitions(-Ddeal_II_dimension=3)
+target_compile_definitions(${BMK_PROJECT_NAME} PUBLIC -DBOOST_DISABLE_THREADS)
+target_compile_definitions(${BMK_PROJECT_NAME} PUBLIC -Ddeal_II_dimension=3)
 
 target_include_directories(${BMK_PROJECT_NAME} PUBLIC
   "${CMAKE_CURRENT_SOURCE_DIR}/${HARNESS_BMK_SOURCE_SUBDIR}")

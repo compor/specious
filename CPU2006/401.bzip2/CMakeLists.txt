@@ -25,7 +25,7 @@ add_prefix(SOURCES "${HARNESS_BMK_SOURCE_SUBDIR}/" "${SOURCES}")
 
 add_executable(${BMK_PROJECT_NAME} ${SOURCES})
 
-add_definitions(-DSPEC_BZIP)
+target_compile_definitions(${BMK_PROJECT_NAME} PUBLIC -DSPEC_BZIP)
 
 target_include_directories(${BMK_PROJECT_NAME} PUBLIC
   "${CMAKE_CURRENT_SOURCE_DIR}/${HARNESS_BMK_SOURCE_SUBDIR}")
