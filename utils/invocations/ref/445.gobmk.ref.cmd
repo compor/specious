@@ -1,5 +1,5 @@
---quiet --mode gtp < 13x13.tst
---quiet --mode gtp < nngs.tst
---quiet --mode gtp < score2.tst
---quiet --mode gtp < trevorc.tst
---quiet --mode gtp < trevord.tst
+--quiet --mode gtp --gtp-input 13x13.tst
+--quiet --mode gtp --gtp-input nngs.tst
+--quiet --mode gtp --gtp-input score2.tst
+--quiet --mode gtp --gtp-input trevorc.tst
+--quiet --mode gtp --gtp-input trevord.tst

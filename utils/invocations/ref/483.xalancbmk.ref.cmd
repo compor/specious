@@ -1,1 +1,1 @@
--v t5.xml xalanc.xsl
+-v -o output.xml t5.xml xalanc.xsl
