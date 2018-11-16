@@ -4,7 +4,7 @@ PRJ_ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../../" && pwd)"
 SRC_DIR=${1:-$PRJ_ROOT_DIR}
 INSTALL_PREFIX=${2:-../install/}
 
-BMK_CONFIG_FILE="${SRC_DIR}/configs/all_except_fortran.txt"
+BMK_CONFIG_FILE="${SRC_DIR}/config/sets/groups/all_except_fortran.txt"
 
 # use Intel ICC specific flags
 ICC_FLAGS="${ICC_FLAGS} -O2"
@@ -24,7 +24,7 @@ C_FLAGS="${CMAKE_C_FLAGS} ${ICC_FLAGS}"
 CXX_FLAGS="${CMAKE_CXX_FLAGS} ${ICC_FLAGS}"
 
 #C_FLAGS="-g -Wall -O3"
-#LINKER_FLAGS="-Wl,-L$(llvm-config --libdir) -Wl,-rpath=$(llvm-config --libdir)"
+#LINKER_FLAGS="-Wl,-L$(llvm-config/sets/groups --libdir) -Wl,-rpath=$(llvm-config/sets/groups --libdir)"
 #LINKER_FLAGS="${LINKER_FLAGS} -lc++ -lc++abi"
 
 #

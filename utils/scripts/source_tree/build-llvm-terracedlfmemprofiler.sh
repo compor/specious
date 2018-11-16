@@ -4,9 +4,9 @@ PRJ_ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../../" && pwd)"
 SRC_DIR=${1:-$PRJ_ROOT_DIR}
 INSTALL_PREFIX=${2:-../install/}
 
-PIPELINE_CONFIG_FILE=${3:-${SRC_DIR}/configs/pipelines/terracedlfmemprofiler.txt}
-BMK_CONFIG_FILE=${4:-${SRC_DIR}/configs/all_except_fortran.txt}
-BMK_CONFIG_FILE=${4:-${SRC_DIR}/configs/lbm.txt}
+PIPELINE_CONFIG_FILE=${3:-${SRC_DIR}/config/pipelines/terracedlfmemprofiler.txt}
+BMK_CONFIG_FILE=${4:-${SRC_DIR}/config/sets/groups/all_except_fortran.txt}
+BMK_CONFIG_FILE=${4:-${SRC_DIR}/config/sets/groups/lbm.txt}
 
 [[ -z "${AnnotateLoops_DIR}" ]] && echo "error: AnnotateLoops_DIR is not set" && exit 1
 [[ -z "${DecoupleLoopsFront_DIR}" ]] && echo "error: DecoupleLoopsFront_DIR is not set" && exit 1

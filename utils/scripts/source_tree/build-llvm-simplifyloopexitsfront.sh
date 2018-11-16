@@ -4,8 +4,8 @@ PRJ_ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../../" && pwd)"
 SRC_DIR=${1:-$PRJ_ROOT_DIR}
 INSTALL_PREFIX=${2:-../install/}
 
-BMK_CONFIG_FILE="${SRC_DIR}/configs/all_except_fortran.txt"
-PIPELINE_CONFIG_FILE="${SRC_DIR}/configs/pipelines/slef.txt"
+BMK_CONFIG_FILE="${SRC_DIR}/config/sets/groups/all_except_fortran.txt"
+PIPELINE_CONFIG_FILE="${SRC_DIR}/config/pipelines/slef.txt"
 
 [[ -z "${ANNOTATELOOPS_DIR}" ]] && echo "error: ANNOTATELOOPS_DIR is not set" && exit 2
 [[ -z "${SIMPLIFYLOOPEXITSFRONT_DIR}" ]] && echo "error: SIMPLIFYLOOPEXITSFRONT_DIR is not set" && exit 2
