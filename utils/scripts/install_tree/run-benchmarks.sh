@@ -1,55 +1,75 @@
 #!/usr/bin/env bash
 
+#set -x
+
 # internal vars
 
 OUTS='/dev/stdout'
 ERRS='/dev/stderr'
 
-
 # initialize configuration vars
 
-SHOW_HELP=0
-BMK_CONFIG_FILE=""
-BMK_INSTALL_DIR=""
-BMK_DATA_DIR=""
-BMK_DATA_TYPEBMK_DATA_TYPE=""
+SCRIPT_HELP=0
+SCRIPT_JOBS=1
+SCRIPT_CPU=0
+SCRIPT_DRYRUN=0
+
+SCRIPT_MAX_CPUS=$(nproc)
+
+SUITE_CONFIG_FILE=""
+SUITE_TARGET_DIR=""
+SUITE_DATA_DIR=""
+SUITE_DATA_TYPE=""
 
 
 # parse and check cmd line options
 
-CMDOPTS=":c:i:d:t:qh"
+CMDOPTS=":c:i:d:t:j:u:nqh"
 
-HELP_STRING="\
+HELP_STRING=$(cat <<- END
 Usage: ${0} OPTIONS
 
--c file    benchmark config file
--i dir     benchmark install directory
--d dir     data set dir
--t string  data set type
--q         silent mode (no output)
--h         help
-"
+-c file       benchmark suite config file
+-i dir        benchmark suite target directory
+-d dir        data set dir
+-t string     data set type
+-j N          perform N parallel jobs
+-u N          run on CPU N and onwards parallel jobs
+-q            silent mode (no output)
+-n            dry run
+-h            help
+END
+)
 
 while getopts ${CMDOPTS} cmdopt; do
   case $cmdopt in
     c)
-      BMK_CONFIG_FILE=$OPTARG
+      SUITE_CONFIG_FILE=$OPTARG
       ;;
     i)
-      BMK_INSTALL_DIR=$OPTARG
+      SUITE_TARGET_DIR=$OPTARG
       ;;
     d)
-      BMK_DATA_DIR=$OPTARG
+      SUITE_DATA_DIR=$OPTARG
       ;;
     t)
-      BMK_DATA_TYPE=$OPTARG
+      SUITE_DATA_TYPE=$OPTARG
+      ;;
+    j)
+      SCRIPT_JOBS=$OPTARG
+      ;;
+    u)
+      SCRIPT_CPU=$OPTARG
       ;;
     q)
       OUTS="/dev/null"
       ERRS="/dev/null"
       ;;
     h)
-      SHOW_HELP=1
+      SCRIPT_HELP=1
+      ;;
+    n)
+      SCRIPT_DRYRUN=1
       ;;
     \?)
       echo "error: invalid option: -$OPTARG" > $ERRS
@@ -63,86 +83,119 @@ while getopts ${CMDOPTS} cmdopt; do
 done
 
 
-if [ "$SHOW_HELP" -ne 0 ]; then
-  echo "$HELP_STRING" > $ERRS
+[[ $SCRIPT_HELP -ne 0 ]] && echo "$HELP_STRING" > $ERRS && exit 0
 
-  exit 0
-fi
-
+[[ $SCRIPT_DRYRUN -ne 0 ]] && echo "*** DRY RUN ***" > $ERRS
 
 # print configuration vars
 
-INFO_STR="\
+INFO_STR=$(cat <<- END
+
 info: printing configuration vars
-info: benchmark config file: ${BMK_CONFIG_FILE}
-info: benchmark install dir: ${BMK_INSTALL_DIR}
-info: benchmark data set dir: ${BMK_DATA_DIR}
-info: benchmark data set type: ${BMK_DATA_TYPE}
-"
+info: benchmark suite config file: ${SUITE_CONFIG_FILE}
+info: benchmark suite target dir: ${SUITE_TARGET_DIR}
+info: benchmark suite data set dir: ${SUITE_DATA_DIR}
+info: benchmark suite data set type: ${SUITE_DATA_TYPE}
+info: script jobs: ${SCRIPT_JOBS}
+info: first job starting CPU: ${SCRIPT_CPU}
+
+END
+)
 
 echo "$INFO_STR" > $OUTS
 
-if [ -z "$BMK_CONFIG_FILE" -o ! -e "$BMK_CONFIG_FILE" ]; then
-  echo "error: benchmark config file was not provided or does not exist" > $ERRS
+if [[ -z "$SUITE_CONFIG_FILE" ||  ! -e "$SUITE_CONFIG_FILE" ]]; then
+  echo "error: benchmark suite config file was not provided or does not exist" > $ERRS
 
   exit 1
 fi
 
-if [ -z "$BMK_INSTALL_DIR" -o ! -e "$BMK_INSTALL_DIR" ]; then
-  echo "error: benchmark install dir was not provided or does not exist" > $ERRS
+if [[ -z "$SUITE_TARGET_DIR" || ! -e "$SUITE_TARGET_DIR" ]]; then
+  echo "error: benchmark suite install dir was not provided or does not exist" > $ERRS
 
   exit 1
 fi
 
-if [ -z "$BMK_DATA_DIR" -o ! -e "$BMK_DATA_DIR" ]; then
-  echo "error: benchmark data dir was not provided or does not exist" > $ERRS
+if [[ -z "$SUITE_DATA_DIR" || ! -e "$SUITE_DATA_DIR" ]]; then
+  echo "error: benchmark suite data dir was not provided or does not exist" > $ERRS
 
   exit 1
 fi
 
-if [ -z "$BMK_DATA_TYPE" ]; then
-  echo "error: benchmark data set type was not provided" > $ERRS
+if [[ -z "$SUITE_DATA_TYPE" ]]; then
+  echo "error: benchmark suite data set type was not provided" > $ERRS
 
   exit 1
+fi
+
+if [[ $SCRIPT_CPU -ge $SCRIPT_MAX_CPUS ]]; then
+  echo "warning: CPU number is greater than the available cores. Resetting to 0" > $ERRS
+
+  SCRIPT_CPU=0
+fi
+
+if [[ $SCRIPT_JOBS -gt $SCRIPT_MAX_CPUS ]]; then
+  echo "warning: number of jobs is greater than the available cores. Resetting to ${SCRIPT_MAX_CPUS}" > $ERRS
+
+  SCRIPT_JOBS=${SCRIPT_MAX_CPUS}
 fi
 
 
 # operations
 
 # check if out dir location is given in relative form
-if [ "${BMK_INSTALL_DIR}" == "${BMK_INSTALL_DIR#/}" ]; then 
-  BMK_INSTALL_DIR="$(pwd)/${BMK_INSTALL_DIR}"
-fi
+[[ "${SUITE_TARGET_DIR}" == "${SUITE_TARGET_DIR#/}" ]] && SUITE_TARGET_DIR="$(pwd)/${SUITE_TARGET_DIR}"
+[[ "${SUITE_DATA_DIR}" == "${SUITE_DATA_DIR#/}" ]] && SUITE_DATA_DIR="$(pwd)/${SUITE_DATA_DIR}"
 
-if [ "${BMK_DATA_DIR}" == "${BMK_DATA_DIR#/}" ]; then 
-  BMK_DATA_DIR="$(pwd)/${BMK_DATA_DIR}"
-fi
+readarray BENCHMARKS < ${SUITE_CONFIG_FILE}
 
-readarray BENCHMARKS < ${BMK_CONFIG_FILE}
+CPU_NUM=${SCRIPT_CPU}
+
+[[ $SCRIPT_DRYRUN -eq 0 ]] && date +"%T" > started.txt
 
 for BMK in ${BENCHMARKS[@]}; do
   # trim whitespace
   BMK=$(echo $BMK | xargs)
 
-  BMK_EXE=${BMK##*.} # cut off the numbers ###.bmk
+  SUITE_EXE=${BMK##*.}
 
   # read command args file
-  BMK_ARGS_FILE=${BMK_DATA_DIR}/invocations/${BMK_DATA_TYPE}/${BMK}.${BMK_DATA_TYPE}.cmd
-  IFS=$'\n' read -d '' -r -a BMK_ARGS < ${BMK_ARGS_FILE}
+  SUITE_ARGS_FILE=${SUITE_DATA_DIR}/invocations/${SUITE_DATA_TYPE}/${BMK}.${SUITE_DATA_TYPE}.cmd
+  IFS=$'\n' read -d '' -r -a SUITE_ARGS < ${SUITE_ARGS_FILE}
 
-  echo "running ${BMK}" > $OUTS
+  echo "running ${BMK} on CPU ${CPU_NUM}" > $OUTS
 
   # this cur working directory change is essentially bound to the way each
-  # benchmark is invoked by the corresponding arguments file 
+  # benchmark is invoked by the corresponding arguments file
   # the downside is that any output file is created in the input date location
-  pushd ${BMK_DATA_DIR}/CPU2006/${BMK}/data/${BMK_DATA_TYPE}/input/ > $OUTS
+  pushd ${SUITE_DATA_DIR}/CPU2006/${BMK}/data/${SUITE_DATA_TYPE}/input/ > $OUTS
 
-  echo "${BMK_EXE} ${BMK_DATA_TYPE}" > $OUTS
-  eval ${BMK_INSTALL_DIR}/CPU2006/${BMK}/exe/${BMK_EXE} ${BMK_ARGS}
+  OUTPUT_FILE_COUNT=0
+
+  echo "${SUITE_EXE} ${SUITE_DATA_TYPE}" > $OUTS
+
+  for SUITE_ARG in "${SUITE_ARGS[@]}"; do
+    echo "with arguments: ${SUITE_ARG}" > $OUTS
+
+    if [[ $SCRIPT_DRYRUN -eq 0 ]]; then
+      if [[ $SCRIPT_JOBS -gt 1 ]]; then
+        sem --no-notice -j ${SCRIPT_JOBS} "taskset -c ${CPU_NUM} ${SUITE_TARGET_DIR}/CPU2006/${BMK}/exe/${SUITE_EXE} ${SUITE_ARG}"
+      else
+        taskset -c ${CPU_NUM} ${SUITE_TARGET_DIR}/CPU2006/${BMK}/exe/${SUITE_EXE} ${SUITE_ARG}
+        #taskset -c ${CPU_NUM} perf record -o perf${OUTPUT_FILE_COUNT}.data -g -- ${SUITE_TARGET_DIR}/CPU2006/${BMK}/exe/${SUITE_EXE} ${SUITE_ARG}
+      fi
+    fi
+
+    [[ $SCRIPT_JOBS -gt 1 ]] && let CPU_NUM=(CPU_NUM+1)%SCRIPT_MAX_CPUS
+    let OUTPUT_FILE_COUNT++
+  done
 
   popd > $OUTS
 done
 
+[[ $SCRIPT_DRYRUN -eq 0 ]] && [[ $SCRIPT_JOBS -gt 1 ]] && sem --wait
+
+[[ $SCRIPT_DRYRUN -eq 0 ]] && date +"%T" > finished.txt
 
 exit 0
 
