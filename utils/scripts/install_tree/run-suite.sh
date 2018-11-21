@@ -168,7 +168,7 @@ for BMK in ${BENCHMARKS[@]}; do
   # this cur working directory change is essentially bound to the way each
   # benchmark is invoked by the corresponding arguments file
   # the downside is that any output file is created in the input date location
-  pushd ${SUITE_DATA_DIR}/CPU2006/${BMK}/data/${SUITE_DATA_TYPE}/input/ > $OUTS
+  pushd ${SUITE_DATA_DIR}/${BMK}/data/${SUITE_DATA_TYPE}/input/ > $OUTS
 
   OUTPUT_FILE_COUNT=0
 
@@ -179,10 +179,10 @@ for BMK in ${BENCHMARKS[@]}; do
 
     if [[ $SCRIPT_DRYRUN -eq 0 ]]; then
       if [[ $SCRIPT_JOBS -gt 1 ]]; then
-        sem --no-notice -j ${SCRIPT_JOBS} "taskset -c ${CPU_NUM} ${SUITE_TARGET_DIR}/CPU2006/${BMK}/exe/${SUITE_EXE} ${SUITE_ARG}"
+        sem --no-notice -j ${SCRIPT_JOBS} "taskset -c ${CPU_NUM} ${SUITE_TARGET_DIR}/${BMK}/exe/${SUITE_EXE} ${SUITE_ARG}"
       else
-        taskset -c ${CPU_NUM} ${SUITE_TARGET_DIR}/CPU2006/${BMK}/exe/${SUITE_EXE} ${SUITE_ARG}
-        #taskset -c ${CPU_NUM} perf record -o perf${OUTPUT_FILE_COUNT}.data -g -- ${SUITE_TARGET_DIR}/CPU2006/${BMK}/exe/${SUITE_EXE} ${SUITE_ARG}
+        taskset -c ${CPU_NUM} ${SUITE_TARGET_DIR}/${BMK}/exe/${SUITE_EXE} ${SUITE_ARG}
+        #taskset -c ${CPU_NUM} perf record -o perf${OUTPUT_FILE_COUNT}.data -g -- ${SUITE_TARGET_DIR}/${BMK}/exe/${SUITE_EXE} ${SUITE_ARG}
       fi
     fi
 
