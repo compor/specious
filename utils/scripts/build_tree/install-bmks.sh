@@ -9,31 +9,34 @@ ERRS='/dev/stderr'
 
 # initialize configuration vars
 
-SHOW_HELP=0
+SCRIPT_HELP=0
 SUITE_CONFIG_FILE=""
 SUITE_BUILD_DIR=""
 SUITE_INSTALL_DIR=""
 
 # parse and check cmd line options
 
-CMDOPTS=":c:b:i:qh"
+CMDOPTS=":c:s:i:qh"
 
-HELP_STRING="\
+HELP_STRING=$(cat <<- END
+
 Usage: ${0} OPTIONS
 
 -c file    suite config file
--b dir     suite build directory
+-s dir     suite build directory
 -i dir     suite install directory
 -q         silent mode (no output)
 -h         help
-"
+
+END
+)
 
 while getopts ${CMDOPTS} cmdopt; do
   case $cmdopt in
     c)
       SUITE_CONFIG_FILE=$OPTARG
       ;;
-    b)
+    s)
       SUITE_BUILD_DIR=$OPTARG
       ;;
     i)
@@ -44,7 +47,7 @@ while getopts ${CMDOPTS} cmdopt; do
       ERRS="/dev/null"
       ;;
     h)
-      SHOW_HELP=1
+      SCRIPT_HELP=1
       ;;
     \?)
       echo "error: invalid option: -$OPTARG" > $ERRS
@@ -58,17 +61,18 @@ while getopts ${CMDOPTS} cmdopt; do
 done
 
 
-[[ $SHOW_HELP -ne 0 ]] && echo "$HELP_STRING" > $ERRS && exit 0
+[[ $SCRIPT_HELP -ne 0 ]] && echo "$HELP_STRING" > $ERRS && exit 0
 
 
 # print configuration vars
 
-INFO_STR="\
+INFO_STR=$(cat <<- END
 info: printing configuration vars
 info: suite config file: ${SUITE_CONFIG_FILE}
 info: suite build dir: ${SUITE_BUILD_DIR}
 info: suite install dir: ${SUITE_INSTALL_DIR}
-"
+END
+)
 
 echo "$INFO_STR" > $OUTS
 
@@ -82,6 +86,10 @@ if [[ -z $SUITE_BUILD_DIR || ! -e $SUITE_BUILD_DIR ]]; then
   exit 1
 fi
 
+if [[ ! -e $(which rsync) ]]; then
+  echo "error: this script requires rsync" > $ERRS
+  exit 1
+fi
 
 # operations
 
@@ -93,20 +101,21 @@ mkdir -p "${SUITE_INSTALL_DIR}"
 readarray BENCHMARKS < ${SUITE_CONFIG_FILE}
 
 for BMK in ${BENCHMARKS[@]}; do
-  # trim whitespace
-  BMK=$(echo $BMK | xargs)
+  BMK=$(echo $BMK | tr -d [:space:])
+  BMK_EXE=${BMK##*.}
 
-  # cut off the numbers ###.bmk
-  BMK_EXE=${BMK##*.} 
-
-  BMK_BUILD_DIR=${SUITE_BUILD_DIR}/${BMK}
-  BMK_INSTALL_DIR=${SUITE_INSTALL_DIR}/${BMK}
+  BMK_BUILD_DIR=${SUITE_BUILD_DIR}/${BMK}/exe
+  BMK_INSTALL_DIR=${SUITE_INSTALL_DIR}/${BMK}/exe
 
   mkdir -p ${BMK_INSTALL_DIR}
 
-  rsync -cq ${BMK_BUILD_DIR}/${BMK_EXE} ${BMK_INSTALL_DIR}
+  rsync -krcq ${BMK_BUILD_DIR}/${BMK_EXE} ${BMK_INSTALL_DIR}
+  RC=$?
 
-  [[ $? -eq 0 ]] && echo "installed ${BMK}" > $OUTS
+  MSG="installing ${BMK} binary"
+  PRE_MSG="failure"
+  [[ $RC -eq 0 ]] && PRE_MSG="success"
+  echo "${PRE_MSG} ${MSG}" > $OUTS
 done
 
 exit 0
