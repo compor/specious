@@ -19,7 +19,7 @@ SCRIPT_MAX_CPUS=$(nproc)
 SUITE_CONFIG_FILE=""
 SUITE_TARGET_DIR=""
 SUITE_DATA_DIR=""
-SUITE_DATA_TYPE=""
+SUITE_DATA_TYPE="test"
 
 
 # parse and check cmd line options
@@ -31,10 +31,10 @@ Usage: ${0} OPTIONS
 
 -c file       benchmark suite config file
 -i dir        benchmark suite target directory
--d dir        data set dir
--t string     data set type
--j N          perform N parallel jobs
--u N          run on CPU N and onwards parallel jobs
+-d dir        data set dir (default: -i arg)
+-t string     data set type (default: test)
+-j N          perform N parallel jobs (default: 1)
+-u N          run on CPU N and onwards parallel jobs (default: 0)
 -q            silent mode (no output)
 -n            dry run
 -h            help
@@ -116,11 +116,6 @@ fi
 
 if [[ ! -z $SUITE_DATA_DIR && ! -e $SUITE_DATA_DIR ]]; then
   echo "error: benchmark suite data dir does not exist" > $ERRS
-  exit 1
-fi
-
-if [[ -z $SUITE_DATA_TYPE ]]; then
-  echo "error: benchmark suite data set type was not provided" > $ERRS
   exit 1
 fi
 

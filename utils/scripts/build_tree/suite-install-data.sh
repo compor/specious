@@ -96,6 +96,11 @@ if [[ ${#SUITE_DATA_TYPE[@]} -lt 1 ]]; then
   SUITE_DATA_TYPE=("train" "test" "ref")
 fi
 
+if [[ ! -e $(which rsync) ]]; then
+  echo "error: this script requires rsync" > $ERRS
+  exit 1
+fi
+
 # operations
 
 mkdir -p "${SUITE_INSTALL_DIR}"
