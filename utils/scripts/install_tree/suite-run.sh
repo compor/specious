@@ -106,43 +106,36 @@ echo "$INFO_STR" > $OUTS
 
 if [[ -z $SUITE_CONFIG_FILE ||  ! -e $SUITE_CONFIG_FILE ]]; then
   echo "error: benchmark suite config file was not provided or does not exist" > $ERRS
-
   exit 1
 fi
 
 if [[ -z $SUITE_TARGET_DIR || ! -e $SUITE_TARGET_DIR ]]; then
   echo "error: benchmark suite install dir was not provided or does not exist" > $ERRS
-
   exit 1
 fi
 
 if [[ ! -z $SUITE_DATA_DIR && ! -e $SUITE_DATA_DIR ]]; then
   echo "error: benchmark suite data dir does not exist" > $ERRS
-
   exit 1
 fi
 
 if [[ -z $SUITE_DATA_TYPE ]]; then
   echo "error: benchmark suite data set type was not provided" > $ERRS
-
   exit 1
 fi
 
 if [[ -z $SUITE_DATA_DIR ]]; then
   echo "warning: using SUITE_TARGET_DIR as SUITE_DATA_DIR" > $ERRS
-
   SUITE_DATA_DIR=$SUITE_TARGET_DIR
 fi
 
 if [[ $SCRIPT_CPU -ge $SCRIPT_MAX_CPUS ]]; then
   echo "warning: CPU number set to 0 becase provided value is greater than the available cores" > $ERRS
-
   SCRIPT_CPU=0
 fi
 
 if [[ $SCRIPT_JOBS -gt $SCRIPT_MAX_CPUS ]]; then
   echo "warning: number of jobs set to ${SCRIPT_MAX_CPUS} because provided value is greater than the available cores" > $ERRS
-
   SCRIPT_JOBS=${SCRIPT_MAX_CPUS}
 fi
 
@@ -160,9 +153,7 @@ CPU_NUM=${SCRIPT_CPU}
 [[ $SCRIPT_DRYRUN -eq 0 ]] && date +"%T" > started.txt
 
 for BMK in ${BENCHMARKS[@]}; do
-  # trim whitespace
-  BMK=$(echo $BMK | xargs)
-
+  BMK=$(echo $BMK | tr -d [:space:])
   SUITE_EXE=${BMK##*.}
 
   # read command args file

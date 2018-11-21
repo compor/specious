@@ -160,9 +160,7 @@ CPU_NUM=${SCRIPT_CPU}
 [[ $SCRIPT_DRYRUN -eq 0 ]] && date +"%T" > started.txt
 
 for BMK in ${BENCHMARKS[@]}; do
-  # trim whitespace
-  BMK=$(echo $BMK | xargs)
-
+  BMK=$(echo $BMK | tr -d [:space:])
   SUITE_EXE=${BMK##*.}
 
   echo "running ${BMK} on CPU ${CPU_NUM}" > $OUTS
