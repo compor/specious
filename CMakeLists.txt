@@ -62,7 +62,11 @@ set(HARNESS_INVOCATIONS_DIR
 
 add_definitions(-DSPEC_CPU)
 add_definitions(-DSPEC_CPU_LINUX)
-add_definitions(-DSPEC_CPU_LINUX_X64)
+if(${CMAKE_SYSTEM_PROCESSOR} STREQUAL "x86_64")
+  add_definitions(-DSPEC_CPU_LINUX_X64)
+elseif(${CMAKE_SYSTEM_PROCESSOR} STREQUAL "i686")
+  #
+endif()
 
 
 # project options checks and processing

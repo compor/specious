@@ -68,6 +68,15 @@ add_prefix(SOURCES "${HARNESS_BMK_SOURCE_SUBDIR}/" "${SOURCES}")
 add_executable(${BMK_PROJECT_NAME} ${SOURCES})
 
 target_compile_definitions(${BMK_PROJECT_NAME} PUBLIC -DPERL_CORE)
+
+if(${CMAKE_SYSTEM_PROCESSOR} STREQUAL "x86_64")
+  target_compile_definitions(${BMK_PROJECT_NAME} PUBLIC -DSPEC_CPU_LP64)
+elseif(${CMAKE_SYSTEM_PROCESSOR} STREQUAL "i686")
+  target_compile_definitions(${BMK_PROJECT_NAME} PUBLIC -DSPEC_CPU_LINUX_IA32)
+else()
+  #
+endif()
+
 target_compile_options(${BMK_PROJECT_NAME} PUBLIC -std=gnu89)
 
 target_include_directories(${BMK_PROJECT_NAME} PUBLIC
